@@ -1,0 +1,13 @@
+#key	value
+name	Amadeus Web v9
+byline	Spiritualized Simplified Tech
+safeName	amadeusweb9
+iconName	Spring v9
+footer-message	Fostering transparency and accountability by making content / interactions public record.
+siteMenuName	AmadeusWeb's Spring
+sections_todo	features
+mediakit	?palette=default
+fonts	cursive=Eagle+Lake&menu=Quintessential&menu-size=1.3rem
+local-url	http://localhost/dawn/spring/
+live-url	https://spring.amadeusweb.world/
+year	2019
