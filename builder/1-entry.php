@@ -13,7 +13,8 @@
  */
 
 DEFINE('AMADEUSROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-DEFINE('ALLSITESROOT', dirname(AMADEUSROOT) . DIRECTORY_SEPARATOR);
+DEFINE('AMADEUSSITEROOT', dirname(__DIR__, 1) . DIRECTORY_SEPARATOR);
+DEFINE('ALLSITESROOT', dirname(AMADEUSROOT, 2) . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSFRAMEWORK', __DIR__ . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSCORE', __DIR__ . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSFEATURES', AMADEUSCORE . 'features/');
@@ -233,9 +234,10 @@ function _credits($pre = '', $return = false) {
 	$url = $world . '?utm_content=site-credits&utm_referrer=' . variable('safeName');
 	$img = '<img src="' . $world . 'assets/amadeuswebworld-credits.png" height="40" alt="Amadeus Web World" style="border-radius: 6px; vertical-align: middle;">';
 
-	$result = $pre . 'Conjoined to ' . getLink($img, $url, '', true, ' style="display: inline-block;"') . NEWLINE;
+	$result = $pre . 'Conjoined to ' . getLink($img, $url, '', true, ' style="display: inline-block;"') . NEWLINE
+		. ' by ' . getLink('Imran', $imran . 'whoami/', 'btn btn-dark', true);
 
-	$result .= 'and abiding by it\'s ' . getLink('Courtesies', $spring . 'courtesies/', 'btn btn-info', true)
+	$result .= ' and abiding by it\'s ' . getLink('Courtesies', $spring . 'courtesies/', 'btn btn-info', true)
 					. ' and ' . getLink('DNA', $world . 'courtesies/', 'btn btn-success', true);
 
 	if ($return) return $result; else echo $result;

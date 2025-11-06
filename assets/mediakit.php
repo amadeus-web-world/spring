@@ -62,8 +62,8 @@ if ($cursive) echo '.cursive { font-family: "' . $cursive . '", serif; }' . NEWL
 
 if ($menu) {
 	$menuSize = valueIfSetAndNotEmpty($fonts, 'menu-size');
-	$menuSize = $menuSize ? '--cnvs-primary-menu-font-size: ' . $menuSize . '; ' : '';
-	echo '#header { --cnvs-primary-menu-font: "' . $menu . '", serif; ' . $menuSize . '}' . NEWLINES2;
+	$menuSize = $menuSize ? '--cnvs-primary-menu-font-size: ' . $menuSize . '; --cnvs-primary-menu-submenu-font-size: ' . $menuSize . '; ' : '';
+	echo '#header { --cnvs-primary-menu-font: "' . $menu . '", serif; --cnvs-primary-menu-submenu-font:"' . $menu . '", serif; ' . $menuSize . '}' . NEWLINES2;
 
 	$menuHeight = valueIfSetAndNotEmpty($fonts, 'menu-height');
 	if ($menuHeight)

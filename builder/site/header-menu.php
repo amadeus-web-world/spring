@@ -46,9 +46,11 @@ if ($groups = variable('section-groups')) {
 }
 
 subsitesMenu();
+if (function_exists('network_menu')) network_menu(); //for the actual menu
+
 if (function_exists('pollenAt')) pollenAt(PINICONS);
 if (function_exists('after_menu')) after_menu();
-if (function_exists('network_after_menu')) network_after_menu();
+if (function_exists('network_after_menu')) network_after_menu(); //for common stuff after (like opus / webring??)
 if (!$noOuterUl) _menuULStart('site');
 
 function subsitesMenu() {

@@ -1,8 +1,25 @@
 body { cursor: default; }
 
-body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; } /* menu */
+/* Menu */
+#header { z-index: 1050; }
+.menu-section { background-color: var(--amadeus-menu-section-bgd, #E1F2FF); border: 1px solid #999!important; border-style: solid none solid none!important; }
+body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; }
 
-/* content */
+.breadcrumb-item { border: #333 1px solid; border-radius: 2ex; }
+
+.breadcrumb-item abbr {
+	background-color: #737cf8;
+	color: #f7e5e5;
+	font-weight: bolder;
+	border-radius: 50%;
+	height: 3ex;
+	display: inline-block;
+	padding: .6ex 1ex .6ex 1ex;
+	line-height: .7;
+	margin-left: 3px;
+}
+
+/* Content */
 .content-box:not(.plain) {
 	background-color: #fff;
 	padding: 25px;
@@ -15,8 +32,28 @@ body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; } /* men
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+/* LARGE LIST */
+div.large-list { background-color: #fffeea !important; }
+.large-list.with-labels { background-color: #defafa!important; }
+.large-list li { font-size: 125% !important; margin-bottom: 12px; }
+
+.with-labels label { width: 120px; display: inline-block; text-align: right; }
+.with-labels li { list-style-type: none; margin-bottom: 4px; border-bottom: 1px solid lightgray; }
+.with-labels a { font-size: 115%; font-weight: bold; }
+
 li ul { margin-left: 25px; }
 .bg-light.btn:hover { --bs-btn-hover-color: #666; }
+
+ol.large-list,
+ul.large-list,
+.large-list ol,
+.large-list ul {
+	border: 2px solid #333;
+	border-width: 2px 0 2px 0;
+	padding: 10px 0 10px 0;
+}
+
+ul.large-list, .large-list ul { list-style-type: none; }
 
 /* Footer */
 #footer-social { padding-bottom: 15px; }

@@ -5,4 +5,15 @@ builtinOrRender(SITEPATH . '/README.md', false, false);
 
 echo '<hr class="mt-4" />';
 printH1InDivider('LICENSE (Courtesies)', false);
-builtinOrRender(SITEPATH . '/LICENSE.md', false, false);
+
+sectionId('license', 'container');
+$op = renderAny(SITEPATH . '/LICENSE.md', ['echo' => false, 'use-content-box' => true]);
+
+if (variable('local')) {
+	$op = str_replace('https://amadeusweb.world/', replaceHtml('%urlOf-world%'), $op);
+	$op = str_replace('https://people.amadeusweb.world/imran/', replaceHtml('%urlOf-imran%'), $op);
+}
+
+echo $op;
+
+sectionEnd();

@@ -112,3 +112,24 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 	renderAny($file);
 	if (!$siteTheme) sectionEnd();
 }
+
+/* ai stuff - no parser.php anymore */
+DEFINE('FROM_GEMINI_AI', '<!--exported-from-gemini-ai-->');
+DEFINE('GEMINI_AI_MSG', 'This is a Chat with "Gemini AI"');
+
+function peekAtMainFile($file) {
+	$raw = disk_file_get_contents($file);
+	$ai = contains($raw, FROM_GEMINI_AI);
+	if (!$ai) return;
+	
+	add_body_class('with-ai has-gemini-ai has-prompts');
+}
+
+function processAI($raw, $aiName) {
+	$replaces = [
+		FROM_GEMINI_AI => FROM_GEMINI_AI . SPACERSTART . GEMINI_AI_MSG . SPACEREND,
+		'## Prompt:' => '[prompt]',
+		'## Response:' => '[/prompt]' . NEWLINES2,
+	];
+	return replaceItems($raw, $replaces);
+}

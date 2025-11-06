@@ -33,7 +33,7 @@ function _renderMenu($home, $folder, $where) {
 	$breadcrumbs = variable('breadcrumbs');
 
 	if (!$breadcrumbs && !variable('in-node'))
-		h2(humanize($where) . currentLevel(), 'amadeus-icon');
+		h2(humanize($where), 'amadeus-icon');
 
 	if ($home) {
 		contentBox('home');

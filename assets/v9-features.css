@@ -1,0 +1,36 @@
+/* AI */
+.has-gemini-ai .prompt, .standout {
+	background-color: var(--cnvs-themecolor, #bbb2f2)!important;
+	color: #fff;
+	font-size: 150% !important;
+}
+
+.has-gemini-ai .content-wrap section:first-of-type .content-box:first-of-type { background-color: #ffffea; }
+.has-gemini-ai .content-wrap section:first-of-type .content-box:first-of-type h1 { font-size: 16px; margin-bottom: 5px; }
+.has-gemini-ai .content-wrap section:first-of-type .content-box:first-of-type a::before { content: '** Ignore this link --> '; }
+
+/* https://stackoverflow.com/a/26849367 */
+.has-prompts {
+	counter-reset: promptscount 0;
+}
+
+.prompt {
+	counter-increment: promptscount 1;
+}
+
+.has-prompts .prompt:before {
+	content: "Prompt #" counter(promptscount);
+}
+
+.prompt::before, .right-button {
+	font-weight: bold;
+	font-size: 125%;
+	background-color: whitesmoke;
+	color: #666;
+	padding: 8px;
+	border: cadetblue solid 2px;
+	border-radius: 5px;
+	float: right;
+}
+
+/*  */

@@ -147,7 +147,6 @@ function _renderImplementation($fileOrRaw, $settings) {
 		} else {
 			$ai = contains($raw, FROM_GEMINI_AI);
 			if ($ai) {
-				runFrameworkFile('parser');
 				$raw = processAI($raw, 'gemini');
 			}
 
@@ -201,16 +200,6 @@ function _renderImplementation($fileOrRaw, $settings) {
 function _txtInfo($msg, $info) {
 	if (true || !variable('local')) return '';
 	return textBoxWithCopyOnClick($msg, _makeSlashesConsistent($info), 'Link Copied');
-}
-
-DEFINE('FROM_GEMINI_AI', '<!--exported-from-gemini-ai-->');
-
-function peekAtMainFile($file) {
-	$raw = disk_file_get_contents($file);
-	$ai = contains($raw, FROM_GEMINI_AI);
-	if (!$ai) return;
-	
-	add_body_class('with-ai has-gemini-ai has-prompts');
 }
 
 function renderRichPage($sheetFile, $groupBy = 'section', $templateName = 'home') {
