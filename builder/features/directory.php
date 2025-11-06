@@ -81,7 +81,7 @@ function _renderMenu($home, $folder, $where) {
 	$relativeUrl = (nodeIsNot(variable('section')) ? nodeValue() . '/' : '') . ($breadcrumbs ? implode('/', $breadcrumbs) . '/' : '');
 
 	if (hasPageParameter('generate-index')) {
-		addScript('engage', 'app-static--common-assets'); //TODO: better way than against DRY?	
+		addScript('engage', COREASSETS);
 		echo '<textarea class="autofit">' . NEWLINE;
 		echo '<!--use-blocks-->' . NEWLINES2;
 		foreach ($sectionItems as $item) {
@@ -93,11 +93,10 @@ function _renderMenu($home, $folder, $where) {
 		echo '</textarea>' . NEWLINE;
 	} else {
 		runFeature('tables');
-		$template = '<tr><td class="d-none">%index%</td><td><a href="%url%' . $relativeUrl .
+		$template = '<tr><td><a href="%url%' . $relativeUrl .
 			'%name_urlized%">%name_humanized%</a></td><td>%about%</td><td>%tags%</td><td>%size%</td></tr>';
 		$params = ['use-datatables' => count($sectionItems) > 5];
-		(new tableBuilder(INPAGETABLE, $sectionItems, 'index, name_urlized, about, tags, size', $template, $params))->render();
-		//add_table(INPAGETABLE, $sectionItems, '', $template, $params);
+		(new tableBuilder(INPAGETABLE, $sectionItems, 'name_urlized, about, tags, size', $template, $params))->render();
 	}
 
 	contentBox('end');

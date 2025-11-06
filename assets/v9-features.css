@@ -33,4 +33,6 @@
 	float: right;
 }
 
+thead th, thead td { background-color: #fcfcc8!important; }
+
 /*  */

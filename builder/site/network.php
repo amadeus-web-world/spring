@@ -38,6 +38,7 @@ function setupNetwork() {
 	$networkUrls = [];
 
 	$networkName = variable('network');
+
 	//TEST: $networkName = 'Learning'; variable('network', $networkName);
 	$urlKey = _getUrlKeySansPreview();
 

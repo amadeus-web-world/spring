@@ -16,6 +16,9 @@ DEFINE('BRNL', $br . $nl);
 $hr = '<hr>';
 DEFINE('HRTAG', $hr);
 
+DEFINE('NBSP', ' &nbsp; ');
+DEFINE('PIPEWS', ' | '); //whitespace
+
 variable('markdownStart', $md = '<!--markdown-->');
 variable('markdownStartTag', $md . $nl); //NOTE: to detect content which doesnt start with a heading
 variable('autopStart', '<!--autop-->');

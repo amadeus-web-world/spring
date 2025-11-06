@@ -56,6 +56,7 @@ ul.large-list,
 ul.large-list, .large-list ul { list-style-type: none; }
 
 /* Footer */
+#footer a:not(.bg-light) { color: #fff; }
 #footer-social { padding-bottom: 15px; }
 #footer-social .social-icon { float: none; position: relative; top: 10px; }
 
@@ -66,6 +67,17 @@ ul.large-list, .large-list ul { list-style-type: none; }
 #special-md .amadeus-icon:first-child { margin-top: 0; }
 #statistics .amadeus-icon { background-color: whitesmoke; }
 h2.amadeus-icon { font-size: 120%; padding: 5px; }
+
+/* after-content */
+.after-content { background-color: var(--amadeus-heading-bgd, #f0f0f0)!important; }
+#statistics .after-content { background-color: #ffe5c3!important; }
+.after-content table, .after-content .block-links { background-color: white; }
+.after-content .block-links { padding: 15px; border: 1px solid #666; }
+ul.block-links li { list-style-type: none; margin-bottom: 8px; }
+
+/* datatables */
+.after-content .dt-search { padding: 6px 12px 6px 12px; background-color: #fffeea; border-radius: 8px; }
+.after-content .dt-search .dt-input { background-color: #fff; }
 
 /* Image Related */
 .has-floating-images::after { display: block; clear: both; content: ''; }

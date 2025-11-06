@@ -63,33 +63,36 @@ function includeThemeManager() {
 	disk_include_once($mgr);
 }
 
-function runThemePart($what) {
+DEFINE('WIDGETSBELOW', 'widgets-below');
+function _useAltFooterDesign() {
+	return variableOr('footer-variation', WIDGETSBELOW) == WIDGETSBELOW;
+}
 
+function runThemePart($what) {
 	if (!($content = variable('theme-template'))) {
 		$file = getThemeFile(variable('sub-theme') . '.html');
 		$bits = explode('##content##', disk_file_get_contents($file));
 		$content = ['header' => $bits[0], 'footer' => $bits[1]];
-		$content['footer-widgets'] = disk_file_get_contents(getThemeFile('footer/' . variableOr('footer-variation', 'single-widget') . '.html'));
+		$content['footer-widgets'] = disk_file_get_contents(getThemeFile('footer/' . variableOr('footer-variation', WIDGETSBELOW) . '.html'));
 		variable('theme-template', $content);
 	}
-
-	$vars = [
-		'theme' => getThemeBaseUrl(), //TODO: /version can be maintained on the individual file?
-		'optional-page-menu' => '',
-		'optional-slider' => '', //this could be a page title too
-		'optional-right-button' => '',
-		'optional-after-menu' => '',
-		'optional-search-trigger' => '',
-		'optional-search' => '',
-		'header-align' => '', //an addon class needed if video page title has an image and wants content on right
-		'search-url' => searchUrl(),
-		'app-static' => assetMeta(COREASSETS)['location'],
-	];
 
 	$siteIcon = getLogoOrIcon('icon', 'site');
 	$nodeIcon = getLogoOrIcon('icon', 'node');
 
 	if ($what == 'header') {
+		$vars = [
+			'theme' => getThemeBaseUrl(), //TODO: /version can be maintained on the individual file?
+			'optional-page-menu' => '',
+			'optional-slider' => '', //this could be a page title too
+			'optional-right-button' => '',
+			'optional-after-menu' => '',
+			'optional-search-trigger' => '',
+			'optional-search' => '',
+			//deprecate! 'header-align' => '', //an addon class needed if video page title has an image and wants content on right
+			'search-url' => searchUrl(),
+			//deprecate! 'app-static' => assetMeta(COREASSETS)['location'],
+		];
 
 		$icon = '<link rel="icon" href="' . $nodeIcon . '" sizes="192x192">';
 
@@ -125,23 +128,30 @@ function runThemePart($what) {
 		}
 		setMenuSettings(true);
 	} else if ($what == 'footer') {
+		$vars = [
+			'theme' => getThemeBaseUrl(), //TODO: /version can be maintained on the individual file?
+		];
+
 		if (!variable('footer-widgets-in-enrich')) {
 			$logo2x = getLogoOrIcon('logo', 'site');
 			$logo = NEWLINE . '			' . concatSlugs(['<a href="', pageUrl(), '">' . NEWLINE .
 				'				<img src="', $logo2x, '" style="border-radius: 8px;" class="img-fluid img-logo img-max-500" alt="', variable('name'), '">' . NEWLINE . '			</a><br>'], '');
 
-			$message = !variable('footer-message') ? '' : (NEWLINE . '			<span class="btn btn-secondary mb-2">' . returnLine(variable('footer-message')) . '</span>' . NEWLINE);
+			$message = !variable('footer-message') ? '' : (NEWLINE . '			<span class="btn btn-secondary mb-2">' . returnLine(variable('footer-message')) . '		</span>');
 
 			$contact = getSnippet('contact');
 			if (!$contact) $contact = getSnippet('contact', CORESNIPPET);
 
-			$nodeName = hasVariable('nodeSiteName') ? NEWLINE . '				<span class="btn btn-light" style="letter-spacing: 2px;">&#10148; ' . variable('nodeSiteName') . '</span>' . NEWLINE : '';
+			$nodeName = nodeIs(SITEHOME) ? '' : NEWLINE . '				<span class="btn btn-light" style="letter-spacing: 2px;">&#10148; '
+				. variableOr('nodeSiteName', humanize((nodeValue()))) . '</span>' . NEWLINE;
+
+			$altDesign = _useAltFooterDesign();
+			$nodeName = NEWLINE . '			<h4 class="' . ($altDesign ? '' : 'mt-sm-4 ') . 'mb-0">' . variableOr('footer-name', variable('name')) . '</h4>' . $nodeName;
 
 			$fwVars = [
-				'footer-logo' => $logo . NEWLINE . '			<div class="text-center">'
-					. NEWLINE . '			<h4 class="mt-sm-4 mb-0">' . variableOr('footer-name', variable('name')) . '</h4>' . $nodeName .'</div>',
+				'footer-logo' => $logo . NEWLINE . '			<div class="text-center">' . ($altDesign ? '' : $nodeName) . '</div>',
 				'site-widgets' => siteWidgets(),
-				'footer-message' => '<p class="text-align-center p-3 pt-4">' . $message . '</p>',
+				'footer-message' => $altDesign ? $nodeName . '<hr class="my-2">' . $message : '<p class="text-align-center p-3 pt-4">' . $message . BRNL . $nodeName . '</p>',
 				'footer-contact' => $contact,
 				'copyright' => _copyright(true),
 				'credits' => _credits('', true),
@@ -281,8 +291,8 @@ function siteWidgets() {
 	if ($showSections) $showSections = count($sections = variableOr('sections', []));
 	if ($showSections) $colsInUse += 1;
 
-	$showNetwork = !variable('no-network-in-footer') && !variable('not-a-network');
-	if ($showNetwork) $showNetwork = count($sites = variableOr('networkItems', []));
+	$showNetwork = !variable('no-network-in-footer') && variable('network');
+	if ($showNetwork) $showNetwork = count($sites = variableOr('networkSites', []));
 	if ($showNetwork) $colsInUse += 1;
 
 	$showSocial = !variable('no-social-in-footer');
@@ -302,7 +312,7 @@ function siteWidgets() {
 
 	if ($showSections) {
 		$op[] = str_replace('[WHAT]', 'sections', $start);
-		$op[] = '<h4>Sections</h4>';
+		$op[] = '<h4 class="mb-1">Sections</h4>';
 		foreach ($sections as $slug)
 			$op[] = makeRelativeLink(humanize($slug), $slug) . BRNL;
 		$op[] = '</div>'; $op[] = '';
@@ -310,9 +320,14 @@ function siteWidgets() {
 
 	if ($showNetwork) {
 		$op[] = str_replace('[WHAT]', 'network', $start);
-		$op[] = '<h4>' . networkLink() . '</h4>';
+		$op[] = '<h4 class="mb-1">' . networkLink() . '</h4>';
+
+		$urlKey = _getUrlKeySansPreview();
+		$brYes = _useAltFooterDesign() ? NEWLINE : BRNL;
 		foreach ($sites as $site)
-			$op[] =  $site['icon-link'] . BRNL;
+			$op[] = is_string($site) ? '<u class="m-1 ms-3">' . substr($site, 1) . '</u>'
+				: getLink('<img src="' . $site[$urlKey] . $site['key'] . '-icon.png" height="28" class="me-2" /> ' . $site['name'], $site[$urlKey],
+					'btn bg-light btn-outline-success m-1', true) . $brYes;
 		$op[] = '</div>'; $op[] = '';
 	}
 
@@ -327,16 +342,18 @@ function siteWidgets() {
 }
 
 function networkLink($class= '', $prefix = '') {
-	if (!DEFINED('SITENETWORK')) return '';
+	if (!DEFINED('SITENETWORK')) return 'Network';
 	return $prefix . getLink('Our Network', subVariableOr('networkHome', 'url', '#todo/') . 'our-network/', $class, true);
 }
 
 function appendSocial($social, &$op) {
 	if (empty($social)) return;
+
+	$hrYes = _useAltFooterDesign() ? PIPEWS : '<hr style="visibility: hidden; margin: 0;" />';
 	foreach($social as $item) {
 		$op[] = '<a target="_blank" href="' . $item['url'] . '">';
-		$op[] = '	<i class="social-icon text-light si-mini rounded-circle ' . (contains($item['type'], ' ')
-			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' . $item['name'] . '</a><hr style="visibility: hidden; margin: 0;" />';
+		$op[] = '	<i class="social-icon text-light si-mini rounded-circle lh-3 ' . (contains($item['type'], ' ')
+			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' . $item['name'] . '</a>' . $hrYes;
 		$op[] = '';
 	}
 }

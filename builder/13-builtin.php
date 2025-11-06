@@ -8,7 +8,6 @@ variables([
 	'exclude-folders' => ['home', 'assets', 'data', 'engage', 'home', 'images', 'thumbnails'],
 ]);
 
-
 function isContentFile($fileOrRaw) {
 	foreach (CONTENTFILEEXTENSIONS as $extn)
 		if (endsWith($fileOrRaw, '.' . $extn)) return true;
@@ -131,5 +130,29 @@ function processAI($raw, $aiName) {
 		'## Prompt:' => '[prompt]',
 		'## Response:' => '[/prompt]' . NEWLINES2,
 	];
+
+	if ($sr = variable('siteAIReplaces'))
+		$raw = replaceItems($raw, $sr);
+
 	return replaceItems($raw, $replaces);
+}
+
+function adjustOutputOfAI($raw, $aiName) {
+	if (!contains($raw, '<p>| ')) return $raw;
+
+	runFeature('tables');
+	_includeDatatables(false);
+	_includeTableAssets();
+
+	return replaceItems($raw, [
+		'<p>| ' => '<table class="datatables table-sans-th table table-striped table-bordered"><thead></thead><tbody><tr><td>',
+		'|</p> ' => '</tr></tbody></table>',
+		' | ' => '</td><td>',
+		'| ' => '<tr><td>',
+		' |' => '</td></tr>',
+		'</td></tr></p>' => '</tr></tbody></table>',
+		'--- |' . NEWLINE => '-->' . NEWLINE,
+		'| --- |' => '<!--',
+		'<tr><td>---' => '<tr class="d-none"><td>',
+	]);
 }

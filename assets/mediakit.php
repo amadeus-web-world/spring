@@ -43,9 +43,8 @@ echo replaceItems($op, [
 	'sticky-header' => $content ? $content : '#fff',
 	'footer' => _color($palette, 'footer', '999'),
 	'body' => _color($palette, 'body', 'bee6f9'),
-	'link' => _color($palette, 'link', '5BDCFF'),
-	'heading' => _color($palette, 'heading', 'E1F2FF'),
-	'paler' => _color($palette, 'paler', 'C8D9F8'),
+	'link' => _color($palette, 'link', '30B1D4'),
+	'heading' => _color($palette, 'heading', '86cbffb2'),
 	'MOREROOTVARS' => implode(NEWLINE . '	', $moreVars),
 ], '%');
 

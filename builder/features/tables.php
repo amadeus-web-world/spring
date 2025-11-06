@@ -212,15 +212,13 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	if ($beforeContent = valueIfSetAndNotEmpty($values, 'before-content')) echo returnLine(pipeToBR($beforeContent));
 	if ($allowCards) echo '<div class="text-center"><button data-table-id="amadeus-table-' . $id . '" class="amadeus-table-' . $id . '-card-view">toggle card view</button></div>' . BRNL;
 
-	$hideFirst = $id == INPAGETABLE ? ' class="d-none"' : '';
-
 	if ($customHead) echo $values['head-template'];
 	else if ($wantsBSRow) echo '<div id="amadeus-bs-row-' . $id . '" class="row">';
 	else echo '
 	<table id="amadeus-table-' . $id . '" class="' . $datatableClass . 'table table-striped table-bordered" ' . $datatableParams . 'cellspacing="0" width="100%">
 	<thead>
 		<tr class="align-text-top amadeus-header-row">
-			<th' . $hideFirst . '>' . $headings . '</th>
+			<th>' . $headings . '</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -252,7 +250,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 ';
 	if (contains($template, '_Embed')) echo NEWLINES2 . IGEMBED;
 	if ($useDatatables) _includeDatatables($rg);
-	if ($useDatatables) _includeTableV2($template);
+	if ($useDatatables) _includeTableAssets($template);
 }
 
 function _tableHeadingsOnLeft($id, $data) {
@@ -288,8 +286,6 @@ function _includeDatatables($rg) {
 		. '/rg-1.5.2/sp-2.3.4/datatables.js');
 }
 
-function _includeTableV2($template) {
-	//D:\AmadeusWeb\bhava\amadeus\features\tables\tables-loader.js
-	addScript('tables-v2', COREASSETS);
-	//contains($template, 'data-price')
+function _includeTableAssets() {
+	addScript('tables', COREASSETS);
 }

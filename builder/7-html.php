@@ -270,7 +270,7 @@ function replaceHtml($html) {
 	if ($hr = variable('htmlReplaces'))
 		$html = replaceItems($html, $hr, '%');
 
-	if ($nw = variable('networkUrls'))
+	if (($nw = variable('networkUrls')) && contains($html, OTHERSITEPREFIX))
 		$html = replaceItems($html, $nw, '%');
 
 	return replaceItems($html, $replaces);
@@ -386,7 +386,7 @@ class bootstrapAndUX {
 		'SITE' => 'btn btn-info',
 		'PHONE' => 'btn btn-has-icon bg-light btn-outline-secondary fa fa-phone',
 		'WHATSAPP' => 'btn btn-has-icon bg-success text-light bi bi-whatsapp',
-		'EMAIL' => 'btn btn-has-icon bg-info bi bi-mailbox',
+		'EMAIL' => 'btn btn-has-icon bg-danger bi bi-mailbox',
 	];
 
 	static $buttonVars = []; //static on demand for optimizing

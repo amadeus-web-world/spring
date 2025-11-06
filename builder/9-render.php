@@ -146,11 +146,12 @@ function _renderImplementation($fileOrRaw, $settings) {
 			$output = renderEngage(getPageName(), $raw . $inProgress, false, $meta);
 		} else {
 			$ai = contains($raw, FROM_GEMINI_AI);
-			if ($ai) {
+			if ($ai)
 				$raw = processAI($raw, 'gemini');
-			}
 
 			$output = $md || $endsWithMd || $treatAsMarkdown ? markdown($raw) : wpautop($raw);
+
+			if ($ai) $output = adjustOutputOfAI($output, 'gemini');
 		}
 	}
 
