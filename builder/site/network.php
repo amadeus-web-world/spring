@@ -1,7 +1,9 @@
 <?php
-if (variable('network')) {
-	setupNetwork();
+$networkName = variable('network');
+$noNetwork = in_array($networkName, BOOLFALSE);
+setupNetwork($noNetwork);
 
+if (!$noNetwork) {
 	function network_menu() {
 		setMenuSettings(); //undo page-menu stuff
 		extract(variable('menu-settings'));
@@ -33,7 +35,7 @@ if (variable('network')) {
 	}
 }
 
-function setupNetwork() {
+function setupNetwork($noNetwork) {
 	$networkSites = [];
 	$networkUrls = [];
 
@@ -42,26 +44,38 @@ function setupNetwork() {
 	//TEST: $networkName = 'Learning'; variable('network', $networkName);
 	$urlKey = _getUrlKeySansPreview();
 
-	$sheet = getSheet(AMADEUSSITEROOT . 'data/networks/' . $networkName . '.tsv', false);
-	foreach ($sheet->rows as $row) {
+	$items = [];
+	if (!$noNetwork) {
+		$sheet = getSheet(AMADEUSSITEROOT . 'data/networks/' . $networkName . '.tsv', false);
+		$items = $sheet->rows;
+	}
+
+	foreach ($items as $row) {
+		$key = $sheet->getValue($row, 'key');
+		if (startsWith($key, '~')) {
+			$networkSites[] = $key;
+			continue;
+		}
+
 		$item = _getOrWarn($sheet->getValue($row, 'path'));
 		if ($item === false) continue;
 		$networkSites[] = $item;
-		$networkUrls[OTHERSITEPREFIX . $item['key']] = $item[$urlKey];
+		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
 
 	//these always exist and have a urlOf short name ($key)
-	$networkSites[] = '~DAWN Core';
+	$noDawn = $networkName != 'DAWN';
+	if (!$noDawn) $networkSites[] = '~DAWN Core';
 	$sitePaths = [
-		'spring' => 'dawn/spring',
 		'world' => 'dawn/world',
-		'imran' => 'people/imran'
+		'imran' => 'people/imran',
+		'spring' => 'dawn/spring',
 	];
 
 	foreach ($sitePaths as $key => $path) {
 		$item = _getOrWarn($path);
 		if ($item === false) continue;
-		$networkSites[] = $item;
+		if (!$noDawn) $networkSites[] = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
 

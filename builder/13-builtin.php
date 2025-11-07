@@ -58,7 +58,7 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		} else if (startsWith($raw, '<!--is-deck-->')) {
 			_renderedDeck($file, $pageName);
 		} else {
-			$settings = ['use-content-box' => (!variable('skip-content-box-for-this-page'))];
+			$settings = ['use-content-box' => (!variable('skip-content-box-for-this-page')), 'strip-paragraph-tag' => true];
 			if ($useHeading) $settings['heading'] = $pageName;
 			if (variable(FIRSTSECTIONONLY)) $settings[FIRSTSECTIONONLY] = true;
 			renderAny($file, $settings);
@@ -115,13 +115,14 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 /* ai stuff - no parser.php anymore */
 DEFINE('FROM_GEMINI_AI', '<!--exported-from-gemini-ai-->');
 DEFINE('GEMINI_AI_MSG', 'This is a Chat with "Gemini AI"');
+DEFINE('GEMINI_CLASSES', 'with-ai has-gemini-ai has-prompts');
 
-function peekAtMainFile($file) {
+function peekAtMainFile($file, $notMain = false) {
 	$raw = disk_file_get_contents($file);
 	$ai = contains($raw, FROM_GEMINI_AI);
-	if (!$ai) return;
-	
-	add_body_class('with-ai has-gemini-ai has-prompts');
+	if ($notMain) return $ai ? ' ' . GEMINI_CLASSES : '';
+
+	if ($ai) add_body_class(GEMINI_CLASSES);
 }
 
 function processAI($raw, $aiName) {

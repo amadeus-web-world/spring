@@ -74,8 +74,12 @@ function _renderMenu($home, $folder, $where) {
 	}
 	$nodes = _skipNodeFiles($files);
 
+	$lastName = false;
 	foreach ($nodes as $fol) {
-		$sectionItems[] = getFolderMeta($folder, $fol, '', $ix++);
+		$item = getFolderMeta($folder, $fol, '', $ix++);
+		if ($lastName == $item['name_urlized']) { $ix--; continue; }
+		$lastName = $item['name_urlized'];
+		$sectionItems[] = $item;
 	}
 
 	$relativeUrl = (nodeIsNot(variable('section')) ? nodeValue() . '/' : '') . ($breadcrumbs ? implode('/', $breadcrumbs) . '/' : '');

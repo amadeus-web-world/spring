@@ -95,8 +95,9 @@ function _visane($siteVars) {
 		['mediakit', '?palette=polished'],
 		['fonts', ''], //used in mediakit.php
 		['description', false],
+		['welcome-message', 'Welcomes you!'],
 		['no-search', true], //TODO: GPSE - high
-		['network', 'DAWN', 'bool'],
+		['network', 'DAWN'],
 	];
 
 	if (!hasVariable('theme')) {

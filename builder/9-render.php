@@ -10,10 +10,11 @@ function renderExcerpt($file, $link, $prefix = '', $echo = true) {
 	if (!$hasMoreTag && $meta && isset($meta['excerpt'])) $raw = $meta['excerpt']; else
 	$raw = renderAny($file, ['excerpt' => true, 'echo' => false, 'markdown' => endsWith($file, '.md')]);
 
-	if ($meta && isset($meta['meta']['Date'])) $raw .= BRTAG . '<i>on ' . $meta['meta']['Date'] . '</i>';
+	$raw .= '<hr class="m-2" /><div style="text-align: right;">';
+	if ($meta && isset($meta['meta']['Date'])) $raw .= 'on ' . $meta['meta']['Date'] . '';
 
 	$result = $prefix . _excludeFromGoogleSearch($raw)
-		. BRTAG . '<a class="read-more btn btn-success" href="' . $link . '">Read More&hellip;</a>';
+		. BRTAG . '<a class="mt-1 read-more btn btn-success" href="' . $link . '">Read More&hellip;</a></div>';
 
 	if (!$echo) return $result;
 	echo $result;

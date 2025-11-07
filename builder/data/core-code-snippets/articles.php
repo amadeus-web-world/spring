@@ -5,9 +5,9 @@ if (!sheetExists($sheetName)) return h2('No articles found.', 'text-danger', tru
 
 $sheet = getSheet($sheetName, false);
 
-$op = ['</section><div class="container articles">' . NEWLINE];
-$format = '<section class="content-box"><sup>%sno%</sup> %title%
-<br /><br />%excerpt%</section>';
+$op = ['</section><div class="container articles-codesnippet"><div class="articles row">' . NEWLINE];
+$format = '<section class="p-3 col-md-4 col-sm-6 col-12%moreClasses%"><div class="content-box">%title%
+<br /><br />%excerpt%</div></section>';
 
 foreach ($sheet->rows as $item) {
 	$site = $sheet->hasColumn('site') ? $sheet->getValue($item, 'site') : '';
@@ -28,16 +28,17 @@ foreach ($sheet->rows as $item) {
 		. $sheet->getValue($item, 'extension');
 
 	$title = $sheet->getValue($item, 'title');
+	$moreClasses = peekAtMainFile($file, true);
 
 	$itm = replaceItems($format, [
-		'sno' => $sheet->getValue($item, 'sno'),
-		'title' => getLink($title, $link, 'btn btn-outline-info'),
+		'moreClasses' => $moreClasses,
+		'title' => getLink('#' . $sheet->getValue($item, 'sno') . NBSP . $title, $link, 'btn d-block btn-outline-info'),
 		'excerpt' => renderExcerpt($file, $link, '', false),
 	], '%');
 
 	$op[] = $itm;
 }
 
-$op[] = '<section>' . NEWLINES2;
+$op[] = '<section></div></div>' . NEWLINES2;
 
 return implode(NEWLINES2, $op);
