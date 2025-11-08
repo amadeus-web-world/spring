@@ -90,8 +90,8 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 	$echo = valueIfSet($settings, 'echo', true);
 	$excerpt = valueIfSet($settings, 'excerpt', false);
-	$no_processing = valueIfSet($settings, 'raw', false) || contains($raw, '<!--no-processing-->') || do_md_in_parser($raw);
-	if (contains($raw, '<!--no-p-tags-->')) $settings['strip-paragraph-tag'] = true;
+	$no_processing = valueIfSet($settings, 'raw', false) || contains($raw, WANTSNOPROCESSING) || do_md_in_parser($raw);
+	if (contains($raw, WANTSNOPARATAGS)) $settings['strip-paragraph-tag'] = true;
 
 	if ($excerpt) $raw = explode(MORETAG, $raw)[0];
 	if ($excerpt && contains($raw, EXCERPTSTART)) $raw = explode(EXCERPTSTART, $raw)[1];
@@ -115,13 +115,8 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 	if ($svars = variable('siteReplaces')) $raw = replaceItems($raw, $svars, '%', true);
 
-	$markdownStart = variable('markdownStartTag');
-	$autopStart = variable('autopStart');
-	$param1IsPageTag = '<!--node-item-is-page-->';
-	$param1IsPage = contains($raw, $param1IsPageTag);
-
-	$autop = $raw != '' && startsWith($raw, $autopStart);
-	$md = $raw != '' && ($raw[0] == '#' || startsWith($raw, $markdownStart));
+	$autop = $raw != '' && startsWith($raw, WANTSAUTOPARA);
+	$md = $raw != '' && ($raw[0] == '#' || startsWith($raw, WANTSMARKDOWN));
 	$engageContent = false;
 
 	if ($rawVars = variable('rawReplaces'))
@@ -129,7 +124,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 	if ($no_processing) {
 		$output = $raw;
-	} else if ($autop || ($endsWithMd && variable('autop-for-markdown'))) {
+	} else if ($autop || ($endsWithMd && contains($raw, WANTSAUTOPARA))) {
 		//TODO: @<team> temp for Sarath site which should use txt (autop) ideally
 		$output = wpautop($raw);
 	} else {
@@ -147,8 +142,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 			$output = renderEngage(getPageName(), $raw . $inProgress, false, $meta);
 		} else {
 			$ai = contains($raw, FROM_GEMINI_AI);
-			if ($ai)
-				$raw = processAI($raw, 'gemini');
+			if ($ai) $raw = processAI($raw, 'gemini');
 
 			$output = $md || $endsWithMd || $treatAsMarkdown ? markdown($raw) : wpautop($raw);
 
@@ -158,12 +152,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 	$output = runAllMacros($output);
 
-	if (contains($raw, '<!--composite-work-->') && !(variable('is-in-directory'))) {
-		runFrameworkFile('parser');
-		$prepend = getWorkSettings($fileName);
-		$param1IsPage = $param1IsPage || contains($prepend, $param1IsPageTag);
-		$output = parseCompositeWork($prepend . $output, $param1IsPage);
-	}
+	//may bring composite work back (Dec 2024)
 
 	$output = replaceHtml($output);
 

@@ -1,6 +1,12 @@
 <?php
 DEFINE('MORETAG', '<!--more-->');
+
 DEFINE('EXCERPTSTART', '<!--start-excerpt-->');
+DEFINE('WANTSNOPARATAGS', '<!--no-p-tags-->');
+DEFINE('WANTSNOPROCESSING', '<!--no-processing-->');
+
+DEFINE('WANTSMARKDOWN', '<!--markdown-->' . NEWLINE); //NOTE: to detect content which doesnt start with a heading
+DEFINE('WANTSAUTOPARA', '<!--autop-->');
 
 //added in 8..5
 abstract class builderBase {
