@@ -218,7 +218,7 @@ function _page_menu($siteIcon, $nodeIcon) {
 	$menuFile = getThemeFile('snippets/page-menu.html');
 	$menuContent = disk_file_get_contents($menuFile);
 
-	$siteOnly = variable('dont-overwrite-logo');
+	$siteOnly = variable('dont-overwrite-logo') && lastNodeVarsIndex() < 2;
 	$menuVars = $siteOnly ? [
 		'menu-title' => NEWLINE . _iconLink($siteIcon)
 		 . getLink(variable('nodeSiteName'), pageUrl(variable('nodeSlug')), 'btn btn-site') . NEWLINE,
