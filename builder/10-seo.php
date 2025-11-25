@@ -59,6 +59,7 @@ function read_seo($file, $inContent = false) {
 		}
 
 		$keywords = count($keywords) ? implode(', ', $keywords) : '';
+		if (!$about) $about = $description;
 
 		variable('meta_' . $file, $meta);
 		if ($fileGiven && !$inContent) return compact('about', 'title', 'description', 'excerpt', 'keywords', 'meta');

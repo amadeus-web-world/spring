@@ -120,6 +120,10 @@ function autoSetNode($level, $where, $overrides = []) {
 	variable('NodeVarsAt' . $level, $vars);
 }
 
+function lastNodeVarsIndex() {
+	return count(nodeVarsInUse());
+}
+
 function ensureNodeVar() {
 	if (count($indices = nodeVarsInUse())) {
 		$vars = variable('NodeVarsAt' . end($indices));
