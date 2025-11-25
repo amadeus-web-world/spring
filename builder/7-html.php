@@ -490,6 +490,7 @@ class linkBuilder extends builderBase {
 		if (in_array('lightbox', $do)) {
 			$result->attrs .= ' data-lightbox="iframe"';
 			$result->href .= self::content;
+			$result->href .= str_replace('?', '&', variable('mediakit'));
 		}
 
 		if (in_array('noPageUrl', $do))

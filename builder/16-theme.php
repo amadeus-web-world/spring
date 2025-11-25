@@ -96,6 +96,9 @@ function runThemePart($what) {
 
 		$icon = '<link rel="icon" href="' . $nodeIcon . '" sizes="192x192">';
 
+		if (getQueryParameter('content'))
+			add_body_class('wants-only-content');
+
 		$vars['head-includes'] = '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn();
 		$vars['seo'] = seo_tags(true);
 		$vars['body-classes'] = body_classes(true);
@@ -166,7 +169,9 @@ function runThemePart($what) {
 		$atBody = !contains($footer, '##footer-includes##');
 		$bits = explode($atBody ? '</body>' : '##footer-includes##', $footer);
 
-		if ($after = variable('after-wrapper')) {
+		if (getQueryParameter('content')) {
+			//noop
+		} else if ($after = variable('after-wrapper')) {
 			if (!contains($bits[0], $sep = '<!-- #wrapper end -->'))
 				showDebugging('expected template to have a wrapper close comment!', $after, true);
 

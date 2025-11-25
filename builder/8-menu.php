@@ -63,7 +63,7 @@ function _skipExcludedFiles($files, $excludeNames = 'home', $excludeExtensions =
 }
 
 function pageMenu($file) {
-	//printRelatedPages($file);
+	printRelatedPages($file);
 
 	print_seo();
 

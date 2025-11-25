@@ -52,6 +52,7 @@ runFrameworkFile('13-builtin'); //was special
 runFrameworkFile('14-main');
 runFrameworkFile('15-routing');
 runFrameworkFile('16-theme');
+runFrameworkFile('18-related');
 
 function before_bootstrap() {
 	$port = $_SERVER['SERVER_PORT'];

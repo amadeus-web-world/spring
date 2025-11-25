@@ -32,6 +32,9 @@ body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; }
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.wants-only-content #header { display: none; }
+.mfp-iframe { background-color: #f0f0f0!important; border-radius: 30px; padding: 20px; }
+
 .wants-ls-2 h1, .wants-ls-2 h2, .wants-ls-2 h3 { letter-spacing: 4px; }
 .wants-ls-3 h1, .wants-ls-3 h3, .wants-ls-3 h3 { letter-spacing: 6px; }
 
