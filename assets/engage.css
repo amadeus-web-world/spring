@@ -5,12 +5,15 @@
 .engage h2:first-child, .engage h3 { background-color: var(--amadeus-engage-h3-bgd, #f7eedd); }
 .engage h2 { background-color: var(--amadeus-engage-h2-bgd, #defbfb); }
 
-.engage ol, .engage ul { list-style-type: none; margin: 4px 0 15px 35px; }
+.engage ul { list-style-type: none; margin: 4px 0 15px 35px; }
+.engage ol { margin: 4px 0 15px 65px; }
+
 .engage li { margin: 6px 0 6px 0; background-color: var(--amadeus-engage-li-bgd, #feeded);
 	padding: 8px; border-radius: 15px; }
 .engage label, .engage p { text-transform: none!important; font-size: 18px; }
 .engage label { width: 100%; cursor: pointer; }
 .engage input[type="checkbox"] { position: absolute; margin-left: -35px; width: 20px; height: 20px; }
+.engage ol input[type="checkbox"] { margin-left: -65px; } 
 
 .btn-fill { margin: 10px; width: 100%; padding: 15px; }
 .btn-fill:hover { text-decoration: underline; }

@@ -5,6 +5,6 @@ $message = returnLine(hasVariable('below-countdown') ? variable('below-countdown
 return replaceItems($tpl, [
 	'left-hand-side'   => markdown('**COMING**'),
 	'right-hand-side'  => markdown('**SOOOON**'),
-	'countdown-params' => variableOr('countdown-params', 'data-year="2025" data-month="11" data-day="25"  data-hour="12" data-minute="37" data-format="dHMS"'),
+	'countdown-params' => variableOr('countdown-params', 'data-year="2025" data-month="12" data-day="05"  data-hour="12" data-minute="37" data-format="dHMS"'),
 	'below-countdown'  => $message,
 ], '%');

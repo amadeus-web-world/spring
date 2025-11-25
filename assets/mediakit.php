@@ -7,9 +7,12 @@ DEFINE('NEWLINES2', NEWLINE . NEWLINE);
 if ($raw = valueIfSetAndNotEmpty($_GET, 'raw')) { echo $raw; return; }
 
 $palette = $fonts = $_GET;
+
 $moreVars = [''];
 if ($menuColor = valueIfSetAndNotEmpty($palette, 'sticky-menu'))
 	$moreVars[] = '--amadeus-sticky-menu: #' . $menuColor . ';';
+if ($themeColor = valueIfSetAndNotEmpty($palette, 'themecolor'))
+	$moreVars[] = '--cnvs-themecolor: #' . $themeColor . ';';
 
 $cursive = valueIfSetAndNotEmpty($fonts, 'cursive');
 $menu = valueIfSetAndNotEmpty($fonts, 'menu');

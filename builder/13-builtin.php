@@ -20,6 +20,9 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		return;
 	}
 
+	if (variable('skip-heading-for-page'))
+		$useHeading = false;
+
 	//TODO: engage, blurbs, deck, tsv
 	$raw = disk_file_exists($file) ? disk_file_get_contents($file) : '[RAW]';
 	$embed = hasPageParameter('embed');
@@ -101,7 +104,7 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		else
 			showDebugging('unsupported tsv file - see line 1 for type definition', $file, true);
 
-		if (!$embed) section('end');
+		if (!$embed) sectionEnd();
 		pageMenu($file);
 		return;
 	}

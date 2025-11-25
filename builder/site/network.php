@@ -65,7 +65,7 @@ function setupNetwork($noNetwork) {
 
 	//these always exist and have a urlOf short name ($key)
 	$noDawn = $networkName != 'DAWN';
-	if (!$noDawn) $networkSites[] = '~DAWN Core';
+	if (!$noDawn) $networkSites[] = '~DAWN';
 	$sitePaths = [
 		'world' => 'dawn/world',
 		'imran' => 'people/imran',

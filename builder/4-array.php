@@ -252,11 +252,14 @@ class sheet {
 		return $result ? $result : $default;
 	}
 
-	public function getAllItemsAsObject($source = false) {
+	public function getAllItemsAsObject($source = false, $enrich = false) {
 		if (!$source) $source = $this->rows;
 		$items = [];
-		foreach ($source as $item)
-			$items[] = $this->asObject($item);
+		foreach ($source as $item) {
+			$obj = $this->asObject($item);
+			if ($enrich) $obj = $enrich($obj);
+			$items[] = $obj;
+		}
 		return $items;
 	}
 

@@ -78,6 +78,7 @@ function disk_scandir($folder) {
 
 function disk_file_get_contents($file) {
 	debug('files.php - disk_file_get_contents', ['$file' => $file]);
+	//if (!file_exists($file)) showDebugging('81', $file, false, true);
 	if (($result = _diskCached('file_get_contents', $file)) == null) {
 		_disk_start();
 		$file = _makeSlashesConsistent($file);

@@ -65,7 +65,7 @@ function includeThemeManager() {
 
 DEFINE('WIDGETSBELOW', 'widgets-below');
 function _useAltFooterDesign() {
-	return variableOr('footer-variation', WIDGETSBELOW) == WIDGETSBELOW;
+	return variableOr('footer-variation', WIDGETSBELOW) == WIDGETSBELOW && !variable('no-footer-alt-design');
 }
 
 function runThemePart($what) {
@@ -73,7 +73,7 @@ function runThemePart($what) {
 		$file = getThemeFile(variable('sub-theme') . '.html');
 		$bits = explode('##content##', disk_file_get_contents($file));
 		$content = ['header' => $bits[0], 'footer' => $bits[1]];
-		$content['footer-widgets'] = disk_file_get_contents(getThemeFile('footer/' . variableOr('footer-variation', WIDGETSBELOW) . '.html'));
+		$content['footer-widgets'] = variable('custom-footer') ? getSnippet('footer') : disk_file_get_contents(getThemeFile('footer/' . variableOr('footer-variation', WIDGETSBELOW) . '.html'));
 		variable('theme-template', $content);
 	}
 

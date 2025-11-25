@@ -23,6 +23,9 @@ function runAllMacros($html) {
 	if (contains($html, '[youtube]'))
 		$html = processYouTubeShortcode($html);
 
+	if (contains($html, '[google-'))
+		$html = processGoogleShortcodes($html);
+
 	if (contains($html, '[spotify]'))
 		$html = processSpotifyShortcode($html);
 
@@ -181,6 +184,13 @@ function processYouTubeShortcode($html) {
 	return replaceItems($html, [
 		'[youtube]' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/',
 		'[/youtube]' => '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+	]);
+}
+
+function processGoogleShortcodes($html) {
+	return replaceItems($html, [
+		'[google-video]' => '<div class="video-container google-video"><iframe src="https://drive.google.com/file/d/',
+		'[/google-video]' => '/preview" width="640" height="480" allow="autoplay"></iframe></div>',
 	]);
 }
 

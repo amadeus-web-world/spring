@@ -6,7 +6,7 @@ function read_seo($file, $inContent = false) {
 	if (!$file) return;
 
 	$meta = false;
-	if (endsWith($file, '.md')) {
+	if (endsWith($file, '.md') || endsWith($file, '.txt')) {
 		$raw = disk_file_get_contents($file);
 		$meta = parseMeta($raw);
 	} else if (endsWith($file, '.tsv')) {
