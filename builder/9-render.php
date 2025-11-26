@@ -6,8 +6,8 @@ function renderExcerpt($file, $link, $prefix = '', $echo = true) {
 
 	$meta = read_seo($file);
 
-	$hasMoreTag = disk_file_exists($file) ? contains(disk_file_get_contents($file), MORETAG) : false;
-	if (!$hasMoreTag && $meta && isset($meta['excerpt'])) $raw = pipeToBR(markdown($meta['excerpt'])); else
+	$hasMoreTag = disk_file_exists($file) ? contains(disk_file_get_contents($file), '') : false;
+	if (!$hasMoreTag && $meta && isset($meta['excerpt'])) $raw = $meta['excerpt']; else
 	$raw = renderAny($file, ['excerpt' => true, 'echo' => false, 'markdown' => endsWith($file, '.md')]);
 
 	$raw .= '<hr class="m-2" /><div style="text-align: right;">';
@@ -172,13 +172,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 	if (isset($settings['use-content-box']) && $settings['use-content-box'])
 		$output = cbWrapAndReplaceHr($output);
 
-	if (contains($output, '---cb-close-and-open'))
-		$output = replaceItems($output, [
-			'---cb-close-and-open--with-container' => cbCloseAndOpen('container'),
-			'---cb-close-and-open' => cbCloseAndOpen(''),
-		]);
-
-	if (isset($settings['heading'])) $output = h2($settings['heading'], 'amadeus-icon', true) . NEWLINES2 . $output;
+	if (isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-icon', true)) . NEWLINES2 . $output;
 
 	if ($engageContent) {
 		runFeature('engage');

@@ -318,8 +318,9 @@ function siteWidgets() {
 	if ($showSections) {
 		$op[] = str_replace('[WHAT]', 'sections', $start);
 		$op[] = '<h4 class="mb-1">Sections</h4>';
+		$class = variableOr('sections-class', '');
 		foreach ($sections as $slug)
-			$op[] = makeRelativeLink(humanize($slug), $slug) . BRNL;
+			$op[] = getLink(humanize($slug), pageUrl($slug), $class) . ($class ? '' : BRNL);
 		$op[] = '</div>'; $op[] = '';
 	}
 
@@ -355,9 +356,10 @@ function appendSocial($social, &$op) {
 	if (empty($social)) return;
 
 	$hrYes = _useAltFooterDesign() ? PIPEWS : '<hr style="visibility: hidden; margin: 0;" />';
+	$class = variableOr('social-class', 'text-light');
 	foreach($social as $item) {
 		$op[] = '<a target="_blank" href="' . $item['url'] . '">';
-		$op[] = '	<i class="social-icon text-light si-mini rounded-circle lh-3 ' . (contains($item['type'], ' ')
+		$op[] = '	<i class="social-icon si-mini rounded-circle lh-3 ' . $class . (contains($item['type'], ' ')
 			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' . $item['name'] . '</a>' . $hrYes;
 		$op[] = '';
 	}

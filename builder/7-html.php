@@ -234,6 +234,7 @@ function replaceHtml($html) {
 
 			'%cdn%' => variableOr('cdn', variable('assets-url') . 'assets/cdn/'),
 
+			'%currentUrl%' => currentUrl(),
 			'%nodeSlug%' => $node,
 			'%nodeName%' => humanize($node),
 			'%nodeUrl%' => pageUrl($node),
@@ -281,6 +282,13 @@ function replaceHtml($html) {
 		$html = replaceItems($html, $nw, '%');
 
 	return replaceItems($html, $replaces);
+}
+
+function replaceIfContained($html, $variable) {
+	if (!contains($html, '%' . $variable . '%'))
+		return $html;
+
+	return replaceItems($html, [$variable => markdown(pipeToNL(variable($variable)))], '%');
 }
 
 variable('_marqueeStart', '<marquee onmouseover="this.stop();" onmouseout="this.start();">');
@@ -391,9 +399,10 @@ class bootstrapAndUX {
 	const namedButtons = [
 		'DOWNLOAD' => 'btn btn-lg btn-primary" target="_blank',
 		'SITE' => 'btn btn-info',
-		'PHONE' => 'btn btn-has-icon bg-light btn-outline-secondary fa fa-phone',
+		'PHONE' => 'btn btn-has-icon btn-info fa fa-phone ls-2',
 		'WHATSAPP' => 'btn btn-has-icon bg-success text-light bi bi-whatsapp',
 		'EMAIL' => 'btn btn-has-icon bg-danger bi bi-mailbox',
+		'MAP' => 'btn btn-has-icon bg-warning bi bi-pin-map',
 	];
 
 	static $buttonVars = []; //static on demand for optimizing
