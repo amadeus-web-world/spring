@@ -115,6 +115,26 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 	if (!$siteTheme) sectionEnd();
 }
 
+function hasBuiltin() {
+	$scaffold = variableOr('scaffold', []);
+	//NOTE: sitemap always needed
+	$always = false; //variable('local') && nodeIs('sitemap');
+	if (!$always && !nodeIsOneOf($scaffold))
+		return false;
+
+	if (hasPageParameter('embed')) variable('embed', true);
+	variable('scaffoldCode', nodeValue());
+	return true;
+}
+
+function renderedBuiltin() {
+	$code = variable('scaffoldCode');
+	if (!$code) return false;
+
+	runFrameworkFile('pages/' . $code);
+	return true;
+}
+
 /* ai stuff - no parser.php anymore */
 DEFINE('FROM_GEMINI_AI', '<!--exported-from-gemini-ai-->');
 DEFINE('GEMINI_AI_MSG', 'This is a Chat with "Gemini AI"');

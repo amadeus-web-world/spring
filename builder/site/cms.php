@@ -17,7 +17,7 @@ function before_render() {
 
 	if (function_exists('beforeSectionSet') && beforeSectionSet()) return;
 
-	//TODO: asap! if (hasBuiltin()) { afterSectionSet(); return; }
+	if (hasBuiltin()) { afterSectionSet(); return; }
 
 	$canHaveFiles = variable('sections-have-files');
 	$node = variable('node');
@@ -177,7 +177,7 @@ function afterSectionSet() {
 
 function did_render_page() {
 	if (function_exists('did_site_render_page') && did_site_render_page()) return true;
-	//if (renderedBuiltin()) return true;
+	if (renderedBuiltin()) return true;
 
 	if (variable('directory_of')) {
 		runFeature('directory');

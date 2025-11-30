@@ -152,9 +152,9 @@ function runThemePart($what) {
 			$nodeName = NEWLINE . '			<h4 class="' . ($altDesign ? '' : 'mt-sm-4 ') . 'mb-0">' . variableOr('footer-name', variable('name')) . '</h4>' . $nodeName;
 
 			$fwVars = [
-				'footer-logo' => $logo . NEWLINE . '			<div class="text-center">' . ($altDesign ? '' : $nodeName) . '</div>',
+				'footer-logo' => $logo . NEWLINE . '			<div class="text-center mt-2">' . ($altDesign ? '' : $nodeName) . '</div>',
 				'site-widgets' => siteWidgets(),
-				'footer-message' => $altDesign ? $nodeName . '<hr class="my-2">' . $message : '<p class="text-align-center p-3 pt-4">' . $message . BRNL . $nodeName . '</p>',
+				'footer-message' => '<div class="mt-3">' . ($altDesign ? $nodeName . '<hr class="my-2">' . $message : $message) . '</div>',
 				'footer-contact' => $contact,
 				'copyright' => _copyright(true),
 				'credits' => _credits('', true),
@@ -359,7 +359,7 @@ function appendSocial($social, &$op) {
 	$class = variableOr('social-class', 'text-light');
 	foreach($social as $item) {
 		$op[] = '<a target="_blank" href="' . $item['url'] . '">';
-		$op[] = '	<i class="social-icon si-mini rounded-circle lh-3 ' . $class . (contains($item['type'], ' ')
+		$op[] = '	<i class="social-icon si-mini rounded-circle lh-3 ' . $class . ' ' . (contains($item['type'], ' ')
 			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' . $item['name'] . '</a>' . $hrYes;
 		$op[] = '';
 	}

@@ -1,11 +1,11 @@
 #key	path
 |key used for urlOf-
-~Initiatives
-ava	ava
+|~Initiatives
+|ava	ava
 |veeram	initiatives/veeram
-agape	initiatives/agape
-~Families
-kalvi	families/kalvi
+|agape	initiatives/agape
+|~Families
+|kalvi	families/kalvi
 ~Organizations
 vishwas	organizations/vishwas
 |~People

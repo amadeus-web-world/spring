@@ -29,6 +29,7 @@ $op = ':root {
 	--cnvs-footer-bg: %footer%;
 	--cnvs-link-color: %link%;
 	--amadeus-heading-bgd: %heading%;
+	--cnvs-content-padding: 15px;
 	--cnvs-mfp-iframe-max-width: 90%;
 	--amadeus-after-content-bgd: %paler%;%MOREROOTVARS%
 }' . NEWLINES2;
