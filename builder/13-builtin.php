@@ -137,6 +137,7 @@ function renderedBuiltin() {
 
 /* ai stuff - no parser.php anymore */
 DEFINE('FROM_GEMINI_AI', '<!--exported-from-gemini-ai-->');
+DEFINE('HAS_GEMINI_AI', '<!--has-gemini-ai-elements-->');
 DEFINE('GEMINI_AI_MSG', 'This is a Chat with "Gemini AI"');
 DEFINE('GEMINI_CLASSES', 'with-ai has-gemini-ai has-prompts');
 

@@ -146,7 +146,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 			$output = $md || $endsWithMd || $treatAsMarkdown ? markdown($raw) : wpautop($raw);
 
-			if ($ai) $output = adjustOutputOfAI($output, 'gemini');
+			if ($ai || contains($raw, HAS_GEMINI_AI)) $output = adjustOutputOfAI($output, 'gemini');
 		}
 	}
 

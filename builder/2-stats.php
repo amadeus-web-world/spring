@@ -76,7 +76,7 @@ function print_stats() {
 
 	sectionId('statistics-summary', 'container');
 	contentBox('summary', 'after-content');
-	echo featureHeading('statistics-version-3.5');
+	H2('Statistics: Version 4');
 
 	$data = [
 		'+metric' => 'value',
@@ -101,7 +101,7 @@ function print_stats() {
 
 	sectionId('statistics-php-files', 'container');
 	contentBox('executables', 'after-content');
-	echo featureHeading('statistics-executable-files');
+	H2('Statistics: Executable Files');
 	add_table('stats-php-files', $files, 'call, folder, name, size',
 		'<tr><td>%call%</td><td>%folder%</td><td>%name%</td><td>%size%</td></tr>' . NEWLINE);
 	contentBox('end');
@@ -109,7 +109,7 @@ function print_stats() {
 
 	sectionId('statistics-disk-calls', 'container');
 	contentBox('disk-calls', 'after-content');
-	echo featureHeading('statistics-disk-calls');
+	H2('Statistics: Disk Calls');
 	add_table('statistics-disk-calls', $disk_calls, 'call, function, parameter, time, exact',
 		'<tr><td>%call%</td><td>%function%</td><td>%parameter%</td><td>%time%</td><td>%exact%</td></tr>' . NEWLINE);
 	contentBox('end');
