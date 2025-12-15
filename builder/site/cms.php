@@ -204,6 +204,7 @@ variable('specialHumanizeReplaces', [
 	'2025 09' => 'Sep 2025',
 	'2025 10' => 'Oct 2025',
 	'2025 11' => 'Nov 2025',
+	'2025 12' => 'Dec 2025',
 ]);
 
 function site_humanize($txt, $field = 'title', $how = false) {

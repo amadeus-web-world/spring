@@ -101,6 +101,9 @@ ul.block-links li { list-style-type: none; margin-bottom: 8px; }
 .float-left { float: left; }
 .float-right { float: right; }
 .img-fluid { width: 100%; }
+.img-max-800 { max-width: 800px; }
+.img-max-700 { max-width: 700px; }
+.img-max-600 { max-width: 600px; }
 .img-max-500 { max-width: 500px; }
 .img-max-400 { max-width: 400px; }
 .img-max-300 { max-width: 300px; }

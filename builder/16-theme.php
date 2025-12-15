@@ -160,7 +160,6 @@ function runThemePart($what) {
 				'credits' => _credits('', true),
 			];
 
-			
 			$vars['footer-widgets'] = _substituteThemeVars($content, 'footer-widgets', $fwVars);
 		}
 
@@ -355,12 +354,16 @@ function networkLink($class= '', $prefix = '') {
 function appendSocial($social, &$op) {
 	if (empty($social)) return;
 
-	$hrYes = _useAltFooterDesign() ? PIPEWS : '<hr style="visibility: hidden; margin: 0;" />';
+	$separatorType = variableOr('social-separator', 'pipe');
+	$separator = $separatorType == 'pipe' ? PIPEWS : '<hr class="'. ($separatorType == 'newline-with-hr' ? '' : 'invisible ') .'mt-3 mb-0 w-50 mx-auto" />';
+	$lastIndex = count($social) - 1;
 	$class = variableOr('social-class', 'text-light');
-	foreach($social as $item) {
-		$op[] = '<a target="_blank" href="' . $item['url'] . '">';
-		$op[] = '	<i class="social-icon si-mini rounded-circle lh-3 ' . $class . ' ' . (contains($item['type'], ' ')
-			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' . $item['name'] . '</a>' . $hrYes;
+	foreach($social as $ix => $item) {
+		$wantsItalics = !contains($item['type'], 'png-icon');
+		$op[] = '<a target="_blank" href="' . $item['url'] . '"' . (!$wantsItalics ? ' class="' . $item['type'] . '"' : '') . '>';
+		$op[] = ($wantsItalics ? '	<i class="social-icon si-mini rounded-circle lh-3 ' . $class . ' ' . (contains($item['type'], ' ')
+			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' : '') . $item['name'] . '</a>'
+			. ($ix < $lastIndex ? $separator : '');
 		$op[] = '';
 	}
 }

@@ -228,7 +228,7 @@ function processAudioShortcode($html) {
 
 function processVideoShortcode($html) {
 	return replaceItems($html, [
-		'[video]' => '<div class="video-container"><video loop autoplay controls><source src="',
+		'[video]' => '<div class="video-container text-center"><video class="w-100" loop autoplay controls><source src="',
 		'[/video]' => '" type="video/mp4"></video></div>',
 	]);
 }

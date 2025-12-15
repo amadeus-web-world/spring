@@ -12,7 +12,7 @@ variable('omit-long-keywords', true);
 
 sectionId('directory', 'container');
 function _sections($current) {
-	if (nodeIsNot(variable('section'))) return;
+	if (!nodeIsSection()) return;
 
 	contentBox('', 'toolbar text-align-left');
 	echo 'Section: ' . variable('nl');
@@ -42,7 +42,7 @@ function _renderMenu($home, $folder, $where) {
 	}
 
 	echo GOOGLEOFF;
-	contentBox('nodes', 'after-content mb-5');
+	contentBox('nodes', variable('directory_use_excerpts') ? '' : 'after-content mb-5');
 
 	if (!$breadcrumbs)
 		_sections($where);
@@ -64,10 +64,10 @@ function _renderMenu($home, $folder, $where) {
 		//echo '<li class="' . $itemClass . '"><a href="' . pageUrl(variable(SAFENODEVAR)) . '" class="' . $anchorClass . '">' . getHtmlVariable('nodeName') . '</a>';
 	}
 
-
 	//doesnt need / (copied from node-menu)
-	if (($order = $folder . '_menu-items.txt') && disk_file_exists($order)) {
-		$files = textToList(disk_file_get_contents($order));
+	if (disk_file_exists($folder . '_menu-items.tsv')) {
+		$tsvInfo = menu('/' . $where . '/', ['return-tsv-info' => true]);
+		$files = $tsvInfo['files'];
 	} else {
 		$files = disk_scandir($folder);
 		natsort($files);
@@ -95,6 +95,15 @@ function _renderMenu($home, $folder, $where) {
 		}
 
 		echo '</textarea>' . NEWLINE;
+	} else if (variable('directory_use_excerpts')) {
+		$last = count($sectionItems);
+		foreach ($sectionItems as $ix => $item) {
+			$slug = $item['name_urlized'];
+			$extn = disk_one_of_files_exist($file = $folder . $slug . '/home.', 'md');
+			if (!$extn) showDebugging('md files only allowed for "excerpt"!!', 'Expected: ' . $file . 'md', true, true);
+			if ($ix > 0) echo cbCloseAndOpen('mt-3 container' . ($ix == count($sectionItems) - 1 ? ' mb-5' : ''));
+			renderExcerpt($file . 'md', pageUrl($slug), h2(makeLink($item['name_humanized'], pageUrl($slug)), '', true));
+		}
 	} else {
 		runFeature('tables');
 		$template = '<tr><td><a href="%url%' . $relativeUrl .

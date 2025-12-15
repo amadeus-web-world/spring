@@ -159,6 +159,10 @@ function menu($folderRelative = false, $settings = []) {
 					$allNamesOfFiles[$slug] = $namesOfFiles[$slug] = $sno . $name;
 			}
 			variable('menu-humanize', $allNamesOfFiles);
+			if (valueIfSet($settings, 'return-tsv-info')) {
+				if (!$hasSNo && !$hasName) $namesOfFiles = false;
+				return compact('files', 'namesOfFiles');
+			}
 		} else {
 			$files = disk_scandir($folder);
 			natsort($files);

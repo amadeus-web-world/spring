@@ -1,14 +1,10 @@
 #key	path
 |key used for urlOf-
-|~Initiatives
-|ava	ava
-|veeram	initiatives/veeram
-|agape	initiatives/agape
 |~Families
-|kalvi	families/kalvi
+|puvidham	families/puvidham
 ~Organizations
+anbagam	organizations/anbagam
+globalconcernsindia	organizations/globalconcernsindia
 vishwas	organizations/vishwas
-|~People
-|imranWrites	people/imran/writing
-|srividya	people/srividya
-|bhuvana	people/bhuvana
+~People
+imranWrites	people/imran/writing

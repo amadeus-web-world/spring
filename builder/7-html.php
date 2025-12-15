@@ -278,10 +278,16 @@ function replaceHtml($html) {
 	if ($hr = variable('htmlReplaces'))
 		$html = replaceItems($html, $hr, '%');
 
+	$html = replaceNetworkUrls($html);
+
+	return replaceItems($html, $replaces);
+}
+
+function replaceNetworkUrls($html) {
 	if (($nw = variable('networkUrls')) && contains($html, OTHERSITEPREFIX))
 		$html = replaceItems($html, $nw, '%');
 
-	return replaceItems($html, $replaces);
+	return $html;
 }
 
 function replaceIfContained($html, $variable) {
@@ -331,12 +337,15 @@ function prepareLinks($output) {
 	$output = bootstrapAndUX::toButtons($output);
 
 	$output = replaceItems($output, [
+		//divs
 		'DIV-LARGELIST' => '<div class="large-list">',
 		'DIV-CONTAINER' => '<div class="video-container">',
 		'DIV-MAX-500-CENTER' => '<div class="m-auto img-max-500">',
 		'DIV-CENTER' => '<div class="text-center">',
 		'DIV-RIGHT' => '<div class="float-right">',
 		'DIV-CLEAR' => '<div class="clearfix"></div>',
+
+		//bs grid
 		'DIV-ROW' => '<div class="row">',
 		'DIV-CELL3' => '<div class="col-md-3 col-sm-12">',
 		'DIV-CELL4' => '<div class="col-md-4 col-sm-12">',
@@ -344,6 +353,19 @@ function prepareLinks($output) {
 		'DIV-CELL8' => '<div class="col-md-8 col-sm-12">',
 		'DIV-CELL9' => '<div class="col-md-9 col-sm-12">',
 		'DIV-CLOSE' => '</div>',
+
+		//articles / grid
+		'ALLARTICLES' => '<div class="portfolio row grid-container">',
+		'ALLARTICLES-CLOSE' => '</div>',
+		'ARTICLE-BOX' => '<article class="portfolio-item col-md-3 col-sm-12"><div class="grid-inner content-box">',
+		'ARTICLE-CLOSE' => '</div></article>',
+		'DIV-WITHBOX' => '<div class="content-box">',
+		' NEWLINES2' => '<br /><br />',
+		' NEWLINE' => '<br />',
+
+		//generic html
+		'STARTDIV ' => '<div ',
+		' CLOSETAG' => '>',
 	]);
 
 	$output = replaceItems($output, ['/class' => '', 'class' => '" class="', ], '~');
@@ -414,6 +436,7 @@ class bootstrapAndUX {
 			foreach (self::colors as $color) {
 				$colorUpper = strtoupper($color);
 				self::$buttonVars[$btn . $colorUpper] = $start . 'btn btn-' . $color;
+				self::$buttonVars[$btn . 'OUTLINE' . $colorUpper] = $start . 'btn btn-outline-' . $color;
 				self::$buttonVars[$bigBtn . $colorUpper] = $start . 'btn btn-lg btn-' . $color;
 			}
 
