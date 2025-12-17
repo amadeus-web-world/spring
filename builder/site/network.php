@@ -1,4 +1,6 @@
 <?php
+DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
+
 $networkName = variable('network');
 $noNetwork = in_array($networkName, BOOLFALSE);
 setupNetwork($noNetwork);
@@ -39,14 +41,14 @@ function setupNetwork($noNetwork) {
 	$networkSites = [];
 	$networkUrls = [];
 
-	$networkName = variable('network');
+	$networkName = urldecode(getQueryParameter('network', variable('network')));
 
 	//TEST: $networkName = 'Learning'; variable('network', $networkName);
 	$urlKey = _getUrlKeySansPreview();
 
 	$items = [];
 	if (!$noNetwork) {
-		$sheet = getSheet(AMADEUSSITEROOT . 'data/networks/' . $networkName . '.tsv', false);
+		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);
 		$items = $sheet->rows;
 	}
 
@@ -67,10 +69,17 @@ function setupNetwork($noNetwork) {
 	$noDawn = $networkName != 'DAWN';
 	if (!$noDawn) $networkSites[] = '~DAWN';
 	$sitePaths = [
+		/*/TODO:
+		'planeteers' => 'dawn/planeteers',
+		'smithy' => 'dawn/smithy',
+		*/
 		'world' => 'dawn/world',
 		'imran' => 'people/imran',
 		'spring' => 'dawn/spring',
 	];
+
+	if (variable('local'))
+		$sitePaths['admin'] = 'dawn/admin';
 
 	foreach ($sitePaths as $key => $path) {
 		$item = _getOrWarn($path);
@@ -94,9 +103,14 @@ function _getOrWarn($relativePath) {
 
 	return [
 		'key' => $site->getValue($site->firstOfGroup('safeName'), 'value'),
+		'name' => $site->getValue($site->firstOfGroup('iconName'), 'value'),
+
+		'siteName' => $site->getValue($site->firstOfGroup('name'), 'value'),
+		'byline' => $site->getValue($site->firstOfGroup('byline'), 'value'),
+
 		'local-url' => $site->getValue($site->firstOfGroup('local-url'), 'value'),
 		'live-url' => $site->getValue($site->firstOfGroup('live-url'), 'value'),
-		'name' => $site->getValue($site->firstOfGroup('iconName'), 'value'),
+
 		'path' => $relativePath,
 	];
 }

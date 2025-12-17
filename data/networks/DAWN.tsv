@@ -1,10 +1,9 @@
 #key	path
 |key used for urlOf-
-|~Families
-|puvidham	families/puvidham
 ~Organizations
 anbagam	organizations/anbagam
 globalconcernsindia	organizations/globalconcernsindia
+kings-college-london	organizations/kings-college-london/intrepid-research
 vishwas	organizations/vishwas
 ~People
 imranWrites	people/imran/writing

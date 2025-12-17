@@ -120,8 +120,8 @@ function hasPageParameter($param) {
 	return in_array($param, variableOr('page_parameters', [])) || isset($_GET[$param]);
 }
 
-function getQueryParameter($param) {
-	return isset($_GET[$param]) ? $_GET[$param] : false;
+function getQueryParameter($param, $or = false) {
+	return isset($_GET[$param]) ? $_GET[$param] : $or;
 }
 
 function render() {

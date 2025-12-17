@@ -240,6 +240,7 @@ class sheet {
 	public array | null $group;
 
 	public function firstOfGroup($key, $else = false) {
+		if (!isset($this->group[$key]) && variable('local')) showDebugging('243 missing-group-key', $key, true, true);
 		return isset($this->group[$key]) ? $this->group[$key][0] : $else;
 	}
 
