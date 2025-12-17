@@ -19,7 +19,12 @@ $cursive = valueIfSetAndNotEmpty($fonts, 'cursive');
 $menu = valueIfSetAndNotEmpty($fonts, 'menu');
 
 if ($contentFont || $cursive || $menu) {
-	$unique = implode('&family=', array_unique([$contentFont, $cursive, $menu]));
+	$nonEmpty = [];
+	if ($contentFont) $nonEmpty[] = $contentFont;
+	if ($cursive) $nonEmpty[] = $cursive;
+	if ($menu) $nonEmpty[] = $menu;
+
+	$unique = implode('&family=', array_unique($nonEmpty));
 	echo '@import url(\'https://fonts.googleapis.com/css2?family=' . str_replace(' ', '+', $unique) . '&display=swap\');' . NEWLINES2;
 }
 
