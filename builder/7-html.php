@@ -260,6 +260,7 @@ function replaceHtml($html) {
 			'%welcomeMessage%' => markdown(pipeToNL(variable('welcome-message'))), //links will get picked up
 			'%network-link%' => networkLink('btn btn-success', '<hr class="mt-5" />'),
 			'%siteName%' => $sn = variable('name'),
+			'%byline%' =>  variable('byline'),
 			'%safeName%' =>  variable('safeName'),
 			'%section%' => $section, //let archives break!
 			'%section_r%' => humanize($section),

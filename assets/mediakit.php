@@ -14,13 +14,19 @@ if ($menuColor = valueIfSetAndNotEmpty($palette, 'sticky-menu'))
 if ($themeColor = valueIfSetAndNotEmpty($palette, 'themecolor'))
 	$moreVars[] = '--cnvs-themecolor: #' . $themeColor . ';';
 
+$contentFont = valueIfSetAndNotEmpty($fonts, 'content-font');
 $cursive = valueIfSetAndNotEmpty($fonts, 'cursive');
 $menu = valueIfSetAndNotEmpty($fonts, 'menu');
 
-if ($cursive || $menu) {
-	$unique = implode('&family=', array_unique([$cursive, $menu]));
+if ($contentFont || $cursive || $menu) {
+	$unique = implode('&family=', array_unique([$contentFont, $cursive, $menu]));
 	echo '@import url(\'https://fonts.googleapis.com/css2?family=' . str_replace(' ', '+', $unique) . '&display=swap\');' . NEWLINES2;
 }
+
+if ($menu) $moreVars[] = '--cnvs-primary-menu-font: "' . $menu . '", serif;';
+if ($cursive) $moreVars[] = '--amadeus-cursive-font: "' . $cursive . '", serif;';
+if ($contentFont) $moreVars[] = '--amadeus-content-font: "' . $contentFont . '", serif;';
+
 
 //TODO: rewrite with all as optional!
 $op = ':root {
@@ -60,8 +66,10 @@ if ($node = _color($palette, 'node', false))
 
 if ($content)
 	echo '#content, .also-content { background-color: ' . $content . '!important; }' . NEWLINES2;
+if ($contentFont)
+	echo '#content, #content h1, #content h2, #content h3 { font-family: "' . urldecode($contentFont) . '", sans-serif; }' . NEWLINES2;
 
-if ($cursive) echo '.cursive { font-family: "' . $cursive . '", serif; }' . NEWLINES2;
+if ($cursive) echo '.cursive:not(.plain-font) { font-family: "' . $cursive . '", serif; }' . NEWLINES2;
 
 if ($menu) {
 	$menuSize = valueIfSetAndNotEmpty($fonts, 'menu-size');

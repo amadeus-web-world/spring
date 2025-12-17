@@ -65,7 +65,7 @@ function subsitesMenu() {
 	extract(variable('menu-settings'));
 	if ($wrapTextInADiv) $name = '<div>' . $name . $topLevelAngle . '</div>';
 
-	echo '<li class="' . $itemClass . ' ' . $subMenuClass . '"><a class="' . $anchorClass . '">' . $name . '</a>' . NEWLINE;
+	echo '<li class="' . $itemClass . ' ' . $subMenuClass . '"><a class="' . $anchorClass . '">' . $name . '</a>' . NEWLINES2;
 	echo '	<ul class="' . $ulClass . '">' . NEWLINE;
 
 	$all = variable('allSiteItems');
@@ -79,10 +79,10 @@ function subsitesMenu() {
 		if ($siteAt == $homePath) continue;
 		$name = _siteOf($item, $all, $wrapTextInADiv, $anchorClass);
 		if (!$name) continue;
-		echo '<li class="' . $itemClass . ' ' . $subMenuClass . '">' . $name . '</li>';
+		echo '<li class="' . $itemClass . ' ' . $subMenuClass . '">' . $name . '</li>' . NEWLINE;
 	}
 
-	echo '	</ul>' . variable('2nl');
+	echo '	</ul>' . NEWLINES2;
 	echo '</li>' . NEWLINE;
 }
 

@@ -205,11 +205,11 @@ function site_and_node_icons($siteIcon = null, $nodeIcon = null, $nodeSuffix = '
 		$breadcrumbs[] = _iconLink(getLogoOrIcon('icon', $vars), $vars['nodeSlug']);
 	}
 
-	return implode(NEWLINE, $breadcrumbs);
+	return implode(BREADCRUMBSEPARATOR . NEWLINE, $breadcrumbs);
 }
 
 function _iconLink($icon, $slug = '') {
-	return '<a href="' . pageUrl($slug) . '">' . NEWLINE . '		<img height="40" src="' . $icon . '" /></a>&nbsp;&nbsp;&nbsp;' . NEWLINE;
+	return '<a href="' . pageUrl($slug) . '">' . NEWLINE . '		<img height="40" src="' . $icon . '" /></a>' . NEWLINE;
 }
 
 function _iconImage($src) {
@@ -224,7 +224,7 @@ function _page_menu($siteIcon, $nodeIcon) {
 
 	$siteOnly = variable('dont-overwrite-logo') && lastNodeVarsIndex() < 2;
 	$menuVars = $siteOnly ? [
-		'menu-title' => NEWLINE . _iconLink($siteIcon)
+		'menu-title' => NEWLINE . _iconLink($siteIcon) . BREADCRUMBSEPARATOR
 		 . getLink(variable('nodeSiteName'), pageUrl(variable('nodeSlug')), 'btn btn-site') . NEWLINE,
 	] : [
 		'menu-title' => NEWLINE . site_and_node_icons($siteIcon, $nodeIcon)

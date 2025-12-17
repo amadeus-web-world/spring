@@ -19,6 +19,8 @@ DEFINE('HRTAG', $hr);
 DEFINE('NBSP', ' &nbsp; ');
 DEFINE('PIPEWS', ' | '); //whitespace
 
+DEFINE('BREADCRUMBSEPARATOR', ' <large>&#8680;</large> ');
+
 function trimCrLf($txt) {
 	return trim($txt, "\r\n");
 }
