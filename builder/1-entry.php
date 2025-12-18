@@ -63,7 +63,7 @@ function before_bootstrap() {
 	variable('port', $port != $testMobile ? ':' . $port : '');
 
 	variable('local', $local = startsWith($_SERVER['HTTP_HOST'], 'localhost'));
-	variable('live', contains(SITEPATH, 'live'));
+	variable('live', defined('SHOWSITESAT') ? false : contains(SITEPATH, 'live'));
 
 	variable('app', $url = ($local && !$isMobile ? replaceVariables('http://localhost%port%/dawn/spring/', 'port') : '//spring.amadeusweb.world/'));
 
@@ -86,6 +86,8 @@ function before_bootstrap() {
 
 if (!DEFINED('AMADEUSPRODUCT'))
 	before_bootstrap();
+
+if (defined('SHOWSITESAT')) return;
 
 //Now this only sets up the node and page parameters - rest moved to before_bootstrap()
 function bootstrap($config) {

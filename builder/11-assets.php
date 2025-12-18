@@ -29,7 +29,7 @@ function title($what = 'default') {
 	$node = nodeValue();
 	if ($what === TITLEONLY) return humanize($node);
 
-	$siteRoot = $node == 'index' || variable('under-construction');
+	$siteRoot = $node == SITEHOME || variable('under-construction');
 
 	if ($siteRoot)
 		return variable('name') . ' | ' . variable('byline');
@@ -50,6 +50,7 @@ function title($what = 'default') {
 }
 
 //locations
+DEFINE('SECTIONASSETS', 'SECTION');
 DEFINE('LEAFNODEASSETS', 'LEAFNODE');
 DEFINE('NODEASSETS', 'NODE');
 DEFINE('NETWORKASSETS', 'NETWORK');
@@ -113,14 +114,15 @@ function getLogoOrIcon($what, $which = 'site') {
 	return _resolveFile($prefix . $name, $where, $inNode);
 }
 
-DEFINE('STARTATNODE', 0);
-DEFINE('STARTATNETWORK', 1);
-DEFINE('STARTATSITE', 2);
-DEFINE('STARTATCORE', 3);
+DEFINE('STARTATSECTION', 0);
+DEFINE('STARTATNODE', 1);
+DEFINE('STARTATNETWORK', 2);
+DEFINE('STARTATSITE', 3);
+DEFINE('STARTATCORE', 4);
 
 function _resolveFile($file, $where = 0, $includeAssets = true) {
 	if (is_integer($where)) {
-		$hierarchy = [NODEASSETS, NETWORKASSETS, SITEASSETS, COREASSETS];
+		$hierarchy = [SECTIONASSETS, NODEASSETS, NETWORKASSETS, SITEASSETS, COREASSETS];
 		while (true) { if (hasVariable( assetKey($hierarchy[$where]))) break; else $where++; }
 		$result = assetUrl($file, $hierarchy[$where]);
 	} else {

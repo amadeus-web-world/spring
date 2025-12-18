@@ -5,6 +5,13 @@ body { cursor: default; }
 .menu-section { background-color: var(--amadeus-menu-section-bgd, #E1F2FF); border: 1px solid #999!important; border-style: solid none solid none!important; }
 body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; }
 
+.showing-sites .content-wrap { min-height: 100vh; }
+.showing-sites h2 { 
+	background-color: var(--amadeus-heading-bgd, whitesmoke);
+	color: var(--cnvs-link-color, teal);
+	padding: 6px; border-radius: 5px;
+}
+
 .breadcrumb-item { border: #333 1px solid; border-radius: 2ex; }
 
 .breadcrumb-item abbr {

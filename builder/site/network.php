@@ -1,5 +1,11 @@
 <?php
 DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
+DEFINE('DAWN_NAME', 'Dynamic AmadeusWeb Network');
+
+if (defined('SHOWSITESAT')) {
+	setupNetwork(null);
+	return;
+}
 
 $networkName = variable('network');
 $noNetwork = in_array($networkName, BOOLFALSE);
@@ -34,7 +40,53 @@ if (!$noNetwork) {
 
 		echo '	</ul>' . NEWLINES2;
 		echo '</li>' . NEWLINE;
+
+		if (getDawnSites(variable('safeName'))) domains_menu();
 	}
+}
+
+function domains_menu() {
+	echo NEWLINES2 . '<li class="menu-item sub-menu"><a class="menu-link"><div>DOMAINS<i class="icon-angle-down"></i></div></a>' . NEWLINE;
+	echo '	<ul class="sub-menu-container">' . NEWLINE;
+
+	$href = variable('local') ? 'http://localhost/%folder%/' : 'https://%folder%.amadeusweb.world/';
+
+	foreach (['people', 'organizations'] as $item)
+		echo replaceItems('<li class="menu-item sub-menu"><a href="' . $href . '" class="menu-link" target="_blank"><div>%text%</div></a></li>' . NEWLINE,
+			['folder' => $item, 'text' => humanize($item)], '%');
+
+	echo '	</ul>' . NEWLINE;
+	echo '</li>' . NEWLINES2;
+}
+
+function getDawnSites($key = false) {
+	$op = [
+		/*/TODO:
+		'planeteers' => 'dawn/planeteers',
+		'smithy' => 'dawn/smithy',
+		*/
+		'world' => 'dawn/world',
+		'imran' => 'people/imran',
+		'spring' => 'dawn/spring',
+	];
+
+	if (variable('local'))
+		$op['admin'] = 'dawn/admin';
+
+	if ($key) {
+		$names = [
+			'amadeuswebworld' => 'world',
+			'amadeusweb9' => 'spring',
+			'amadeuswebadmin' => 'admin',
+			'imran-ali-namazi' => 'imran',
+			//'' => '',
+		];
+		if (!isset($names[$key])) return false;
+		$key = $names[$key];
+		return in_array($key, array_keys($op));
+	}
+
+	return $op;
 }
 
 function setupNetwork($noNetwork) {
@@ -47,19 +99,42 @@ function setupNetwork($noNetwork) {
 	$urlKey = _getUrlKeySansPreview();
 
 	$items = [];
-	if (!$noNetwork) {
+	$folPrefix = '';
+
+	if (defined('SHOWSITESAT')) {
+		$folPrefix = pathinfo(SHOWSITESAT, PATHINFO_FILENAME);
+		DEFINE('SITESATNAME', humanize($folPrefix));
+		$items[] = '~' . SITESATNAME;
+		$folPrefix .= '/';
+
+		if (disk_file_exists($txt = SHOWSITESAT . '/sites.txt'))
+			$files = textToList(disk_file_get_contents($txt));
+		else
+			$files = _skipNodeFiles(scandir(SHOWSITESAT), 'txt, php');
+
+		foreach ($files as $file) {
+			if (startsWith($file, '==') || !disk_file_exists(SHOWSITESAT . '/' . $file . '/data/site.tsv')) continue;
+			$items[] = $file;
+		}
+
+		$items[] = '~of the "' . DAWN_NAME . '"';
+		$items = array_merge($items, getDawnSites());
+	} else if (!$noNetwork) {
 		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);
 		$items = $sheet->rows;
 	}
 
 	foreach ($items as $row) {
-		$key = $sheet->getValue($row, 'key');
+		$plain = is_string($row);
+		$key = $plain ? $row : $sheet->getValue($row, 'key');
 		if (startsWith($key, '~')) {
 			$networkSites[] = $key;
 			continue;
 		}
 
-		$item = _getOrWarn($sheet->getValue($row, 'path'));
+		if ($plain && $folPrefix && contains($row, '/')) $folPrefix = ''; //clear for dawn stuff!
+
+		$item = _getOrWarn($plain ? $folPrefix . $row : $sheet->getValue($row, 'path'));
 		if ($item === false) continue;
 		$networkSites[] = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
@@ -68,18 +143,7 @@ function setupNetwork($noNetwork) {
 	//these always exist and have a urlOf short name ($key)
 	$noDawn = $networkName != 'DAWN';
 	if (!$noDawn) $networkSites[] = '~DAWN';
-	$sitePaths = [
-		/*/TODO:
-		'planeteers' => 'dawn/planeteers',
-		'smithy' => 'dawn/smithy',
-		*/
-		'world' => 'dawn/world',
-		'imran' => 'people/imran',
-		'spring' => 'dawn/spring',
-	];
-
-	if (variable('local'))
-		$sitePaths['admin'] = 'dawn/admin';
+	$sitePaths = getDawnSites();
 
 	foreach ($sitePaths as $key => $path) {
 		$item = _getOrWarn($path);

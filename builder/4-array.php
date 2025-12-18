@@ -225,6 +225,7 @@ function tsvSetCols($lin, &$c)
 }
 
 function _sheetPath($name) {
+	if ($name === false) showDebugging('228', '$name is false', true, true);
 	return endsWith($name, '.tsv') ? $name
 		: SITEPATH . '/data/' . $name . '.tsv';
 }
