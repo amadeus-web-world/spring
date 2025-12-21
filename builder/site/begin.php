@@ -83,6 +83,8 @@ function _visane($siteVars) {
 		['google-analytics', '--use-amadeusweb'],
 
 		['email', 'imran@amadeusweb.world'],
+		['email2', 'imran+owner@amadeusweb.world'],
+		['email3', 'imran+hr@amadeusweb.world'],
 		['phone', '+91-9841223313'],
 		['whatsapp', '919841223313'],
 		['phone2', '+91-9566166880'],
@@ -97,7 +99,7 @@ function _visane($siteVars) {
 		['description', false],
 		['welcome-message', 'Welcomes you!'],
 		['no-search', true], //TODO: GPSE - high
-		['network', 'DAWN', TYPEBOOLEAN],
+		['network', 'Webring'],
 	];
 
 	if (!hasVariable('theme')) {

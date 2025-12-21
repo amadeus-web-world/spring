@@ -172,6 +172,7 @@ function afterSectionSet() {
 
 	ensureNodeVar();
 	if (function_exists('node_before_render')) node_before_render();
+	variable(assetKey(SECTIONASSETS), fileUrl(variable('section') . '/assets/'));
 	read_seo($file);
 }
 

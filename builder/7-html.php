@@ -228,6 +228,7 @@ function replaceHtml($html) {
 			'%' . OTHERSITEPREFIX . 'core%' => variable('app'),
 
 			'%node-assets%' => _resolveFile('', STARTATNODE),
+			'%section-assets%' => _resolveFile('', STARTATSECTION),
 			'%site-assets%' => _resolveFile('', STARTATSITE),
 			'%core-assets%' => _resolveFile('', STARTATCORE),
 			'##theme##' => getThemeBaseUrl(),
@@ -245,6 +246,8 @@ function replaceHtml($html) {
 
 			'%admin-email%' => variableOr('systemEmail', variableOr('assistantEmail', '#error--no-email-configured')),
 			'%email%' => variableOr('email', ''),
+			'%email2%' => variableOr('email2', ''),
+			'%email3%' => variableOr('email3', ''),
 			'%phone%' => variableOr('phone', ''),
 			'%phone2%' => variableOr('phone2', ''),
 			'%whatsapp-number%' => ($wa = variableOr('whatsapp', '##no-number-specified')),
@@ -260,6 +263,7 @@ function replaceHtml($html) {
 			'%welcomeMessage%' => markdown(pipeToNL(variable('welcome-message'))), //links will get picked up
 			'%network-link%' => networkLink('btn btn-success', '<hr class="mt-5" />'),
 			'%siteName%' => $sn = variable('name'),
+			'%siteName_subject%' => urlencode($sn),
 			'%byline%' =>  variable('byline'),
 			'%safeName%' =>  variable('safeName'),
 			'%section%' => $section, //let archives break!
@@ -358,6 +362,7 @@ function prepareLinks($output) {
 		//articles / grid
 		'ALLARTICLES' => '<div class="portfolio row grid-container">',
 		'ALLARTICLES-CLOSE' => '</div>',
+		'ARTICLE-3COL-BOX' => '<article class="portfolio-item col-md-4 col-sm-12"><div class="grid-inner content-box">',
 		'ARTICLE-BOX' => '<article class="portfolio-item col-md-3 col-sm-12"><div class="grid-inner content-box">',
 		'ARTICLE-CLOSE' => '</div></article>',
 		'DIV-WITHBOX' => '<div class="content-box">',

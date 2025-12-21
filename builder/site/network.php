@@ -13,65 +13,65 @@ setupNetwork($noNetwork);
 
 if (!$noNetwork) {
 	function network_menu() {
-		setMenuSettings(); //undo page-menu stuff
-		extract(variable('menu-settings'));
-
-		$name = variable('network');
-		if ($wrapTextInADiv) $name = '<div>' . $name . $topLevelAngle . '</div>';
-
-		echo '<li class="' . $itemClass . ' ' . $subMenuClass . '"><a class="' . $anchorClass . '">' . $name . '</a>' . NEWLINES2;
-		echo '	<ul class="' . $ulClass . '">' . NEWLINE;
-
-		$all = variable('networkSites');
-		$urlKey = _getUrlKeySansPreview();
-		
-		foreach ($all as $item) {
-			if (is_string($item)) {
-				$name = substr($item, 1);
-				if ($wrapTextInADiv) $name = '<div class="' . $anchorClass . '">' . $name . $topLevelAngle . '</div>';
-				echo '		<li class="' . $itemClass . ' ' . $subMenuClass . ' menu-section">' . $name . '</li>' . NEWLINE;
-				continue;
-			}
-
-			$name = $item['name'];
-			if ($wrapTextInADiv) $name = '<div>' . $name . $topLevelAngle . '</div>';
-			echo '			<li class="' . $itemClass . ' ' . $subMenuClass . '">' . getLink($name, $item[$urlKey], $anchorClass, true) . '</li>' . NEWLINE;
-		}
-
-		echo '	</ul>' . NEWLINES2;
-		echo '</li>' . NEWLINE;
-
-		if (getDawnSites(variable('safeName'))) domains_menu();
+		__flatMenu(variable('networkSites'), variable('network'));
+		dawn_menu();
 	}
 }
 
-function domains_menu() {
-	echo NEWLINES2 . '<li class="menu-item sub-menu"><a class="menu-link"><div>DOMAINS<i class="icon-angle-down"></i></div></a>' . NEWLINE;
-	echo '	<ul class="sub-menu-container">' . NEWLINE;
+function dawn_menu() {
+	$items = variable('dawnSites');
 
-	$href = variable('local') ? 'http://localhost/%folder%/' : 'https://%folder%.amadeusweb.world/';
-
+	$items[] = '~Domains';
+	$urlKey = _getUrlKeySansPreview();
+	$href = variable('local') ? 'http://localhost/%s/' : 'https://%s.amadeusweb.world/';
 	foreach (['people', 'organizations'] as $item)
-		echo replaceItems('<li class="menu-item sub-menu"><a href="' . $href . '" class="menu-link" target="_blank"><div>%text%</div></a></li>' . NEWLINE,
-			['folder' => $item, 'text' => humanize($item)], '%');
+		$items[] = [$urlKey => sprintf($href, $item), 'name' => humanize($item)];
 
-	echo '	</ul>' . NEWLINE;
-	echo '</li>' . NEWLINES2;
+	__flatMenu($items, 'DAWN');
+}
+
+function __flatMenu($items, $name) {
+	setMenuSettings(); //undo page-menu stuff
+	extract(variable('menu-settings'));
+
+	if ($wrapTextInADiv) $name = '<div>' . $name . '++' . $topLevelAngle . '</div>';
+
+	echo '<li class="' . $itemClass . ' ' . $subMenuClass . '"><a class="' . $anchorClass . '">' . $name . '</a>' . NEWLINES2;
+	echo '	<ul class="' . $ulClass . '">' . NEWLINE;
+
+	$urlKey = _getUrlKeySansPreview();
+	
+	foreach ($items as $item) {
+		if (is_string($item)) {
+			$name = substr($item, 1);
+			if ($wrapTextInADiv) $name = '<div class="' . $anchorClass . '">' . $name . $topLevelAngle . '</div>';
+			echo '		<li class="' . $itemClass . ' ' . $subMenuClass . ' menu-section">' . $name . '</li>' . NEWLINE;
+			continue;
+		}
+
+		$name = $item['name'];
+		if ($wrapTextInADiv) $name = '<div>' . $name . $topLevelAngle . '</div>';
+		echo '			<li class="' . $itemClass . ' ' . $subMenuClass . '">' . getLink($name, $item[$urlKey], $anchorClass, true) . '</li>' . NEWLINE;
+	}
+
+	echo '	</ul>' . NEWLINES2;
+	echo '</li>' . NEWLINE;
 }
 
 function getDawnSites($key = false) {
 	$op = [
-		/*/TODO:
-		'planeteers' => 'dawn/planeteers',
-		'smithy' => 'dawn/smithy',
-		*/
 		'world' => 'dawn/world',
-		'imran' => 'people/imran',
+		'planeteers' => 'dawn/planeteers',
+		'~Technology',
+		'smithy' => 'dawn/smithy',
 		'spring' => 'dawn/spring',
 	];
 
 	if (variable('local'))
 		$op['admin'] = 'dawn/admin';
+
+	$op[] = '~Authors';
+	$op['imran'] = 'people/imran';
 
 	if ($key) {
 		$names = [
@@ -90,6 +90,7 @@ function getDawnSites($key = false) {
 }
 
 function setupNetwork($noNetwork) {
+	$dawnSites = [];
 	$networkSites = [];
 	$networkUrls = [];
 
@@ -105,13 +106,13 @@ function setupNetwork($noNetwork) {
 		$folPrefix = pathinfo(SHOWSITESAT, PATHINFO_FILENAME);
 		DEFINE('SITESATNAME', humanize($folPrefix));
 		$items[] = '~' . SITESATNAME;
-		$folPrefix .= '/';
 
-		if (disk_file_exists($txt = SHOWSITESAT . '/sites.txt'))
+		if (disk_file_exists($txt = AMADEUSROOT . '/data/domains/' . $folPrefix . '.txt'))
 			$files = textToList(disk_file_get_contents($txt));
 		else
-			$files = _skipNodeFiles(scandir(SHOWSITESAT), 'txt, php');
+			$files = _skipNodeFiles(scandir(SHOWSITESAT), 'php');
 
+		$folPrefix .= '/';
 		foreach ($files as $file) {
 			if (startsWith($file, '==') || !disk_file_exists(SHOWSITESAT . '/' . $file . '/data/site.tsv')) continue;
 			$items[] = $file;
@@ -141,17 +142,21 @@ function setupNetwork($noNetwork) {
 	}
 
 	//these always exist and have a urlOf short name ($key)
-	$noDawn = $networkName != 'DAWN';
-	if (!$noDawn) $networkSites[] = '~DAWN';
-	$sitePaths = getDawnSites();
+	$dawnPaths = getDawnSites();
 
-	foreach ($sitePaths as $key => $path) {
+	foreach ($dawnPaths as $key => $path) {
+		if (is_int($key) && startsWith($path, '~')) {
+			$dawnSites[] = $path;
+			continue;
+		}
+
 		$item = _getOrWarn($path);
 		if ($item === false) continue;
-		if (!$noDawn) $networkSites[] = $item;
+		$dawnSites[] = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
 
+	variable('dawnSites', $dawnSites);
 	variable('networkSites', $networkSites);
 	variable('networkUrls', $networkUrls);
 }
