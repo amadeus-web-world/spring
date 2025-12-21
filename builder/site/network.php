@@ -1,6 +1,7 @@
 <?php
 DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
-DEFINE('DAWN_NAME', 'Dynamic AmadeusWeb Network');
+DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
+DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
 
 if (defined('SHOWSITESAT')) {
 	setupNetwork(null);
@@ -21,7 +22,7 @@ if (!$noNetwork) {
 function dawn_menu() {
 	$items = variable('dawnSites');
 
-	$items[] = '~Domains';
+	$items[] = DAWN_SECTION . 'Domains';
 	$urlKey = _getUrlKeySansPreview();
 	$href = variable('local') ? 'http://localhost/%s/' : 'https://%s.amadeusweb.world/';
 	foreach (['people', 'organizations'] as $item)
@@ -58,33 +59,21 @@ function __flatMenu($items, $name) {
 	echo '</li>' . NEWLINE;
 }
 
-function getDawnSites($key = false) {
+function getDawnSites() {
 	$op = [
+		'~<abbr title="'.DAWN_NAME.'">DAWN</abbr>',
 		'world' => 'dawn/world',
 		'planeteers' => 'dawn/planeteers',
-		'~Technology',
+		DAWN_SECTION . 'Technology',
 		'smithy' => 'dawn/smithy',
 		'spring' => 'dawn/spring',
+		'admin' => 'dawn/admin',
+		DAWN_SECTION . 'Authors',
+		'imran' => 'people/imran',
 	];
 
-	if (variable('local'))
-		$op['admin'] = 'dawn/admin';
-
-	$op[] = '~Authors';
-	$op['imran'] = 'people/imran';
-
-	if ($key) {
-		$names = [
-			'amadeuswebworld' => 'world',
-			'amadeusweb9' => 'spring',
-			'amadeuswebadmin' => 'admin',
-			'imran-ali-namazi' => 'imran',
-			//'' => '',
-		];
-		if (!isset($names[$key])) return false;
-		$key = $names[$key];
-		return in_array($key, array_keys($op));
-	}
+	if (!variable('local'))
+		unset($op['admin']);
 
 	return $op;
 }
@@ -118,7 +107,7 @@ function setupNetwork($noNetwork) {
 			$items[] = $file;
 		}
 
-		$items[] = '~of the "' . DAWN_NAME . '"';
+		$items[] = '~' . DAWN_NAME;
 		$items = array_merge($items, getDawnSites());
 	} else if (!$noNetwork) {
 		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);

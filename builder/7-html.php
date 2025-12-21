@@ -468,10 +468,15 @@ class linkBuilder extends builderBase {
 	const openFile = 'strip-extension text-suffix humanize outline-info margins lightbox noPageUrl';
 	const openFileInline = self::openFile . ' inline';
 	const openFileBlock = self::openFile . ' block';
+
 	const localhostLink = 'new-tab localhost btn-secondary noPageUrl';
+
 	const copyOnClick = 'copy noPageUrl btn btn-lg';
 	const copyUrl = self::copyOnClick . ' outline-primary';
 	const copyRelUrl = self::copyOnClick . ' outline-danger';
+
+	const link = 'outline-primary margins noPageUrl';
+	const selectedLink = 'btn-success margins noPageUrl';
 
 	static function factory($text, $href, $setting, $echo = false) {
 		$do = explode(' ', $setting);

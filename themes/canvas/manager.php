@@ -16,4 +16,14 @@ class CanvasTheme {
 		if ($page == 'spa')
 			return $demo . 'css/fonts/spa-icons';
 	}
+
+	//needed since using stylesheets loaded in page...
+	static function ReincludeIcons() {
+		$base = 'css/icons/';
+		return [
+			$base . 'font-awesome',
+			$base . 'bootstrap-icons',
+			$base . 'unicons',
+		];
+	}
 }
