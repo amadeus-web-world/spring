@@ -1,13 +1,20 @@
 #key	value
-name	Amadeus Web v9
+name	Amadeus Web v9.2
 byline	Spiritualized Simplified Tech
-safeName	amadeusweb9
-iconName	Spring v9
-footer-message	Fostering transparency and accountability by making content / interactions public record.
+year	2019
+
+|labels and messages
+iconName	AW Spring v9.2
 siteMenuName	AmadeusWeb's Spring
-sections_todo	features
+welcome-message	This is the "Proprietary" Web Builder - with Pull Plug Rights held by [Imran](%urlOf-imran%BTNOUTLINESUCCESS) the [Ass Clown](%urlOf-imran%/2025-12/#10).
+footer-message	Fostering transparency and accountability by making content / interactions public record.
+
+|img and styles
+safeName	amadeusweb9
 mediakit	?palette=default
 fonts	cursive=Eagle+Lake&menu=Quintessential&menu-size=1.3rem
+
+|technical
+sections	whois
 local-url	http://localhost/dawn/spring/
 live-url	https://spring.amadeusweb.world/
-year	2019

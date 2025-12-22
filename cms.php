@@ -1,4 +1,4 @@
 <?php
 variables([
-	//'under-construction' => true,
+	'sections-have-files' => true,
 ]);

@@ -76,22 +76,25 @@ function _renderImplementation($fileOrRaw, $settings) {
 	$endsWithMd = false;
 	$raw = $fileOrRaw; $fileName = '[RAW]';
 	$treatAsMarkdown = valueIfSet($settings, 'markdown');
+	$echo = valueIfSet($settings, 'echo', true);
+	$noReplaces = false;
 
 	if ($wasFile = isContentFile($fileOrRaw)) {
 		$fileName = $fileOrRaw;
 		$endsWithMd = endsWith($fileOrRaw, '.md');
 		$raw = disk_file_get_contents($fileOrRaw);
+		$noReplaces = contains($raw, NOREPLACES);
 	}
+
 	if (valueIfSet($settings, FIRSTSECTIONONLY)) {
 		$raw = explode('---', $raw, 2)[0];
 		if ($fan = variable(FULLACCESSNOTICE))
 			$raw .= '---' . NEWLINE . $fan;
 	}
 
-	$echo = valueIfSet($settings, 'echo', true);
 	$excerpt = valueIfSet($settings, 'excerpt', false);
-	$no_processing = valueIfSet($settings, 'raw', false) || contains($raw, WANTSNOPROCESSING) || do_md_in_parser($raw);
-	if (contains($raw, WANTSNOPARATAGS)) $settings['strip-paragraph-tag'] = true;
+	$no_processing = $noReplaces || valueIfSet($settings, 'raw', false) || contains($raw, WANTSNOPROCESSING) || do_md_in_parser($raw);
+	if (!$noReplaces && contains($raw, WANTSNOPARATAGS)) $settings['strip-paragraph-tag'] = true;
 
 	if ($excerpt) $raw = explode(MORETAG, $raw)[0];
 	if ($excerpt && contains($raw, EXCERPTSTART)) $raw = explode(EXCERPTSTART, $raw)[1];
@@ -150,29 +153,28 @@ function _renderImplementation($fileOrRaw, $settings) {
 		}
 	}
 
-	$output = runAllMacros($output);
+	if (!$noReplaces) {
+		$output = runAllMacros($output);
+		$output = replaceHtml($output);
+	}
 
-	//may bring composite work back (Dec 2024)
-
-	$output = replaceHtml($output);
-
-	if (!isset($settings['dont-prepare-links']))
+	if (!$noReplaces && !isset($settings['dont-prepare-links']))
 		$output = prepareLinks($output); //if doing before markdown then this gets messed up
 
-	if (isset($settings['strip-paragraph-tag']))
+	if (!$noReplaces && isset($settings['strip-paragraph-tag']))
 		$output = strip_paragraph($output);
 
 	if (contains($output, '%fileName%'))
 		$output = replaceItems($output, ['%fileName%' => '<u>EDIT FILE:</u> ' .
 			replaceItems($fileName, [SITEPATH => '', '//' => '/'])]);
 
-	if (isset($settings['wrap-in-section']))
+	if (!$noReplaces && isset($settings['wrap-in-section']))
 		$output = '<section>' . NEWLINE . $output . NEWLINE . '</section>' . variable('2nl');
 
 	if (isset($settings['use-content-box']) && $settings['use-content-box'])
 		$output = cbWrapAndReplaceHr($output);
 
-	if (isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-icon', true)) . NEWLINES2 . $output;
+	if (!$noReplaces && isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-icon', true)) . NEWLINES2 . $output;
 
 	if ($engageContent) {
 		runFeature('engage');

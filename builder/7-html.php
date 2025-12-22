@@ -4,6 +4,7 @@ DEFINE('MORETAG', '<!--more-->');
 DEFINE('EXCERPTSTART', '<!--start-excerpt-->');
 DEFINE('WANTSNOPARATAGS', '<!--no-p-tags-->');
 DEFINE('WANTSNOPROCESSING', '<!--no-processing-->');
+DEFINE('NOREPLACES', '<!--no-replaces-->');
 
 DEFINE('WANTSMARKDOWN', '<!--markdown-->' . NEWLINE); //NOTE: to detect content which doesnt start with a heading
 DEFINE('WANTSAUTOPARA', '<!--autop-->');
@@ -239,8 +240,10 @@ function replaceHtml($html) {
 			'%nodeSlug%' => $node,
 			'%nodeName%' => humanize($node),
 			'%nodeUrl%' => pageUrl($node),
-			'%nodeItem%' => getPageParameterAt(1, ''),
-			'%nodeItem2%' => getPageParameterAt(2, ''),
+			'%nodeItem%' => $ni = getPageParameterAt(1, ''),
+			'%nodeItem_r%' => humanize($ni),
+			'%nodeItem2%' => $ni = getPageParameterAt(2, ''),
+			'%nodeItem2_r%' => humanize($ni),
 			'%nodeFullUrl%' => pageUrl(variableOr('nodeSlug', '##no-nodeSlug')),
 			'%leafNodeAssets%' => variableOr(assetKey(LEAFNODEASSETS), ''),
 
@@ -362,8 +365,8 @@ function prepareLinks($output) {
 		//articles / grid
 		'ALLARTICLES' => '<div class="portfolio row grid-container">',
 		'ALLARTICLES-CLOSE' => '</div>',
-		'ARTICLE-3COL-BOX' => '<article class="portfolio-item col-md-4 col-sm-12"><div class="grid-inner content-box">',
-		'ARTICLE-BOX' => '<article class="portfolio-item col-md-3 col-sm-12"><div class="grid-inner content-box">',
+		'ARTICLE-3COL-BOX' => '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12"><div class="grid-inner content-box">',
+		'ARTICLE-BOX' => '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">',
 		'ARTICLE-CLOSE' => '</div></article>',
 		'DIV-WITHBOX' => '<div class="content-box">',
 		' NEWLINES2' => '<br /><br />',
