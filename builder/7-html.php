@@ -430,10 +430,10 @@ class bootstrapAndUX {
 	const namedButtons = [
 		'DOWNLOAD' => 'btn btn-lg btn-primary" target="_blank',
 		'SITE' => 'btn btn-info',
-		'PHONE' => 'btn btn-has-icon btn-info fa fa-phone ls-2',
-		'WHATSAPP' => 'btn btn-has-icon bg-success text-light bi bi-whatsapp',
-		'EMAIL' => 'btn btn-has-icon bg-danger bi bi-mailbox',
-		'MAP' => 'btn btn-has-icon bg-warning bi bi-pin-map',
+		'PHONE' => 'btn btn-has-icon btn-info bi bi-telephone ls-2" style="color: #fff;',
+		'WHATSAPP' => 'btn btn-has-icon btn-success bi bi-whatsapp ls-2',
+		'EMAIL' => 'btn btn-has-icon btn-danger bi bi-mailbox ls-2',
+		'MAP' => 'btn btn-has-icon btn-warning bi bi-pin-map ls-2',
 	];
 
 	static $buttonVars = []; //static on demand for optimizing

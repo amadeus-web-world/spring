@@ -38,7 +38,7 @@ function runAllMacros($html) {
 	if (contains($html, '[audio]'))
 		$html = processAudioShortcode($html);
 
-	if (contains($html, '[video]'))
+	if (contains($html, '[video'))
 		$html = processVideoShortcode($html);
 
 	if (contains($html, '[pdf]'))
@@ -238,6 +238,8 @@ function processAudioShortcode($html) {
 
 function processVideoShortcode($html) {
 	return replaceItems($html, [
+		'[video-plain]' => '<video class="w-100" loop autoplay controls><source src="',
+		'[/video-plain]' => '" type="video/mp4"></video>',
 		'[video]' => '<div class="video-container text-center"><video class="w-100" loop autoplay controls><source src="',
 		'[/video]' => '" type="video/mp4"></video></div>',
 	]);

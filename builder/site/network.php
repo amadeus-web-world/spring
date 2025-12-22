@@ -25,7 +25,7 @@ function dawn_menu() {
 	$items[] = DAWN_SECTION . 'Domains';
 	$urlKey = _getUrlKeySansPreview();
 	$href = variable('local') ? 'http://localhost/%s/' : 'https://%s.amadeusweb.world/';
-	foreach (['people', 'organizations'] as $item)
+	foreach (['people', 'organizations', 'businesses'] as $item)
 		$items[] = [$urlKey => sprintf($href, $item), 'name' => humanize($item)];
 
 	__flatMenu($items, 'DAWN');

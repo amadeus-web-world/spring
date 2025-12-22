@@ -18,10 +18,8 @@ foreach ($sheet->rows as $row) {
 
 variable('site-vars', $siteVars);
 
-if (contains($url = $siteVars[variable(SITEURLKEY)], 'localhost')) {
+if (contains($url = $siteVars[variable(SITEURLKEY)], 'localhost'))
 	$url = replaceItems($url, ['localhost' => 'localhost' . variable('port')]);
-	__testSiteVars(['url-for-localhost' => $url]);
-}
 
 if (hasPageParameter('health')) die('<span style="background-color: #cbfecb; padding: 10px;">Works!: ' . $url . '</span>');
 
