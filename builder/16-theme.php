@@ -359,11 +359,14 @@ function appendSocial($social, &$op) {
 	$lastIndex = count($social) - 1;
 	$class = variableOr('social-class', 'text-light');
 	foreach($social as $ix => $item) {
+		if ($item == '----') { $op[] = '<hr class="mt-3 mb-0 w-50 mx-auto" />'; continue; }
+
 		$wantsItalics = !contains($item['type'], 'png-icon');
+		$nextIsSpacer = $ix < count($social) - 1 && $social[$ix + 1] == '----';
 		$op[] = '<a target="_blank" href="' . $item['url'] . '"' . (!$wantsItalics ? ' class="' . $item['type'] . '"' : '') . '>';
 		$op[] = ($wantsItalics ? '	<i class="social-icon si-mini rounded-circle lh-3 ' . $class . ' ' . (contains($item['type'], ' ')
 			? $item['type'] : 'fa-brands fa-'. $item['type'] . ' bg-' . $item['type']) . '"></i> ' : '') . $item['name'] . '</a>'
-			. ($ix < $lastIndex ? $separator : '');
+			. ($ix < $lastIndex && !$nextIsSpacer ? $separator : '');
 		$op[] = '';
 	}
 }

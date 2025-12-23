@@ -200,7 +200,7 @@ function processCanvaShortcode($html) {
 function processGoogleShortcodes($html) {
 	return replaceItems($html, [
 		'[google-video]' => '<div class="video-container google-video"><iframe src="https://drive.google.com/file/d/',
-		'[/google-video]' => '/preview" width="640" height="480" allow="autoplay"></iframe></div>',
+		'[/google-video]' => '/preview" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allow="autoplay"></iframe></div>',
 	]);
 }
 
