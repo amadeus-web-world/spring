@@ -127,6 +127,7 @@ function getQueryParameter($param, $or = false) {
 }
 
 function render() {
+	if (function_exists('network_before_render')) network_before_render();
 	if (function_exists('before_render')) before_render();
 	ob_start();
 
@@ -141,6 +142,7 @@ function render() {
 
 	if (!$embed) {
 		renderThemeFile('header', $theme);
+		if (function_exists('network_before_file')) network_before_file();
 		if (function_exists('before_file')) before_file();
 	}
 

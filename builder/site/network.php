@@ -90,8 +90,12 @@ function setupNetwork($noNetwork) {
 
 	$items = [];
 	$folPrefix = '';
+	$usePath = false;
 
 	if (defined('SHOWSITESAT')) {
+		$usePath = contains($tmp = substr(SHOWSITESAT, strlen(ALLSITESROOT)), DIRECTORY_SEPARATOR)
+			? explode(DIRECTORY_SEPARATOR, $tmp)[0] . '/' : false;
+
 		$folPrefix = pathinfo(SHOWSITESAT, PATHINFO_FILENAME);
 		DEFINE('SITESATNAME', humanize($folPrefix));
 		$items[] = '~' . SITESATNAME;
@@ -104,7 +108,7 @@ function setupNetwork($noNetwork) {
 		$folPrefix .= '/';
 		foreach ($files as $file) {
 			if (startsWith($file, '==') || !disk_file_exists(SHOWSITESAT . '/' . $file . '/data/site.tsv')) continue;
-			$items[] = $file;
+			$items[$file] = ($usePath ? $usePath : '') . $folPrefix . $file;
 		}
 
 		$items[] = '~' . DAWN_NAME;
@@ -114,7 +118,7 @@ function setupNetwork($noNetwork) {
 		$items = $sheet->rows;
 	}
 
-	foreach ($items as $row) {
+	foreach ($items as $key => $row) {
 		$plain = is_string($row);
 		$key = $plain ? $row : $sheet->getValue($row, 'key');
 		if (startsWith($key, '~')) {
@@ -122,9 +126,7 @@ function setupNetwork($noNetwork) {
 			continue;
 		}
 
-		if ($plain && $folPrefix && contains($row, '/')) $folPrefix = ''; //clear for dawn stuff!
-
-		$item = _getOrWarn($plain ? $folPrefix . $row : $sheet->getValue($row, 'path'));
+		$item = _getOrWarn($plain ? $row : $sheet->getValue($row, 'path'));
 		if ($item === false) continue;
 		$networkSites[] = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];

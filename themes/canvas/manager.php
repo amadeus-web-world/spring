@@ -1,12 +1,16 @@
 <?php
 class CanvasTheme {
-	static function HeadCssFor($page, $css) {
+	static function HeadCssFor($page) {
+		$css = [];
 		$base = getThemeBaseUrl();
 		$demo = $base . 'demos/' . $page . '/';
 		if ($page == 'spa') {
 			//$demo = '//canvastemplate.com/demo/spa/';
 			$css[] = sprintf(CSSTAG, $demo . 'spa.css');
 			$css[] = sprintf(CSSTAG, $demo . 'css/fonts/spa-icons.css');
+		} else if ($page == 'real-estate') {
+			$css[] = sprintf(CSSTAG, $demo . 'real-estate.css');
+			$css[] = sprintf(CSSTAG, $demo . 'css/font-icons.css');
 		}
 		return $css;
 	}
