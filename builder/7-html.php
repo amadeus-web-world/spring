@@ -347,7 +347,7 @@ function prepareLinks($output) {
 	$output = replaceItems($output, [
 		//divs
 		'DIV-LARGELIST' => '<div class="large-list">',
-		'DIV-CONTAINER' => '<div class="video-container">',
+		'DIV-PLAINCONTAINER' => '<div class="container">',
 		'DIV-MAX-500-CENTER' => '<div class="m-auto img-max-500">',
 		'DIV-CENTER' => '<div class="text-center">',
 		'DIV-RIGHT' => '<div class="float-right">',
@@ -363,8 +363,8 @@ function prepareLinks($output) {
 		'DIV-CLOSE' => '</div>',
 
 		//articles / grid
-		'ALLARTICLES' => '<div class="portfolio row grid-container">',
 		'ALLARTICLES-CLOSE' => '</div>',
+		'ALLARTICLES' => '<div class="portfolio row grid-container">',
 		'ARTICLE-3COL-BOX' => '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12"><div class="grid-inner content-box">',
 		'ARTICLE-BOX' => '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">',
 		'ARTICLE-CLOSE' => '</div></article>',

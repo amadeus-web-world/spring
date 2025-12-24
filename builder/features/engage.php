@@ -26,7 +26,7 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 			variableOr('assistantEmail', variable('systemEmail')) .
 		'" data-whatsapp="' . $whatsapp .
 		'" data-site-name="' . variable('name') .
-		'" data-salutation="' . $salutation . '">' . variable('nl');
+		'" data-salutation="' . $salutation . '">' . NEWLINE;
 
 	$replaces = [];
 	if (disk_file_exists($note = (AMADEUSCORE . 'data/engage-note.md'))) {
@@ -41,7 +41,7 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 
 	$result .= getSnippet('engage-toolbox', CORESNIPPET);
 	
-	$result .= '</div>' . variable('nl');
+	$result .= '</div>' . NEWLINE;
 	if (!$echo) return $result;
 	echo $result;
 }

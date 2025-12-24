@@ -132,8 +132,10 @@ function _renderImplementation($fileOrRaw, $settings) {
 		$output = wpautop($raw);
 	} else {
 		$inProgress = '<!--render-processing-->';
+		$engageSansCB = false;
 		if (engage_until_eof($raw)) {
 			$engageBits = explode(ENGAGESTART, $raw);
+			$engageSansCB = contains($raw, ENGAGESANSCB);
 			$raw = $engageBits[0];
 			$engageContent = $engageBits[1];
 		}
@@ -142,7 +144,10 @@ function _renderImplementation($fileOrRaw, $settings) {
 			runFeature('engage');
 			$settings['use-content-box'] = false;
 			$meta = $wasFile ? variable('meta_' . $fileName) : [];
+			$no = variable('no-content-boxes');
+			variable('no-content-boxes', $engageSansCB);
 			$output = renderEngage(getPageName(), $raw . $inProgress, false, $meta);
+			variable('no-content-boxes', $no);
 		} else {
 			$ai = contains($raw, FROM_GEMINI_AI);
 			if ($ai) $raw = processAI($raw, 'gemini');
@@ -180,7 +185,10 @@ function _renderImplementation($fileOrRaw, $settings) {
 		runFeature('engage');
 		$settings['use-content-box'] = false;
 		$meta = $wasFile ? read_seo($fileName) : [];
-		$output .= renderEngage(getPageName(), $engageContent . $inProgress, false, $meta);
+		$no = variable('no-content-boxes');
+		variable('no-content-boxes', $engageSansCB);
+		$output .= renderEngage(getPageName(), $engageContent . $inProgress . WANTSNOPARATAGS, false, $meta);
+		variable('no-content-boxes', $no);
 	}
 
 	if ($wasFile)
@@ -202,10 +210,11 @@ function renderRichPage($sheetFile, $groupBy = 'section', $templateName = 'home'
 }
 
 function is_engage($raw) {
-	return contains($raw, ' //engage-->') || contains($raw, '<!--ENGAGE-->');
+	return contains($raw, ' //engage-->') || contains($raw, '<!--ENGAGE-->') || contains($raw, ENGAGESTART);
 }
 
 DEFINE('ENGAGESTART', '<!--start-engage-->');
+DEFINE('ENGAGESANSCB', '<!--engage-without-cb-->');
 function engage_until_eof($raw) {
 	return contains($raw, ENGAGESTART);
 }
