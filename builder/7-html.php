@@ -346,6 +346,9 @@ function prepareLinks($output) {
 
 	$output = replaceItems($output, [
 		//divs
+		'DIV-LARGELISTWITHITEMSEPARATOR' => '<div class="large-list item-separator">',
+		'DIV-LARGELISTLOWERALPHA' => '<div class="large-list lower-alpha item-separator">',
+		'DIV-LARGELISTLOWERROMAN' => '<div class="large-list lower-roman item-separator">',
 		'DIV-LARGELIST' => '<div class="large-list">',
 		'DIV-PLAINCONTAINER' => '<div class="container">',
 		'DIV-MAX-500-CENTER' => '<div class="m-auto img-max-500">',
@@ -369,8 +372,9 @@ function prepareLinks($output) {
 		'ARTICLE-BOX' => '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">',
 		'ARTICLE-CLOSE' => '</div></article>',
 		'DIV-WITHBOX' => '<div class="content-box">',
-		' NEWLINES2' => '<br /><br />',
-		' NEWLINE' => '<br />',
+		' NEWLINES2' => '<br /><br />' . NEWLINE,
+		' NEWLINE' => '<br />' . NEWLINE,
+		' CRLF' => NEWLINE,
 
 		//generic html
 		'STARTDIV ' => '<div ',

@@ -125,6 +125,15 @@ function _renderImplementation($fileOrRaw, $settings) {
 	if ($rawVars = variable('rawReplaces'))
 		$raw = replaceItems($raw, $rawVars, '%');
 
+	if (contains($raw, $secureSeparator = '<!--secure-page-->')) {
+		if (!function_exists('is_page_secure')) {
+			$raw = '[UNABLE TO SHOW SECURE CONTENT]';
+			showDebugging('secure page detected', ['message' => 'Unable to find a method to resolve', 'notes' => 'this is a technical error and you should contact the developer']);
+		} else {
+			$raw = explode($secureSeparator, $raw)[is_page_secure() ? 1 : 0];
+		}
+	}
+	
 	if ($no_processing) {
 		$output = $raw;
 	} else if ($autop || ($endsWithMd && contains($raw, WANTSAUTOPARA))) {

@@ -1,4 +1,5 @@
 <?php
+//USES UTF8
 
 $safeNL = "\r"; //platform safe
 $nl = "\r\n";
@@ -49,6 +50,7 @@ function humanize($txt, $how = false) {
 	if (contains($words, ' A ')) $words = replaceItems($words, [' A ' => ' a ', ' &mdash; a' => ' &mdash; A']);
 	if (contains($words, ' And ')) $words = str_replace(' And ', ' and ', $words);
 	if (contains($words, ' Of ')) $words = str_replace(' Of ', ' of ', $words);
+	if (contains($words, ' To ')) $words = str_replace(' To ', ' to ', $words);
 	if (contains($words, ' Version ')) $words = str_replace(' Version ', ' version ', $words);
 	return $words;
 }

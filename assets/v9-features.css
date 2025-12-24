@@ -14,7 +14,7 @@
 section.has-gemini-ai h1 { display: none; }
 .articles-codesnippet > *, section.has-gemini-ai h2 { font-size: 14px; }
 .articles-codesnippet blockquote { font-size: 16px; }
-.articles div.large-list, .large-list li { font-size: 100%!important; }
+.articles div.large-list, .articles .large-list li { font-size: 100%!important; }
 
 /* https://stackoverflow.com/a/26849367 */
 .has-prompts {
