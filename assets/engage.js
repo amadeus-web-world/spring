@@ -12,7 +12,6 @@
 if (typeof($) === 'undefined') $ = jQuery.noConflict();
 
 $(document).ready(function() {
-	$('textarea.autofit').on('input', textAreaAutoHeight).trigger('input');
 	var divs = $('.engage');
 	if (divs.length == 0) return;
 

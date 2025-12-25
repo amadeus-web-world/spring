@@ -5,15 +5,12 @@ function sectionBaseOrSitePath($isThisContentQM = false) {
 }
 
 function before_render() {
-	/*
-	TODO: Fresh
-	addStyle('amadeusweb7', COREASSETS);
-	addStyle('amadeusweb8', COREASSETS);
-	addStyle('amadeus-web-features', COREASSETS);
-	addScript('amadeusweb7', COREASSETS);
-	*/
 	addStyle('v9-spring', COREASSETS);
 	addStyle('v9-features', COREASSETS);
+	addScript('v9-content', COREASSETS);
+
+	addStyle('engage', COREASSETS);
+	addScript('engage', COREASSETS);
 
 	if (function_exists('beforeSectionSet') && beforeSectionSet()) return;
 
