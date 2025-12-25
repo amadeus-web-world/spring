@@ -127,7 +127,6 @@ function getQueryParameter($param, $or = false) {
 }
 
 function render() {
-	if (function_exists('network_before_render')) network_before_render();
 	if (function_exists('before_render')) before_render();
 	ob_start();
 

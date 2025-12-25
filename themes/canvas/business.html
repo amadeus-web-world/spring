@@ -113,6 +113,7 @@
 
 	<script>
 		jQuery(window).on( 'load', function(){
+			if (!jQuery('#oc-features').length) return;
 			jQuery('#oc-features').owlCarousel({
 				items: 1,
 				margin: 60,
