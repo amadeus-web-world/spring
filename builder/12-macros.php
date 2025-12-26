@@ -159,28 +159,21 @@ function replaceUPIs($html) {
 		$html = replaceItems($html, [
 			'#upi-' . $key => replaceVariables(variable('upiFormat'), $replaces),
 			'%upi-' . $key . '%' => $item['id'],
-			'%upi-' . $key . '-textbox%' => textBoxWithCopyOnClick('UPI ID for Indian Money Transfer (GPay / PhonePe etc):', $item['id']),
+			'%upi-' . $key . '-textbox%' => textBoxWithCopyOnClick('UPI ID for Indian Money Transfer (GPay / PhonePe etc):', $item['id'], $item['name'], 'fa fa-indian-rupee-sign'),
 		]);
 	}
 
 	return $html;
 }
 
-function textBoxWithCopyOnClick($lineBefore, $value, $lineAfter = 'Text Copied!', $label = false) {
+function textBoxWithCopyOnClick($title, $value, $label = false, $icon = '') {
 	$bits = [];
-	$icon = $lineBefore;
-	$group = 'fa-brands bg-' . $icon;
-	if ($lineBefore == 'tracker without source') { $group = 'fa-classic bg-info'; $icon = 'file-lines'; }
-	if ($lineBefore == 'email') { $group = 'fa-classic bg-success'; $icon = 'envelope'; }
-	$bits[] = '<div>' . ($label ? '<label><i style="width: 64px;" class="text-light si-mini rounded-circle fa-2x ' . $group . ' fa-' . $icon . '"></i> ' : '') . $lineBefore . '<br>';
-	//https://css-tricks.com/auto-growing-inputs-textareas/
-	$bits[] = '<textarea onfocus="this.select(); document.execCommand(\'copy\'); this.parentNode.parentNode.classList.add(\'text-copied\'); this.parentNode.nextElementSibling.style.display = \'block\';" rows="3" readonly>' . $value . '</textarea>';
+	$bits[] = '<div title="' . ($icon == '' ? $title : '') . '">' . ($label ? '<label class="d-block"><i class="' . $icon . '"></i> ' . $label . '<br>' : '');
+	$bits[] = '<textarea class="autofit copyable" style="text-align: center; width: 100%" onfocus="this.select(); document.execCommand(\'copy\'); this.setSelectionRange(0, 0); if (!this.classList.contains(\'text-copied\')) { this.classList.add(\'text-copied\'); alert(\'Copied: \' + $(this).text()); }" rows="3" readonly>' . $value . '</textarea>';
 
 	if ($label) $bits[] = '</label>';
-	$bits[] = '<span style="display: none;">' . $lineAfter . '</span></div>';
-	$bits[] = ''; $bits[] = ''; //extra blank lines
 
-	return implode(NEWLINE, $bits);
+	return implode(NEWLINE, $bits) . NEWLINES2;
 }
 
 function processYouTubeShortcode($html) {
