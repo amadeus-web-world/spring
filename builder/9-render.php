@@ -114,8 +114,6 @@ function _renderImplementation($fileOrRaw, $settings) {
 	$raw = replaceItems($raw, $plainReplaces, '');
 	$raw = replaceItems($raw, $builtinReplaces, '##');
 
-	if ($wasFile && !variable('dont-autofix-encoding')) $raw = simplify_encoding($raw);
-
 	if ($svars = variable('siteReplaces')) $raw = replaceItems($raw, $svars, '%', true);
 
 	$autop = $raw != '' && startsWith($raw, WANTSAUTOPARA);

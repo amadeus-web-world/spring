@@ -87,19 +87,6 @@ function contains($haystack, $needle)
 	return stripos($haystack, $needle) !== false;
 }
 
-function simplify_encoding($txt) {
-	$replace = [
-		'�' => '&frac12',
-		'�' => '"', '�' => '"',
-		'�' => "'", '�' => "'",
-		'�' => '-', '�' => '-', '�"' => '-',
-		'�' => '&hellip;',
-	];
-	foreach ($replace as $search=>$replace)
- 		$txt = str_replace($search, $replace, $txt);
-	return $txt;
-}
-
 function contact_r($text) {
 	$text = replaceItems($text, ['tel:' => '', 'mailto:' => '', 'https://' => '', 'www.' => '']);
 	if (contains($text, '?subject')) $text = explode('?subject', $text)[0];

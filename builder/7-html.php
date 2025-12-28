@@ -83,15 +83,17 @@ function cssClass($items) {
 	return ' class="' . implode(' ', $items) . '"';
 }
 
-function sectionId($id, $class = '') {
+function sectionId($id, $class = '', $echo = true) {
 	$attrs = '';
 	if ($id) $attrs .= ' id="' . $id . '"';
 	if ($class) $attrs .= ' class="' . $class . '"';
-	echo NEWLINE . '<section' . $attrs . '>' . NEWLINE;
+	$r = NEWLINE . '<section' . $attrs . '>' . NEWLINE;
+	if (!$echo) return $r; else echo $r;
 }
 
-function sectionEnd() {
-	echo '</section>' . variable('2nl');
+function sectionEnd($echo = true) {
+	$r = '</section>' . NEWLINES2;
+	if (!$echo) return $r; else echo $r;
 }
 
 function iframe($url, $wrapContainer = true) {
@@ -230,6 +232,7 @@ function replaceHtml($html) {
 
 			'%node-assets%' => _resolveFile('', STARTATNODE),
 			'%section-assets%' => _resolveFile('', STARTATSECTION),
+			'%site-base%' => variable('assets-url'),
 			'%site-assets%' => _resolveFile('', STARTATSITE),
 			'%core-assets%' => _resolveFile('', STARTATCORE),
 			'##theme##' => getThemeBaseUrl(),
@@ -377,6 +380,7 @@ function prepareLinks($output) {
 		' CRLF' => NEWLINE,
 
 		//generic html
+		'[cb-close-and-open]' => cbCloseAndOpen('container'),
 		'STARTDIV ' => '<div ',
 		' CLOSETAG' => '>',
 	]);
