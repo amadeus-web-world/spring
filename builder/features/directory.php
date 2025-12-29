@@ -59,7 +59,7 @@ function _renderMenu($home, $folder, $where) {
 			$first = array_shift($clone);
 		$last = end($clone);
 		$sectionItems[] = getFolderMeta($folder, false, '__' . $last, $ix++);
-	} else if (variable('link-to-node-home')) {
+	} else if (variable('link-to-node-home') || variable('link-to-node-home-only-in-directory')) {
 		$sectionItems[] = getFolderMeta($folder, true, '__' . getHtmlVariable('nodeName'), $ix++);
 		//echo '<li class="' . $itemClass . '"><a href="' . pageUrl(variable(SAFENODEVAR)) . '" class="' . $anchorClass . '">' . getHtmlVariable('nodeName') . '</a>';
 	}

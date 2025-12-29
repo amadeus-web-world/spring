@@ -367,6 +367,8 @@ function prepareLinks($output) {
 		'DIV-CELL8' => '<div class="col-md-8 col-sm-12">',
 		'DIV-CELL9' => '<div class="col-md-9 col-sm-12">',
 		'DIV-CLOSE' => '</div>',
+		'DIV-SPACEFIX-CLOSE' => '</div>',
+		'DIV-SPACEFIX' => '<div>',
 
 		//articles / grid
 		'ALLARTICLES-CLOSE' => '</div>',

@@ -116,7 +116,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 	if ($svars = variable('siteReplaces')) $raw = replaceItems($raw, $svars, '%', true);
 
-	$autop = $raw != '' && startsWith($raw, WANTSAUTOPARA);
+	$autop = $raw != '' && contains($raw, WANTSAUTOPARA);
 	$md = $raw != '' && ($raw[0] == '#' || startsWith($raw, WANTSMARKDOWN));
 	$engageContent = false;
 
@@ -134,9 +134,6 @@ function _renderImplementation($fileOrRaw, $settings) {
 	
 	if ($no_processing) {
 		$output = $raw;
-	} else if ($autop || ($endsWithMd && contains($raw, WANTSAUTOPARA))) {
-		//TODO: @<team> temp for Sarath site which should use txt (autop) ideally
-		$output = wpautop($raw);
 	} else {
 		$inProgress = '<!--render-processing-->';
 		$engageSansCB = false;
@@ -153,13 +150,15 @@ function _renderImplementation($fileOrRaw, $settings) {
 			$meta = $wasFile ? variable('meta_' . $fileName) : [];
 			$no = variable('no-content-boxes');
 			variable('no-content-boxes', $engageSansCB);
+
+			if ($autop) $raw = wpautop($raw);
 			$output = renderEngage(getPageName(), $raw . $inProgress, false, $meta);
 			variable('no-content-boxes', $no);
 		} else {
 			$ai = contains($raw, FROM_GEMINI_AI);
 			if ($ai) $raw = processAI($raw, 'gemini');
 
-			$output = $md || $endsWithMd || $treatAsMarkdown ? markdown($raw) : wpautop($raw);
+			$output = !$autop && ($md || $endsWithMd || $treatAsMarkdown) ? markdown($raw) : wpautop($raw);
 
 			if ($ai || contains($raw, HAS_GEMINI_AI)) $output = adjustOutputOfAI($output, 'gemini');
 		}

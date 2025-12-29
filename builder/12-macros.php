@@ -32,6 +32,9 @@ function runAllMacros($html) {
 	if (contains($html, '[spotify]'))
 		$html = processSpotifyShortcode($html);
 
+	if (contains($html, '[suno]'))
+		$html = processSunoShortcode($html);
+
 	if (contains($html, '[instagram')) //post/reel
 		$html = processInstagramShortcode($html);
 
@@ -201,6 +204,13 @@ function processSpotifyShortcode($html) {
 	return replaceItems($html, [
 		'[spotify]' => '<iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/',
 		'[/spotify]' => '?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
+	]);
+}
+
+function processSunoShortcode($html) {
+	return replaceItems($html, [
+		'[suno]' => '<iframe src="https://suno.com/embed/',
+		'[/suno]' => '" width="760" height="240" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
 	]);
 }
 
