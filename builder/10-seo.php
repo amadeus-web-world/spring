@@ -128,6 +128,11 @@ function inlineMeta($meta) {
 }
 
 function getFolderMeta($folder, $fol, $folName = false, $index = '') {
+	if (startsWith($fol, '~')) return [
+		'name_urlized' => '#', 'name_humanized' => '<b>' . substr($fol, 1) . '</b>',
+		'about' => '', 'tags' => '', 'size' => '-', 'index' => $index,
+	];
+
 	$home = $folder . ($fol ? $fol . '/' : ''). 'home.';
 	$page = $folder . ($fol ? $fol : ''). '.';
 

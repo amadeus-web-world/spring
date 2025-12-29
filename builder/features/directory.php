@@ -90,7 +90,7 @@ function _renderMenu($home, $folder, $where) {
 		echo '<!--use-blocks-->' . NEWLINES2;
 		foreach ($sectionItems as $item) {
 			echo '## ' . humanize($item['name_urlized']) . NEWLINE;
-			echo 'Keyworkds ' . $item['tags'] . NEWLINES2;
+			echo 'Keywords ' . $item['tags'] . NEWLINES2;
 			echo $item['about'] . NEWLINES2;
 		}
 

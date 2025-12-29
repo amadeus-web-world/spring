@@ -9,9 +9,6 @@ function before_render() {
 	addStyle('v9-features', COREASSETS);
 	addScript('v9-content', COREASSETS);
 
-	addStyle('engage', COREASSETS);
-	addScript('engage', COREASSETS);
-
 	if (function_exists('beforeSectionSet') && beforeSectionSet()) return;
 
 	if (hasBuiltin()) { afterSectionSet(); return; }

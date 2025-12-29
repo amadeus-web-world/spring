@@ -1,7 +1,5 @@
 /**
- * v2.6 of the engage feature - a part of dawn.amadeusweb.com (v8.5)
- *     .5 - make it more fluent / friendly.
- * 	   .6 - supports salutation
+ * v3 of the engage feature - a part of spring.amadeusweb.world (v9.2)
  * **** Get Emails with details on each call to action.
  * 
  * DO NOTE: This is proprietary software by Imran Ali Namazi.

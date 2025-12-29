@@ -30,9 +30,9 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 
 	$replaces = [];
 	if (disk_file_exists($note = (AMADEUSCORE . 'data/engage-note.md'))) {
-		$replaces['engage-note'] = '<div id="engage-note" class="d-none"><hr>' . renderMarkdown($note, ['echo' => false]) . '</div>';
+		$replaces['engage-note'] = '<div class="engage-note-hint d-none">' . returnLine($note) . '</div>';
 		if (disk_file_exists($note2 = (AMADEUSCORE . 'data/engage-note-above.md')))
-			$replaces['engage-note-above'] = renderMarkdown($note2, ['echo' => false]);
+			$replaces['engage-note-above'] = returnLine($note2);
 		$replaces['email'] = $email;
 		$replaces['whatsapp'] = getHtmlVariable('whatsapp') . getHtmlVariable('enquiry');
 	}
