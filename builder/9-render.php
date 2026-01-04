@@ -20,14 +20,11 @@ function renderExcerpt($file, $link, $prefix = '', $echo = true) {
 	echo $result;
 }
 
-DEFINE('GOOGLEOFF', '<!--googleoff: all-->');
-DEFINE('GOOGLEON', '<!--googleon: all-->');
+DEFINE('GOOGLEOFF', '<!--googleoff: all-->'. NEWLINE);
+DEFINE('GOOGLEON', '<!--googleon: all-->'. NEWLINES2);
 
 function _excludeFromGoogleSearch($raw) {
-	return GOOGLEOFF
-		. NEWLINE . $raw
-		. NEWLINE . GOOGLEON
-		. NEWLINES2;
+	return GOOGLEOFF . $raw . NEWLINE . GOOGLEON;
 }
 
 function renderOnlyMarkdownOrRaw($raw, $wantsMD, $settings = []) {

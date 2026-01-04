@@ -372,6 +372,10 @@ function prepareLinks($output) {
 
 		//articles / grid
 		'ALLARTICLES-CLOSE' => '</div>',
+		'ALLARTICLES-HAUTO' => '<div class="row">',
+		'ARTICLE-3COL-HAUTO-BOX' => '<article class="col-lg-4 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">',
+		'ARTICLE-HAUTO-BOX' => '<article class="col-lg-3 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">',
+
 		'ALLARTICLES' => '<div class="portfolio row grid-container">',
 		'ARTICLE-3COL-BOX' => '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12"><div class="grid-inner content-box">',
 		'ARTICLE-BOX' => '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">',

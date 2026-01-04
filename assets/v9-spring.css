@@ -43,6 +43,10 @@ body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; }
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.content-box.minh-100 {
+	min-height: 100%!important;
+}
+
 .copyable { background-color: whitesmoke; }
 .copyable.text-copied { background-color: #ccf; }
 

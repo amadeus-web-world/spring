@@ -200,14 +200,19 @@ variable('specialHumanizeReplaces', [
 	'2025 10' => 'Oct 2025',
 	'2025 11' => 'Nov 2025',
 	'2025 12' => 'Dec 2025',
+	'2026 01' => 'Jan 2026',
+	'2026 02' => 'Feb 2026',
+	'2026 03' => 'Mar 2026',
 ]);
 
 function site_humanize($txt, $field = 'title', $how = false) {
 	$arrays = [
-		variableOr('siteHumanizeReplaces', []),
-		variableOr('nodeHumanizeReplaces', []),
-		variableOr('nodeItemHumanizeReplaces', []),
+		//NOTA BENE: changed prio
 		variableOr('specialHumanizeReplaces', []),
+		variableOr('nodeItemHumanizeReplaces', []),
+		variableOr('nodeTitleHumanizeReplaces', []), //for works...
+		variableOr('nodeHumanizeReplaces', []),
+		variableOr('siteHumanizeReplaces', []),
 	];
 
 	$key = strtolower($txt);

@@ -63,6 +63,7 @@ function getDawnSites() {
 	$op = [
 		'~<abbr title="'.DAWN_NAME.'">DAWN</abbr>',
 		'world' => 'dawn/world',
+		'ava' => 'dawn/ava',
 		'planeteers' => 'dawn/planeteers',
 		DAWN_SECTION . 'Technology',
 		'smithy' => 'dawn/smithy',

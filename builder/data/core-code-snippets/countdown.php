@@ -1,10 +1,13 @@
 <?php
-$tpl = getThemeSnippet('countdown');
-$message = returnLine(hasVariable('below-countdown') ? variable('below-countdown')
-	: 'A proprietary system, AW Dawn is not for the faint of heart!<br />Launching [Jan 7th](%urlOf-imran%writing/for/msa/BTNSITE)');
+$tpl = _excludeFromGoogleSearch(getThemeSnippet('countdown'));
+$heading = returnLine(hasVariable('heading-of-countdown') ? variable('heading-of-countdown') :
+	'A proprietary system, The <span class="ls-2">[**Dynamic AmadeusWeb Network**](%urlOf-world%BTNINFO)</span> is not for the faint of heart!');
+$message = returnLine(hasVariable('below-countdown') ? variable('below-countdown') :
+	'by [Imran Ali Namazi, Architect](%urlOf-imran%BTNPRIMARY)');
 return replaceItems($tpl, [
-	'left-hand-side'   => markdown('**COMING**'),
-	'right-hand-side'  => markdown('**SOOOON**'),
-	'countdown-params' => variableOr('countdown-params', 'data-year="2026" data-month="1" data-day="7" data-hour="12" data-minute="37" data-format="dHMS"'),
-	'below-countdown'  => $message,
+	'heading'   => $heading,
+	'left-hand-side'   => markdown('Next Release In'),
+	'right-hand-side'  => markdown('i.e AW Spring [v9.3 of Feb 21st](%urlOf-spring%BTNSUCCESS)'),
+	'countdown-params' => variableOr('countdown-params', 'data-year="2026" data-month="2" data-day="21" data-hour="12" data-minute="37" data-format="dHMS"'),
+	'message'  => $message,
 ], '%');
