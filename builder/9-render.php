@@ -6,9 +6,9 @@ function renderExcerpt($file, $link, $prefix = '', $echo = true) {
 
 	$meta = read_seo($file);
 
-	$hasMoreTag = disk_file_exists($file) ? contains(disk_file_get_contents($file), '') : false;
-	if (!$hasMoreTag && $meta && isset($meta['excerpt'])) $raw = $meta['excerpt']; else
-	$raw = renderAny($file, ['excerpt' => true, 'echo' => false, 'markdown' => endsWith($file, '.md')]);
+	$hasMoreTag = disk_file_exists($file) ? contains(disk_file_get_contents($file), MORETAG) : false;
+	if (!$hasMoreTag && $meta && isset($meta['excerpt'])) $raw = returnLine($meta['excerpt']); else
+	$raw = renderAny($file, ['excerpt' => true, 'echo' => false]);
 
 	$raw .= '<hr class="m-2" /><div style="text-align: right;">';
 	if ($meta && isset($meta['meta']['Date'])) $raw .= 'on ' . $meta['meta']['Date'] . '';
