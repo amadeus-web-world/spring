@@ -213,6 +213,7 @@ function site_humanize($txt, $field = 'title', $how = false) {
 		variableOr('nodeTitleHumanizeReplaces', []), //for works...
 		variableOr('nodeHumanizeReplaces', []),
 		variableOr('siteHumanizeReplaces', []),
+		variableOr('networkHumanizeReplaces', []),
 	];
 
 	$key = strtolower($txt);

@@ -213,9 +213,10 @@ function renderRichPage($sheetFile, $groupBy = 'section', $templateName = 'home'
 }
 
 function is_engage($raw) {
-	return contains($raw, ' //engage-->') || contains($raw, '<!--ENGAGE-->') || contains($raw, ENGAGESTART);
+	return contains($raw, ' //engage-->') || contains($raw, ENGAGE) || contains($raw, ENGAGESTART);
 }
 
+DEFINE('ENGAGE', '<!--engage-->');
 DEFINE('ENGAGESTART', '<!--start-engage-->');
 DEFINE('ENGAGESANSCB', '<!--engage-without-cb-->');
 function engage_until_eof($raw) {

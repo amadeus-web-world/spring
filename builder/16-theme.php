@@ -145,8 +145,11 @@ function runThemePart($what) {
 			$contact = getSnippet('contact');
 			if (!$contact) $contact = getSnippet('contact', CORESNIPPET);
 
-			$nodeName = nodeIs(SITEHOME) ? '' : NEWLINE . '				<span class="btn btn-light" style="letter-spacing: 2px;">&#10148; '
-				. variableOr('nodeSiteName', humanize((nodeValue()))) . '</span>' . NEWLINE;
+			//https://www.toptal.com/designers/htmlarrows/arrows/
+			$rightArrow = '<span class="h4">&#8608;</span> '; $leftArrow = ' <span class="h4">&#8606;</span>';
+			$nodeName = nodeIs(SITEHOME) ? '' : NEWLINE .
+				'				<span class="btn btn-light" style="letter-spacing: 2px;"> ' . $rightArrow
+				. variableOr('nodeSiteName', humanize((nodeValue()))) . $leftArrow . '</span>' . NEWLINE;
 
 			$altDesign = _useAltFooterDesign();
 			$nodeName = NEWLINE . '			<h4 class="' . ($altDesign ? '' : 'mt-sm-4 ') . 'mb-0">' . variableOr('footer-name', variable('name')) . '</h4>' . $nodeName;

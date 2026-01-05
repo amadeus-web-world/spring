@@ -4,5 +4,5 @@ echo returnLine(pipeToBR('This website:|"**%siteName%**"|is under construction.|
 contentBox('end');
 ?>
 <style>
-.under-construction { background-color: var(--amadeus-after-content-bgd, #eee)!important; font-size: 260%; padding: 40px; }
+.under-construction { font-size: 260%; padding: 40px; }
 </style>

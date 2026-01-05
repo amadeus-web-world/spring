@@ -1,7 +1,5 @@
 %countdown-corecodesnippet%
 
----
-
 <img class="img-fluid img-max-150 float-md-end" src="%url%%safeName%-icon.png" />
 # %siteName%
 

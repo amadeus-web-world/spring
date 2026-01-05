@@ -60,30 +60,7 @@ function subsitesMenu() {
 	$home = variable('subsiteHome');
 	if (!$home) return;
 
-	$name = humanize($home['Name']) . '++';
-
-	extract(variable('menu-settings'));
-	if ($wrapTextInADiv) $name = '<div>' . $name . $topLevelAngle . '</div>';
-
-	echo '<li class="' . $itemClass . ' ' . $subMenuClass . '"><a class="' . $anchorClass . '">' . $name . '</a>' . NEWLINES2;
-	echo '	<ul class="' . $ulClass . '">' . NEWLINE;
-
-	$all = variable('allSiteItems');
-	$homePath = $home['Path'] . '/' . (isset($home['Folder']) ? $home['Folder'] : '') . $home['Subsite']['Site'];
-
-	$name = _siteOf($home, $all, $wrapTextInADiv, $anchorClass);
-	echo '<li class="' . $itemClass . ' ' . $subMenuClass . '">' . $name . '</li>';
-
-	foreach ($items as $siteAt => $item) {
-		//if ($item['Path'] != $home['Path']) continue; //skip other networks
-		if ($siteAt == $homePath) continue;
-		$name = _siteOf($item, $all, $wrapTextInADiv, $anchorClass);
-		if (!$name) continue;
-		echo '<li class="' . $itemClass . ' ' . $subMenuClass . '">' . $name . '</li>' . NEWLINE;
-	}
-
-	echo '	</ul>' . NEWLINES2;
-	echo '</li>' . NEWLINE;
+	__flatMenu($items, humanize($home['name']));
 }
 
 function _siteOf($item, $items, $wrap, $anchorClass) {

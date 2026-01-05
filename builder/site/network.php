@@ -119,6 +119,16 @@ function setupNetwork($noNetwork) {
 		$items = $sheet->rows;
 	}
 
+	$subsiteItems = DEFINED('SUBSITES') ? [] : false;
+	if (DEFINED('SUBSITES')) foreach (SUBSITES as $key => $path) {
+		$item = _getOrWarn($path);
+		if ($item === false) continue;
+		$subsiteItems[] = $networkSites[] = $item;
+		if (!isset($subsiteHome)) $subsiteHome = $item;
+		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
+	}
+	if ($subsiteItems) variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]);
+
 	foreach ($items as $key => $row) {
 		$plain = is_string($row);
 		$key = $plain ? $row : $sheet->getValue($row, 'key');
