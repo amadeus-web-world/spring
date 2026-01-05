@@ -617,10 +617,11 @@ function makeRelativeLink($text, $relUrl) {
 
 DEFINE('EXTERNALLINK', 'external');
 
-function makeLink($text, $link, $relative = true, $noLink = false) {
+function makeLink($text, $link, $relative = true, $noLink = false, $class= '') {
 	if ($noLink) return $text; //Used when a variable needs to control this, else it will be a ternary condition, complicating things
 	if ($relative == EXTERNALLINK) $link .= '" target="_blank'; //hacky - will never 
 	else if ($relative) $link = pageUrl($link);
+	if ($class) $link .= '" class="' . $class;
 	return prepareLinks('<a href="' . $link . '">' . $text . '</a>');
 }
 

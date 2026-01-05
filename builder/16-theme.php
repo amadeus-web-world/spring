@@ -147,9 +147,10 @@ function runThemePart($what) {
 
 			//https://www.toptal.com/designers/htmlarrows/arrows/
 			$rightArrow = '<span class="h4">&#8608;</span> '; $leftArrow = ' <span class="h4">&#8606;</span>';
+			$nodeLink = makeLink(variableOr('nodeSiteName', humanize((nodeValue()))), pageUrl(nodeIs(SITEHOME) ? '' : nodeValue()), true, false, 'btn-has-icon');
 			$nodeName = nodeIs(SITEHOME) ? '' : NEWLINE .
-				'				<span class="btn btn-light" style="letter-spacing: 2px;"> ' . $rightArrow
-				. variableOr('nodeSiteName', humanize((nodeValue()))) . $leftArrow . '</span>' . NEWLINE;
+				'				<span class="btn btn-success" style="letter-spacing: 2px;"> ' . $rightArrow
+				. $nodeLink . $leftArrow . '</span>' . NEWLINE;
 
 			$altDesign = _useAltFooterDesign();
 			$nodeName = NEWLINE . '			<h4 class="' . ($altDesign ? '' : 'mt-sm-4 ') . 'mb-0">' . variableOr('footer-name', variable('name')) . '</h4>' . $nodeName;

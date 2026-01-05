@@ -14,7 +14,8 @@ setupNetwork($noNetwork);
 
 if (!$noNetwork) {
 	function network_menu() {
-		__flatMenu(variable('networkSites'), variable('network'));
+		if (variable('network') != 'dawn-only')
+			__flatMenu(variable('networkSites'), variable('network'));
 		dawn_menu();
 	}
 }
@@ -114,6 +115,8 @@ function setupNetwork($noNetwork) {
 
 		$items[] = '~' . DAWN_NAME;
 		$items = array_merge($items, getDawnSites());
+	} else if (variable('network') == 'dawn-only') {
+		$items == array_merge(['~' . DAWN_NAME], getDawnSites());
 	} else if (!$noNetwork) {
 		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);
 		$items = $sheet->rows;

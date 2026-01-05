@@ -149,6 +149,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 			variable('no-content-boxes', $engageSansCB);
 
 			if ($autop) $raw = wpautop($raw);
+			$raw = runAllMacros($raw);
 			$output = renderEngage(getPageName(), $raw . $inProgress, false, $meta);
 			variable('no-content-boxes', $no);
 		} else {
