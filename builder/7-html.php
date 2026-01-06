@@ -346,8 +346,16 @@ function prepareLinks($output) {
 	$output = str_replace('#utm', '?utm_source=' . variable('safeName') . $campaign, $output);
 
 	$output = bootstrapAndUX::toButtons($output);
+	$output = replaceHtmlShortcuts($output);
 
-	$output = replaceItems($output, [
+	$output = replaceItems($output, ['/class' => '', 'class' => '" class="', ], '~');
+	$output = str_replace('NBSP', ' ', $output);
+
+	return $output;
+}
+
+function replaceHtmlShortcuts($output) {
+	return replaceItems($output, [
 		//divs
 		'DIV-LARGELISTWITHITEMSEPARATOR' => '<div class="large-list item-separator">',
 		'DIV-LARGELISTLOWERALPHA' => '<div class="large-list lower-alpha item-separator">',
@@ -390,11 +398,6 @@ function prepareLinks($output) {
 		'STARTDIV ' => '<div ',
 		' CLOSETAG' => '>',
 	]);
-
-	$output = replaceItems($output, ['/class' => '', 'class' => '" class="', ], '~');
-	$output = str_replace('NBSP', ' ', $output);
-
-	return $output;
 }
 
 function url_r($url, $domainOnly = false) {
@@ -409,8 +412,9 @@ function url_r($url, $domainOnly = false) {
 	return $domainOnly ? explode('/', $url)[0] : $url;
 }
 
-function _whatsAppME($mob, $txt = '?text=') {
-	return 'https://wa.me/' . replaceItems($mob, ['+' => '', '-' => '', '.' => '']) . $txt;
+function _whatsAppME($mob, $txt = '?text=', $stripOnly = false) {
+	$mob = replaceItems($mob, ['+' => '', '-' => '', '.' => '']);
+	return $stripOnly ? $mob : 'https://wa.me/' . $mob . $txt;
 }
 
 function specialLinkVars($item) {
@@ -549,7 +553,7 @@ class linkBuilder extends builderBase {
 
 		if (in_array('lightbox', $do)) {
 			$result->attrs .= ' data-lightbox="iframe"';
-			$result->href .= self::content;
+			$result->href .= contains($result->href, '?') ? str_replace('/?', '&', self::content) : self::content;
 			$result->href .= str_replace('?', '&', variable('mediakit'));
 		}
 

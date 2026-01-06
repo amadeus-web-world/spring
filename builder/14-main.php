@@ -32,7 +32,8 @@ class main {
 	static function runAndReturn() {
 		doToBuffering(1);
 		main::analytics();
-		main::chat();
+		if (!getQueryParameter('content'))
+			main::chat();
 		$result = doToBuffering(2);
 		doToBuffering(3);
 		return $result;
