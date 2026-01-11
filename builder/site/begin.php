@@ -16,7 +16,11 @@ foreach ($sheet->rows as $row) {
 	$siteVars[$key] = $row[$cols['value']];
 }
 
-variable('site-vars', $siteVars);
+variables([
+	'site-vars' => $siteVars,
+	'local-url' => $siteVars['local-url'],
+	'live-url' => $siteVars['live-url'],
+]);
 
 if (contains($url = $siteVars[variable(SITEURLKEY)], 'localhost'))
 	$url = replaceItems($url, ['localhost' => 'localhost' . variable('port')]);

@@ -237,7 +237,7 @@ function replaceHtml($html) {
 			'%core-assets%' => _resolveFile('', STARTATCORE),
 			'##theme##' => getThemeBaseUrl(),
 
-			'%cdn%' => variableOr('cdn', variable('assets-url') . 'assets/cdn/'),
+			'%cdn%' => variableOr('cdn', variable(variable('is-mobile') ? 'live-url' : 'assets-url') . 'assets/cdn/'),
 
 			'%currentUrl%' => currentUrl(),
 			'%nodeSlug%' => $node,
@@ -391,6 +391,7 @@ function replaceHtmlShortcuts($output) {
 		'DIV-WITHBOX' => '<div class="content-box">',
 		' NEWLINES2' => '<br /><br />' . NEWLINE,
 		' NEWLINE' => '<br />' . NEWLINE,
+		' JUSTBR' => '<br />',
 		' CRLF' => NEWLINE,
 
 		//generic html
