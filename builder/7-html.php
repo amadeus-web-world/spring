@@ -705,9 +705,11 @@ function debug($function, $vars) {
 	if (is_debug()) echo variable('2nl') . '<!--FUNCTION CALLED: ' . $function . ' - ' . print_r($vars, true) . '-->';
 }
 
-function showDebugging($msg, $param, $die = false, $trace = false) {
-	echo variable('_errorStart') . $msg . '<hr><pre>' . print_r($param, 1);
-	if ($trace) { echo '</pre><br>STACK TRACE:<hr><pre>'; debug_print_backtrace(); }
-	echo '</pre></div>';
+function showDebugging($msg, $param, $die = false, $trace = false, $echo = true) {
+	$op = variable('_errorStart') . $msg . '<hr><pre>' . print_r($param, 1);
+	if ($trace) { $op .= '</pre><br>STACK TRACE:<hr><pre>'; debug_print_backtrace(); }
+	$op .= '</pre></div>';
+	if (!$echo) return $op;
+	echo $op;
 	if ($die) die();
 }

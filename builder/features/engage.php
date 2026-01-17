@@ -19,7 +19,9 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 		if (isset($meta['WhatsApp To'])) $whatsapp = _whatsAppME($meta['WhatsApp To']);
 	}
 
-	$result = '	<div id="engage-' . urlize($name) . '" class="' . _getCBClassIfWanted('engage') . '" ' .
+	$class = contains($raw, '<!--no-engage-box-->') ? '' : '" class="' . _getCBClassIfWanted('engage') . '" ';
+
+	$result = '	<div id="engage-' . urlize($name) . $class .
 		//($open ? '' : 'style="display: none" ') .
 		'data-to="' . ($email = $addressee . variable('email')) .
 		'" data-cc="' . $additionalCC .

@@ -2,12 +2,13 @@
 |key used for urlOf-
 ~Organizations
 anbagam	organizations/anbagam
-|globalconcernsindia	organizations/globalconcernsindia
-kings-college-london	organizations/kings-college-london/intrepid-research
+globalconcernsindia	organizations/globalconcernsindia
 vishwas	organizations/vishwas
+zvmworld	organizations/zvmworld
 ~People
 imranWrites	people/imran/writing
-bhuvana	people/bhuvana
+chandrasekar	people/chandrasekar
+khushwant	people/khushwant
 ~by Vidya Shankar
 awakentolife	sites/for-vidya/awakentolife
 vidyantara	sites/for-vidya/vidyantara
