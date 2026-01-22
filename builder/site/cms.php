@@ -217,6 +217,7 @@ function site_humanize($txt, $field = 'title', $how = false) {
 	];
 
 	$key = strtolower($txt);
+
 	foreach ($arrays as $list)
 		if (array_key_exists($key, $list))
 			return $list[$key];

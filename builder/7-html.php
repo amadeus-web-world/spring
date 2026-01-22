@@ -449,6 +449,8 @@ class bootstrapAndUX {
 	const namedButtons = [
 		'DOWNLOAD' => 'btn btn-lg btn-primary" target="_blank',
 		'SITE' => 'btn btn-info',
+		'SECURE' => 'btn btn-danger m-2 bi bi-shield-lock icon-2x',
+		'TODO' => 'btn btn-warning bi bi-journal-check" target="_blank',
 		'PHONE' => 'btn btn-has-icon btn-info bi bi-telephone ls-2" style="color: #fff;',
 		'WHATSAPP' => 'btn btn-has-icon btn-success bi bi-whatsapp ls-2',
 		'EMAIL' => 'btn btn-has-icon btn-danger bi bi-mailbox ls-2',
@@ -499,6 +501,7 @@ class linkBuilder extends builderBase {
 
 	const link = 'outline-primary margins noPageUrl';
 	const selectedLink = 'btn-success margins noPageUrl';
+	const innerLink = 'btn-secondary margins';
 
 	static function factory($text, $href, $setting, $echo = false) {
 		$do = explode(' ', $setting);
@@ -701,11 +704,28 @@ function error($html, $renderAny = false, $settings = []) {
 	echo variable('_errorStart') . $html . '</div>';
 }
 
-function debug($function, $vars) {
-	if (is_debug()) echo variable('2nl') . '<!--FUNCTION CALLED: ' . $function . ' - ' . print_r($vars, true) . '-->';
+define('DEBUGPLAIN', '1');
+define('DEBUGSPECIAL', 'special');
+define('DEBUGVERBOSE', 'verbose');
+
+function debug($file, $function, $vars, $type = DEBUGPLAIN) {
+	if (getQueryParameter('debug') != $type) return;
+	$file = replaceItems($file, [ALLSITESROOT => 'ROOT/', AMADEUSCORE => 'CORE/', '\\' => '/']);
+	echo NEWLINE . '<!--' . NEWLINE
+		. 'INFO:' . NEWLINE . '	' . implode(NEWLINE . '	', explode(PHP_EOL, printReadable($vars))) . NEWLINE
+		. 'FILE: ' . $file . NEWLINE
+		. 'FUNCTION: ' . $function . NEWLINE
+		. '-->' . NEWLINES2;
 }
 
-function showDebugging($msg, $param, $die = false, $trace = false, $echo = true) {
+function printReadable($array) {
+	$r = print_r($array, 1);
+	$r = substr($r, strlen('Array' . PHP_EOL . '(' . NEWLINE . '  '));
+	return substr($r, 0, strlen($r) - strlen(')' . PHP_EOL));
+}
+
+function showDebugging($msg, $param, $die = false, $trace = false, $echo = true, $skip = false) {
+	if ($skip) return;
 	$op = variable('_errorStart') . $msg . '<hr><pre>' . print_r($param, 1);
 	if ($trace) { $op .= '</pre><br>STACK TRACE:<hr><pre>'; debug_print_backtrace(); }
 	$op .= '</pre></div>';

@@ -1,17 +1,19 @@
 #key	path
 |key used for urlOf-
 ~Organizations
-anbagam	organizations/anbagam
-globalconcernsindia	organizations/globalconcernsindia
-vishwas	organizations/vishwas
-zvmworld	organizations/zvmworld
+anbagam	anbagam
+globalconcernsindia	globalconcernsindia
+vishwas	vishwas
+zvmworld	zvmworld
 ~People
-imranWrites	people/imran/writing
-chandrasekar	people/chandrasekar
-khushwant	people/khushwant
+imranWrites	imran/writing
+chandrasekar	chandrasekar
+khushwant	khushwant
 ~by Vidya Shankar
-awakentolife	sites/for-vidya/awakentolife
-vidyantara	sites/for-vidya/vidyantara
+awakentolife	awakentolife
+education	education
+thinkmath	thinkmath
+vidyantara	vidyantara
 ~Business
-ganiandsons	businesses/ganiandsons
-interlink	businesses/iscindia
+ganiandsons	ganiandsons
+interlink	iscindia

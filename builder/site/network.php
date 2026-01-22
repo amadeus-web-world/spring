@@ -2,6 +2,11 @@
 DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
 DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
+DEFINE('DOMAINS', ['organizations', 'spaces', 'people', 'businesses']);
+
+function is_dawn($fol) {
+	return in_array($fol, ['dawn', 'public_html']);
+}
 
 if (defined('SHOWSITESAT')) {
 	setupNetwork(null);
@@ -25,8 +30,8 @@ function dawn_menu() {
 
 	$items[] = DAWN_SECTION . 'Domains';
 	$urlKey = _getUrlKeySansPreview();
-	$href = variable('local') ? 'http://localhost/%s/' : 'https://%s.amadeusweb.world/';
-	foreach (['people', 'organizations', 'businesses'] as $item)
+	$href = variable('local') ? 'http://localhost/%s/' : 'https://amadeusweb.world/%s/';
+	foreach (DOMAINS as $item)
 		$items[] = [$urlKey => sprintf($href, $item), 'name' => humanize($item)];
 
 	__flatMenu($items, 'DAWN');
@@ -63,15 +68,12 @@ function __flatMenu($items, $name) {
 function getDawnSites() {
 	$op = [
 		'~<abbr title="'.DAWN_NAME.'">DAWN</abbr>',
-		'world' => 'dawn/world',
-		'ava' => 'dawn/ava',
-		'planeteers' => 'dawn/planeteers',
+		'oases' => 'oases', //TODO: HIGH: change urlOf-world
 		DAWN_SECTION . 'Technology',
-		'smithy' => 'dawn/smithy',
-		'spring' => 'dawn/spring',
-		'admin' => 'dawn/admin',
+		'smithy' => 'smithy',
+		'spring' => 'spring',
 		DAWN_SECTION . 'Authors',
-		'imran' => 'people/imran',
+		'imran' => 'imran',
 	];
 
 	if (!variable('local'))
@@ -87,30 +89,34 @@ function setupNetwork($noNetwork) {
 
 	$networkName = urldecode(getQueryParameter('network', variable('network')));
 
-	//TEST: $networkName = 'Learning'; variable('network', $networkName);
+	//TEST: $networkName; variable('network', $networkName = 'Learning');
 	$urlKey = _getUrlKeySansPreview();
 
 	$items = [];
-	$folPrefix = '';
-	$usePath = false;
 
 	if (defined('SHOWSITESAT')) {
-		$usePath = contains($tmp = substr(SHOWSITESAT, strlen(ALLSITESROOT)), DIRECTORY_SEPARATOR)
-			? explode(DIRECTORY_SEPARATOR, $tmp)[0] . '/' : false;
-
 		$folPrefix = pathinfo(SHOWSITESAT, PATHINFO_FILENAME);
-		DEFINE('SITESATNAME', humanize($folPrefix));
-		$items[] = '~' . SITESATNAME;
+		$isDawn = is_dawn($folPrefix);
+		DEFINE('SITESATNAME', $isDawn ? 'DAWN' : humanize($folPrefix));
+		if (!$isDawn) $items[] = '~' . SITESATNAME;
 
 		if (disk_file_exists($txt = AMADEUSROOT . '/data/domains/' . $folPrefix . '.txt'))
 			$files = textToList(disk_file_get_contents($txt));
 		else
-			$files = _skipNodeFiles(scandir(SHOWSITESAT), 'php');
+			$files = getSitesToShow($folPrefix);
 
 		$folPrefix .= '/';
 		foreach ($files as $file) {
-			if (startsWith($file, '==') || !disk_file_exists(SHOWSITESAT . '/' . $file . '/data/site.tsv')) continue;
-			$items[$file] = ($usePath ? $usePath : '') . $folPrefix . $file;
+			if (startsWith($file, '~')) {
+				$items[] = $file;
+				continue;
+			}
+
+			if (startsWith($file, '==') || !disk_file_exists($tsv = ALLSITESROOT . $file . '/data/site.tsv')) {
+				if (variable('local')) echo '<!-- missing tsv: ' . $tsv . '-->' . NEWLINE;
+				continue;
+			}
+			$items[$file] = $file;
 		}
 
 		$items[] = '~' . DAWN_NAME;
@@ -123,14 +129,16 @@ function setupNetwork($noNetwork) {
 	}
 
 	$subsiteItems = DEFINED('SUBSITES') ? [] : false;
-	if (DEFINED('SUBSITES')) foreach (SUBSITES as $key => $path) {
+	if (DEFINED('SUBSITES')) foreach (getSitesToShow(SUBSITES) as $path) {
+		$key = $path;
+		//if (contains($key, '/')) { $bits = explode('/', $path); $key = array_shift($bits); } //TODO: HI: check network like JE
 		$item = _getOrWarn($path);
 		if ($item === false) continue;
 		$subsiteItems[] = $networkSites[] = $item;
 		if (!isset($subsiteHome)) $subsiteHome = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
-	if ($subsiteItems) variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]);
+	if ($subsiteItems) showDebugging('131', variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]), false, false, true);
 
 	foreach ($items as $key => $row) {
 		$plain = is_string($row);
@@ -161,15 +169,62 @@ function setupNetwork($noNetwork) {
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
 
-	variable('dawnSites', $dawnSites);
-	variable('networkSites', $networkSites);
-	variable('networkUrls', $networkUrls);
+	variables([
+		'dawnSites' => $dawnSites,
+		'networkSites' => $networkSites,
+		'networkUrls' => $networkUrls
+	]);
+}
+
+function getSitesToShow($at) {
+	$isDawn = is_dawn($at);
+	$byDomain = [];
+	$fols = _skipNodeFiles(scandir(ALLSITESROOT), ONLYFOLDERS);
+
+	$op = [];
+	foreach ($fols as $relativePath) {
+		$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
+		if (!sheetExists($file)) {
+			if (variable('local')) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV missing' => $file, 'hint' => 'IS NETWORK / Site Grouping?'], DEBUGVERBOSE);
+			continue;
+		}
+
+		$site = getSheet($file, 'key');
+		$showInConfig = $site->firstOfGroup('showIn', false, false);
+
+		if (!$showInConfig) {
+			if (variable('local')) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "showIn" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
+			continue;
+		}
+
+		$showIn = $site->getValue($showInConfig, 'value');
+		if ($isDawn) {
+			if (!isset($byDomain[$showIn]))
+				$byDomain[$showIn] = [];
+			$byDomain[$showIn][] = $relativePath;
+			continue;
+		}
+
+		if ($showIn != $at) continue;
+		$op[] = $relativePath;
+	}
+
+	if (!$isDawn) return $op;
+
+	foreach (DOMAINS as $domain) {
+		if (!isset($byDomain[$showIn])) continue;
+		$op[] = '~' . humanize($domain);
+		$op = array_merge($op, $byDomain[$domain]);
+	}
+
+	//showDebugging('211', $op, true);
+	return $op;
 }
 
 function _getOrWarn($relativePath) {
 	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
 	if (!sheetExists($file)) {
-		if (variable('local')) echo '<!-- missing: ' . $relativePath . ' ~~ NOT FOUND: ' . $file . '-->' . NEWLINE;
+		if (variable('local')) debug(__FILE__, '_getOrWarn', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
 		return false;
 	}
 

@@ -240,8 +240,11 @@ class sheet {
 	public array $values;
 	public array | null $group;
 
-	public function firstOfGroup($key, $else = false) {
-		if (!isset($this->group[$key]) && variable('local')) showDebugging('243 missing-group-key', $key, true, true);
+	public function firstOfGroup($key, $else = false, $fail = true) {
+		if (!isset($this->group[$key])) {
+			if (!$fail) return $else;
+			if (variable('local')) showDebugging('243 missing-group-key', $key, true, true);
+		}
 		return isset($this->group[$key]) ? $this->group[$key][0] : $else;
 	}
 
@@ -292,11 +295,15 @@ function getSheet($name, $groupBy = 'section', $urlize = false) : sheet {
 	return $r;
 }
 
-function rowToObject($item, $sheet) {
+function rowToObject($item, $sheet, $render = false, $renderSettings = []) {
 	$result = [];
+	$singleLine = empty($renderSettings);
 
-	foreach ($sheet->columns as $name => $ix)
-		$result[$name] = $sheet->getValue($item, $name);
+	foreach ($sheet->columns as $name => $ix) {
+		$text = $sheet->getValue($item, $name);
+		if ($render) $text = $singleLine ? renderSingleLineMarkdown($text) : renderAny($text, $renderSettings);
+		$result[$name] = $text;
+	}
 
 	return $result;
 }

@@ -14,7 +14,7 @@
 
 DEFINE('AMADEUSROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSSITEROOT', dirname(__DIR__, 1) . DIRECTORY_SEPARATOR);
-DEFINE('ALLSITESROOT', dirname(AMADEUSROOT, 2) . DIRECTORY_SEPARATOR);
+DEFINE('ALLSITESROOT', dirname(AMADEUSROOT) . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSFRAMEWORK', __DIR__ . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSCORE', __DIR__ . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSFEATURES', AMADEUSCORE . 'features/');
@@ -65,7 +65,7 @@ function before_bootstrap() {
 	variable('local', $local = startsWith($_SERVER['HTTP_HOST'], 'localhost'));
 	variable('live', defined('SHOWSITESAT') ? false : contains(SITEPATH, 'live'));
 
-	variable('app', $url = ($local && !$isMobile ? replaceVariables('http://localhost%port%/dawn/spring/', 'port') : '//spring.amadeusweb.world/'));
+	variable('app', $url = ($local && !$isMobile ? replaceVariables('http://localhost%port%/spring/', 'port') : '//amadeusweb.world/spring/'));
 
 	if (DEFINED('AMADEUSURL')) variable('app', AMADEUSURL);
 
@@ -116,6 +116,10 @@ function bootstrap($config) {
 
 function getPageParameterAt($index = 1, $or = false) {
 	return variableOr('page_parameter' . $index, $or);
+}
+
+function getPageParameters($trail = '/') {
+	return concatSlugs(variable('page_parameters')) . $trail;
 }
 
 function hasPageParameter($param) {

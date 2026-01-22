@@ -227,12 +227,13 @@ function _page_menu($siteIcon, $nodeIcon) {
 	$menuContent = disk_file_get_contents($menuFile);
 
 	$siteOnly = variable('dont-overwrite-logo') && lastNodeVarsIndex() < 2;
+	$name = humanize(variable('nodeSiteName'));
 	$menuVars = $siteOnly ? [
 		'menu-title' => NEWLINE . _iconLink($siteIcon) . BREADCRUMBSEPARATOR
-		 . getLink(variable('nodeSiteName'), pageUrl(variable('nodeSlug')), 'btn btn-site') . NEWLINE,
+		 . getLink($name, pageUrl(variable('nodeSlug')), 'btn btn-site') . NEWLINE,
 	] : [
 		'menu-title' => NEWLINE . site_and_node_icons($siteIcon, $nodeIcon)
-			 . variable('nodeSiteName') . NEWLINE,
+			 . $name . NEWLINE,
 	];
 	$menuContent = replaceItems($menuContent, $menuVars, '##');
 
@@ -333,8 +334,8 @@ function siteWidgets() {
 
 		$urlKey = _getUrlKeySansPreview();
 		$brYes = _useAltFooterDesign() ? NEWLINE : BRNL;
-		foreach ($sites as $site)
-			$op[] = is_string($site) ? '<u class="m-1 ms-3">' . substr($site, 1) . '</u>'
+		foreach ($sites as $ix => $site)
+			$op[] = is_string($site) ? ($ix > 0 ? BRNL : '') . '<u class="m-1 ms-3">' . substr($site, 1) . '</u>'
 				: getLink('<img src="' . $site[$urlKey] . $site['key'] . '-icon.png" height="28" class="me-2" /> ' . $site['name'], $site[$urlKey],
 					'btn bg-light btn-outline-success m-1', true) . $brYes;
 		$op[] = '</div>'; $op[] = '';

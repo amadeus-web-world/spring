@@ -20,10 +20,11 @@ function subVariableOr($name, $subName, $or)
 	return hasSubVariable($name, $subName) ? subVariable($name, $subName) : $or;
 }
 
-function variables($a)
+function variables($items)
 {
-	foreach ($a as $key=>$value)
+	foreach ($items as $key=>$value)
 		variable($key, $value);
+	return $items;
 }
 
 function variableOr($name, $or, $hasVar = null)
@@ -51,12 +52,6 @@ function hasSubVariable($name, $subName)
 {
 	$a = variableOr($name, []);
 	return isset($a[$subName]);
-}
-
-function is_debug($value = false) {
-	$qs = itemOr($_GET, 'debug');
-	if ($value == 'verbose') return $qs == 'verbose';
-	return $qs || variable('debug');
 }
 
 function replaceVariables($text, $vars = 'url, app, app-static, app-static--3p')

@@ -64,7 +64,7 @@ function time_r($time, $what, $exact = false) {
 }
 
 function disk_scandir($folder) {
-	debug('files.php - disk_scandir', ['$folder' => $folder]);
+	debug(__FILE__, 'disk_scandir', ['$folder' => $folder]);
 	if (($result = _diskCached('scandir', $folder)) == null) {
 		_disk_start();
 		$folder = _makeSlashesConsistent($folder);
@@ -77,7 +77,7 @@ function disk_scandir($folder) {
 }
 
 function disk_file_get_contents($file) {
-	debug('files.php - disk_file_get_contents', ['$file' => $file]);
+	debug(__FILE__, 'disk_file_get_contents', ['$file' => $file]);
 	//if (!file_exists($file)) showDebugging('81', $file, false, true);
 	if (($result = _diskCached('file_get_contents', $file)) == null) {
 		_disk_start();
@@ -150,7 +150,7 @@ function disk_file_exists($file) {
 function disk_include_once($file, $variables = []) {
 	//breaks as not exists because entry uses new runFrameworkFile
 	if (function_exists('debug'))
-		debug('files.php - disk_include_once', ['$file' => $file]);
+		debug(__FILE__, 'disk_include_once', ['$file' => $file]);
 
 	if (!$file) showDebugging('$file', $file, true);
 	_disk_start();
@@ -163,7 +163,7 @@ function disk_include_once($file, $variables = []) {
 }
 
 function disk_include($file, $variables = false) {
-	debug('files.php - disk_include', ['$file' => $file]);
+	debug(__FILE__, 'disk_include', ['$file' => $file]);
 	_disk_start();
 	$file = _makeSlashesConsistent($file);
 	if ($variables) extract($variables);
