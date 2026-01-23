@@ -1,5 +1,6 @@
 <?php
 DEFINE('OURNETWORK', '');
+DEFINE('DOMAINKEY', 'showIn');
 
 DEFINE('OTHERSITEPREFIX', 'urlOf-');
 function sluggize($relPath) {

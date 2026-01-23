@@ -2,14 +2,16 @@
 /**
  * This php framework is Proprietary, Source-available software!
  * It is licensed for distribution at the sole discretion of it's owner Imran.
- * Copyright Oct 2019 -> 2025, AmadeusWeb.com, All Rights Reserved!
- * Author: Imran Ali Namazi <imran@amadeusweb.world>
- * Website: https://spring.amadeusweb.world/
- * Source:  https://github.com/amadeus-web-world/spring
- * Note: AmadeusWeb v9.1 is based on 25 years of Imran's programming experience:
- * https://imran.amadeusweb.world/
- * You MUST agree to and adhere to all "courtesies" required by:
- *     https://github.com/amadeus-web-world/spring#License-1-ov-file
+ * Copyright Oct 2019 -> 2026, AmadeusWeb.world, All Rights Reserved!
+ *     
+ * Author:    Imran Ali Namazi <imran@amadeusweb.world>
+ * Architect: https://amadeusweb.world/imran/
+ * Website:   https://amadeusweb.world/spring/
+ * Source:    https://github.com/amadeus-web-world/spring
+ * License:   https://github.com/amadeus-web-world/spring#License-1-ov-file
+ * Note: AmadeusWeb Spring v9.3 is based on 25 years of Imran's programming experience:
+ * You MUST agree to the "proprietary" nature and Imran's PULL PLUG RIGHTS
+ * Rights:    https://amadeusweb.world/oases/proprietariness/with-ai/2025-12--16th-chat/
  */
 
 DEFINE('AMADEUSROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);

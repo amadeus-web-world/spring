@@ -1,12 +1,23 @@
 <?php
 $sites = variable('networkSites');
+$prefix = substr(DAWN_SECTION, 1);
 
 sectionId('network-sites', 'container');
 
+function _is_heading($item) { return is_string($item) && startsWith($item, '~'); }
+
 $op = ['ALLARTICLES'];
-foreach ($sites as $item) {
-	if (is_string($item) && startsWith($item, '~')) {
-		$op[] = h2(substr($item, 1), 'btn-outline-info', true);
+foreach ($sites as $ix => $item) {
+	if (_is_heading($item)) {
+		if ($ix == count($sites) -1) continue;
+		if ($ix < count($sites) -1 && _is_heading($sites[$ix + 1])) continue; //Hence ThisIsEmpty
+
+		$domain = startsWith($item, '~~');
+		$text = substr($item, $domain ? 2 : 1);
+		$link = makeLink($domain ? $prefix . humanize($text) : $prefix . $text,
+			$domain ? getDomainLink('', $text, '', true) : '',
+			false, !$domain, $ix == 0 ? 'btn btn-info' : 'btn btn-success');
+		$op[] = h2($link, 'bg-light', true);
 		continue;
 	}
 

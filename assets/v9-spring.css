@@ -8,13 +8,11 @@ body.theme-canvas .menu-link { padding-top: 10px; padding-bottom: 10px; }
 .showing-sites .content-wrap { min-height: 100vh; padding-bottom: 30px; }
 .showing-sites .portfolio-item { padding-bottom: 20px; }
 .showing-sites h2 { 
-	background-color: var(--amadeus-heading-bgd, whitesmoke);
 	color: var(--cnvs-link-color, teal);
 	padding: 6px; border-radius: 5px;
 	text-align:  center; 
 	margin: 20px 10px 15px 10px;
 }
-.showing-sites h2:nth-of-type(2) { opacity: .8; background-color: #f5f5c7; }
 
 .breadcrumb-item { border: #333 1px solid; border-radius: 2ex; }
 

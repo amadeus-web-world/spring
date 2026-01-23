@@ -1,8 +1,9 @@
 <?php
 DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
 DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
+DEFINE('DAWN_ABBR', 'DAWN');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
-DEFINE('DOMAINS', ['organizations', 'spaces', 'people', 'businesses']);
+DEFINE('DOMAINS', ['organizations', 'people', 'communities', 'network', 'spaces', 'businesses', 'technology', 'authors']);
 
 function is_dawn($fol) {
 	return in_array($fol, ['dawn', 'public_html']);
@@ -26,15 +27,24 @@ if (!$noNetwork) {
 }
 
 function dawn_menu() {
-	$items = variable('dawnSites');
+	$urlKey = _getUrlKeySansPreview();
+	$showIn = variable(DOMAINKEY);
+	$back = getDomainLink('Back to ' . ($showIn ? humanize($showIn) : DAWN_ABBR), $showIn ? $showIn : '', $urlKey);
+	$items = array_merge([$back], variable('dawnSites'));
 
 	$items[] = DAWN_SECTION . 'Domains';
-	$urlKey = _getUrlKeySansPreview();
-	$href = variable('local') ? 'http://localhost/%s/' : 'https://amadeusweb.world/%s/';
-	foreach (DOMAINS as $item)
-		$items[] = [$urlKey => sprintf($href, $item), 'name' => humanize($item)];
 
-	__flatMenu($items, 'DAWN');
+	foreach (DOMAINS as $item)
+		$items[] = getDomainLink(humanize($item), $item, $urlKey);
+
+	__flatMenu($items, DAWN_ABBR);
+}
+
+function getDomainLink($name, $site, $urlKey, $hrefOnly = false) {
+	$href = variable('local') ? replaceVariables('http://localhost%port%/', 'port') : 'https://amadeusweb.world/';
+	if ($site) $href .= $site . '/';
+	if ($hrefOnly) return $href;
+	return [$urlKey => $href, 'name' => $name];
 }
 
 function __flatMenu($items, $name) {
@@ -67,17 +77,14 @@ function __flatMenu($items, $name) {
 
 function getDawnSites() {
 	$op = [
-		'~<abbr title="'.DAWN_NAME.'">DAWN</abbr>',
-		'oases' => 'oases', //TODO: HIGH: change urlOf-world
-		DAWN_SECTION . 'Technology',
+		'~~network',
+		'world' => 'oases', //alias of sorts, needed for launcher / urlOf-world to work
+		'~~technology',
 		'smithy' => 'smithy',
 		'spring' => 'spring',
-		DAWN_SECTION . 'Authors',
+		'~~authors',
 		'imran' => 'imran',
 	];
-
-	if (!variable('local'))
-		unset($op['admin']);
 
 	return $op;
 }
@@ -86,6 +93,7 @@ function setupNetwork($noNetwork) {
 	$dawnSites = [];
 	$networkSites = [];
 	$networkUrls = [];
+	//$networkUrls[OTHERSITEPREFIX . 'world'] = variable();
 
 	$networkName = urldecode(getQueryParameter('network', variable('network')));
 
@@ -119,10 +127,9 @@ function setupNetwork($noNetwork) {
 			$items[$file] = $file;
 		}
 
-		$items[] = '~' . DAWN_NAME;
 		$items = array_merge($items, getDawnSites());
 	} else if (variable('network') == 'dawn-only') {
-		$items == array_merge(['~' . DAWN_NAME], getDawnSites());
+		$items == getDawnSites();
 	} else if (!$noNetwork) {
 		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);
 		$items = $sheet->rows;
@@ -138,7 +145,7 @@ function setupNetwork($noNetwork) {
 		if (!isset($subsiteHome)) $subsiteHome = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
-	if ($subsiteItems) showDebugging('131', variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]), false, false, true);
+	if ($subsiteItems) showDebugging('151', variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]), false, false, true);
 
 	foreach ($items as $key => $row) {
 		$plain = is_string($row);
@@ -190,10 +197,10 @@ function getSitesToShow($at) {
 		}
 
 		$site = getSheet($file, 'key');
-		$showInConfig = $site->firstOfGroup('showIn', false, false);
+		$showInConfig = $site->firstOfGroup(DOMAINKEY, false, false);
 
 		if (!$showInConfig) {
-			if (variable('local')) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "showIn" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
+			if (variable('local')) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "' . DOMAINKEY . '" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
 			continue;
 		}
 
@@ -212,7 +219,7 @@ function getSitesToShow($at) {
 	if (!$isDawn) return $op;
 
 	foreach (DOMAINS as $domain) {
-		if (!isset($byDomain[$showIn])) continue;
+		if (!isset($byDomain[$domain])) continue;
 		$op[] = '~' . humanize($domain);
 		$op = array_merge($op, $byDomain[$domain]);
 	}

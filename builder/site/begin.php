@@ -20,6 +20,7 @@ variables([
 	'site-vars' => $siteVars,
 	'local-url' => $siteVars['local-url'],
 	'live-url' => $siteVars['live-url'],
+	'showIn' => isset($siteVars['showIn']) ? $siteVars['showIn'] : false,
 ]);
 
 if (contains($url = $siteVars[variable(SITEURLKEY)], 'localhost'))
