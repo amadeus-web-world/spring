@@ -85,6 +85,44 @@ DEFINE('DontOverwriteLogo', 'dont-overwrite-logo');
 DEFINE('PrefixSafeName', 'prefix-safeName');
 DEFINE('NodeSafeName', 'nodeSafeName');
 
+class nodeSettings extends builderBase {
+	const one_page = '';
+
+	const two_page = 'level2';
+
+	static function factory($where, $const = self::one_page, $settings = []) {
+		if (contains($const, 'level2')) $level = 2;
+		else $level = 1;
+		autoSetNode($level, $where, $settings);
+	}
+
+	static function create($where, $const = self::one_page) {
+		return new nodeSettings($where, $const);
+	}
+
+	private $where;
+	private $const;
+
+	function __construct($where, $const)
+	{
+		$this->where = $where;
+		$this->const = $const;
+	}
+
+	function nodeHome($clear = false) {
+		return $this->setValue('link-to-node-home', !$clear);
+	}
+
+	function logo($overwrite = true) {
+		return $this->setValue(DontOverwriteLogo, !$overwrite);
+	}
+
+	function apply($settings = []) {
+		$this->settings = array_merge($this->settings, $settings);
+		self::factory($this->where, $this->const, $this->settings);
+	}
+}
+
 function autoSetNode($level, $where, $overrides = []) {
 	$section = variable('section');
 
