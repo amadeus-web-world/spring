@@ -6,9 +6,14 @@ sectionId('network-sites', 'container');
 
 function _is_heading($item) { return is_string($item) && startsWith($item, '~'); }
 
+$op = [];
+foreach (DOMAINS as $item)
+	$op[] = getLink(humanize($item), getDomainLink('', $item, '', true), 'btn btn-success me-1');
+
 echo _excludeFromGoogleSearch(
 	contentBox('root-header', 'text-center mt-5', true)
 	. getSnippet('root-header', CORESNIPPET)
+	. HRTAG . implode(NEWLINE, $op)
 	. contentBox('end', '', true)
 );
 

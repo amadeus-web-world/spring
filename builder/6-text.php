@@ -1,21 +1,14 @@
 <?php
-//USES UTF8
-
-$safeNL = "\r"; //platform safe
-$nl = "\r\n";
-
-variable('safeNL', $safeNL); //TODO: deprecate
+variable('safeNL', $safeNL = "\r"); //platform safe
 DEFINE('SAFENEWLINE', $safeNL);
-DEFINE('NEWLINE', $nl);
+DEFINE('NEWLINE', $nl= "\r\n");
 //NOTE: let it break - variable('nl', NEWLINE);
 DEFINE('NEWLINES2', $nl . $nl);
 DEFINE('NEWLINES3', $nl . $nl . $nl);
 
-$br = '<br>';
-DEFINE('BRTAG', $br);
+DEFINE('BRTAG', $br = '<br>');
 DEFINE('BRNL', $br . $nl);
-$hr = '<hr>';
-DEFINE('HRTAG', $hr);
+DEFINE('HRTAG', $hr = '<hr>');
 
 DEFINE('NBSP', ' &nbsp; ');
 DEFINE('PIPEWS', ' | '); //whitespace
