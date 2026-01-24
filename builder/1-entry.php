@@ -157,6 +157,9 @@ function render() {
 	} else if (isset($_GET['share'])) {
 		runFeature('share');
 		$rendered = true;
+	} else if (isset($_GET['cta'])) {
+		echo getCodeSnippet('cta-or-engage', CORESNIPPET);
+		$rendered = true;
 	} else if (hasPageParameter('slider')) {
 		$rendered = true; //dont want to render content. and needed here as it shouldnt support "content" menu pages
 	} else if (variable('skip-content-render')) {

@@ -20,6 +20,9 @@ function runAllMacros($html) {
 	if (contains($html, '#upi') || contains($html, '%upi'))
 		$html = replaceUPIs($html);
 
+	if (contains($html, '[cta'))
+		$html = processCtaShortcode($html);
+
 	if (contains($html, '[youtube]'))
 		$html = processYouTubeShortcode($html);
 
@@ -177,6 +180,16 @@ function textBoxWithCopyOnClick($title, $value, $label = false, $icon = '') {
 	if ($label) $bits[] = '</label>';
 
 	return implode(NEWLINE, $bits) . NEWLINES2;
+}
+
+function processCtaShortcode($html) {
+	return replaceItems($html, [
+		'[cta-link]' => '<a href="',
+		'[cta-delimiter]' => bootstrapAndUX::toButtons('?cta=1&content=1BTNSITE">'),
+		'[/cta-link]' => '</a>',
+		'[cta]' => '<div class="video-container google-video"><iframe src="',
+		'[/cta]' => '?cta=1&content=1" title="AW Spring Engage" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allow="autoplay"></iframe></div>',
+	]);
 }
 
 function processYouTubeShortcode($html) {

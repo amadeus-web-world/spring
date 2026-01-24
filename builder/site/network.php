@@ -3,7 +3,7 @@ DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
 DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
 DEFINE('DAWN_ABBR', 'DAWN');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
-DEFINE('DOMAINS', ['organizations', 'people', 'communities', 'network', 'spaces', 'businesses', 'technology', 'authors']);
+DEFINE('DOMAINS', ['organizations', 'people', 'communities', 'networks', 'spaces', 'businesses', 'technology', 'authors']);
 
 function is_dawn($fol) {
 	return in_array($fol, ['dawn', 'public_html']);
@@ -75,25 +75,14 @@ function __flatMenu($items, $name) {
 	echo '</li>' . NEWLINE;
 }
 
-function getDawnSites() {
-	$op = [
-		'~~network',
-		'world' => 'oases', //alias of sorts, needed for launcher / urlOf-world to work
-		'~~technology',
-		'smithy' => 'smithy',
-		'spring' => 'spring',
-		'~~authors',
-		'imran' => 'imran',
-	];
-
-	return $op;
-}
-
 function setupNetwork($noNetwork) {
 	$dawnSites = [];
 	$networkSites = [];
-	$networkUrls = [];
-	//$networkUrls[OTHERSITEPREFIX . 'world'] = variable();
+	$networkUrls = [
+		OTHERSITEPREFIX . 'root' => getDomainLink('', '', '', true),
+		OTHERSITEPREFIX . 'world' => getDomainLink('', 'oases', '', true),
+		OTHERSITEPREFIX . 'spring' => getDomainLink('', 'spring', '', true),
+	];
 
 	$networkName = urldecode(getQueryParameter('network', variable('network')));
 
@@ -126,10 +115,6 @@ function setupNetwork($noNetwork) {
 			}
 			$items[$file] = $file;
 		}
-
-		$items = array_merge($items, getDawnSites());
-	} else if (variable('network') == 'dawn-only') {
-		$items == getDawnSites();
 	} else if (!$noNetwork) {
 		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);
 		$items = $sheet->rows;
@@ -158,21 +143,6 @@ function setupNetwork($noNetwork) {
 		$item = _getOrWarn($plain ? $row : $sheet->getValue($row, 'path'));
 		if ($item === false) continue;
 		$networkSites[] = $item;
-		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
-	}
-
-	//these always exist and have a urlOf short name ($key)
-	$dawnPaths = getDawnSites();
-
-	foreach ($dawnPaths as $key => $path) {
-		if (is_int($key) && startsWith($path, '~')) {
-			$dawnSites[] = $path;
-			continue;
-		}
-
-		$item = _getOrWarn($path);
-		if ($item === false) continue;
-		$dawnSites[] = $item;
 		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
 	}
 
