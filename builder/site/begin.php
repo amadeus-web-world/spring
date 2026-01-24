@@ -167,6 +167,9 @@ runFrameworkFile('site/cms');
 if (disk_file_exists($cms = SITEPATH . '/cms.php'))
 	disk_include_once($cms);
 
+if (defined('NETWORKPATH') && disk_file_exists($ntk = NETWORKPATH . '/network.php'))
+	disk_include_once($ntk);
+
 if (hasPageParameter('embed')) variable('embed', true);
 
 if (function_exists('after_framework_config')) after_framework_config();

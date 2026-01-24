@@ -94,7 +94,7 @@ function renderHeaderMenu($slug, $node = '', $name = false) {
 	$standalones = variableOr('standalone-sections', []);
 	if (in_array($slug, $standalones)) {
 		$tiss = true;
-		$files = disk_include(variable('path') . '/' . $slug . '/menu.php', ['callingFrom' => 'header-menu', 'limit' => 5]);
+		$files = disk_include(SITEPATH . '/' . $slug . '/menu.php', ['callingFrom' => 'header-menu', 'limit' => 5]);
 		if ($tsmn = variable(getSectionKey($slug, MENUNAME)))
 			$name = $tsmn;
 	}

@@ -78,7 +78,7 @@ function disk_scandir($folder) {
 
 function disk_file_get_contents($file) {
 	debug(__FILE__, 'disk_file_get_contents', ['$file' => $file]);
-	//if (!file_exists($file)) showDebugging('81', $file, false, true);
+	//if (!file_exists($file)) showDebugging('81', $file, true, true);
 	if (($result = _diskCached('file_get_contents', $file)) == null) {
 		_disk_start();
 		$file = _makeSlashesConsistent($file);
@@ -162,11 +162,11 @@ function disk_include_once($file, $variables = []) {
 	return $result;
 }
 
-function disk_include($file, $variables = false) {
+function disk_include($file, $variables = []) {
 	debug(__FILE__, 'disk_include', ['$file' => $file]);
 	_disk_start();
 	$file = _makeSlashesConsistent($file);
-	if ($variables) extract($variables);
+	extract($variables);
 	$result = include($file);
 	$time = _disk_end();
 	disk_call('include_once', $file, $time);
