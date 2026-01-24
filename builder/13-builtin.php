@@ -97,10 +97,8 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 			renderSheetAsDeck($file, variableOr('all_page_parameters', nodeValue()) . '/');
 		else if (startsWith($raw, '|is-rich-page'))
 			renderRichPage($file);
-		else if (contains($raw, '|is-table'))
+		else if ($istwt || contains($raw, '|is-table'))
 			add_table(pathinfo($file, PATHINFO_FILENAME), $file, valueIfSet($meta->values, 'head-columns', 'auto'), valueIfSet($meta->values, 'row-template', 'auto'), $meta->values);
-		else if ($istwt)
-			add_table(pathinfo($file, PATHINFO_FILENAME), $file, $meta->values['head-columns'], $meta->values['row-template'], $meta->values);
 		else
 			showDebugging('unsupported tsv file - see line 1 for type definition', $file, true);
 

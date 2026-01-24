@@ -106,7 +106,7 @@ function getLogoOrIcon($what, $which = 'site') {
 		$where = $which[assetKey(NODEASSETS)];
 	} else {
 		$inNode = $which == 'node' && !$site && hasVariable('nodeSafeName') && DEFINED('NODEPATH');
-		$name = variable($inNode ? 'nodeSafeName' : 'safeName') . $suffix;
+		$name = variableOr($inNode ? 'nodeSafeName' : 'safeName', 'amadeusweb9') . $suffix; //TODO: update when major version changes
 
 		$where = $inNode ? STARTATNODE : ($netWorkManaged ? STARTATNETWORK : STARTATSITE);
 	}

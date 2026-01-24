@@ -150,8 +150,9 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	$tsv = is_string($dataFile) && endsWith($dataFile, '.tsv');
 	$json = is_string($dataFile) && endsWith($dataFile, '.json');
 	$dontTreat = valueIfSetAndNotEmpty($values, 'dont-treat-array', false);
-	$wantsBSRow = isset($values['use-a-bootstrap-row']) && $values['use-a-bootstrap-row'];
+	$wantsBSRow = valueIfSet($values, 'use-a-bootstrap-row');
 	$customHead = valueIfSet($values, 'use-a-custom-head');
+	$wantsBSEnricher = valueIfSet($values, 'bs-use-enricher');
 	$lineTemplateForBS = isset($values['bs-template']) ? $values['bs-template'] : false;
 
 	if ($dontTreat) {
@@ -212,7 +213,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	if ($beforeContent = valueIfSetAndNotEmpty($values, 'before-content')) echo returnLine(pipeToBR($beforeContent));
 	if ($allowCards) echo '<div class="text-center"><button data-table-id="amadeus-table-' . $id . '" class="amadeus-table-' . $id . '-card-view">toggle card view</button></div>' . BRNL;
 
-	if ($customHead) echo $values['head-template'];
+	if ($customHead) echo replaceHtmlShortcuts($values['head-template']);
 	else if ($wantsBSRow) echo '<div id="amadeus-bs-row-' . $id . '" class="row">';
 	else echo '
 	<table id="amadeus-table-' . $id . '" class="' . $datatableClass . 'table table-striped table-bordered" ' . $datatableParams . 'cellspacing="0" width="100%">
@@ -223,21 +224,31 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	</thead>
 	<tbody>
 ';
+
 	foreach ($rows as $item) {
 		if ($dontTreat) {
 			$row = $item;
 		} else if($wantsBSRow && $lineTemplateForBS) {
 			if (isset($item[0]) && $item[0] == '') continue;
-			$row = $sheet->asObject($item);
-			if (valueIfSet($row, 'Skip') || valueIfSet($row, 'skip')) continue;
+			if ($wantsBSEnricher)
+				$row = _table_row_values($item, $columns, $tsv, $values, $template);
+			else
+				$row = $sheet->asObject($item);
 		} else {
 			$more = isset($item[0]) && $item[0] == MORETAG;
 			if ($more) { if (variable('is-in-directory')) break; else continue; }
 			$row = _table_row_values($item, $columns, $tsv, $values, $template);
-			if ($skipItemFn && $skipItemFn($row)) continue;
 		}
-		$line = replaceHtml(prepareLinks(replaceItems($template, $row, '%')));
 
+		if ($skipItemFn && $skipItemFn($row)) continue;
+		if (valueIfSet($row, 'Skip') || valueIfSet($row, 'skip')) continue;
+
+		if ($wantsBSEnricher) {
+			echo NEWLINE . renderSingleLineMarkdown(replaceItems($lineTemplateForBS, $row, '%'));
+			continue;
+		}
+
+		$line = replaceHtml(prepareLinks(replaceItems($template, $row, '%')));
 		if ($wantsBSRow && $lineTemplateForBS)
 			$line = replaceItems($lineTemplateForBS, ['line' => returnLine(pipeToBR($line))], '%');
 
