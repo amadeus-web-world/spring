@@ -279,6 +279,7 @@ function processSpacerShortcode($html) {
 	return replaceItems($html, [
 		'[spacer][no-content-box]' => SPACERSTART,
 		'[spacer]' => cbCloseAndOpen('spacer container') . SPACERSTART,
+		'[/spacer][plaincontainer]' => NEWLINE . SPACEREND . '</div><div class="container">',
 		'[/spacer]' => NEWLINE . SPACEREND,
 	]);
 }

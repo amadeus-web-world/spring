@@ -13,6 +13,7 @@ $siteVars = [];
 foreach ($sheet->rows as $row) {
 	$key = $row[$cols['key']];
 	if (!$key || $key[0] == '|') continue;
+	if (!isset($row[$cols['value']])) showDebugging(16, 'site.tsv - value column missing for row: ' . $key, true);
 	$siteVars[$key] = $row[$cols['value']];
 }
 

@@ -1,4 +1,6 @@
 <?php
+disk_include_once(AMADEUSFRAMEWORK . '5b-varnames.php');
+
 function variable($name, $val = null)
 {
 	global $cscore;

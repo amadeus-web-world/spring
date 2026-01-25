@@ -81,16 +81,17 @@ function nodeVarsInUse($append = false) {
 	variable(USEDNODEVAR, $vars);
 }
 
-DEFINE('DontOverwriteLogo', 'dont-overwrite-logo');
-DEFINE('PrefixSafeName', 'prefix-safeName');
-DEFINE('NodeSafeName', 'nodeSafeName');
-
 class nodeSettings extends builderBase {
 	const one_page = '';
 
 	const two_page = 'level2';
 
 	static function factory($where, $const = self::one_page, $settings = []) {
+		if ($where == SITEPATH) {
+			variables($settings);
+			return;
+		}
+
 		if (contains($const, 'level2')) $level = 2;
 		else $level = 1;
 		autoSetNode($level, $where, $settings);
@@ -110,7 +111,15 @@ class nodeSettings extends builderBase {
 	}
 
 	function nodeHome($clear = false) {
-		return $this->setValue('link-to-node-home', !$clear);
+		return $this->setValue(VARLinkToNodeHome, !$clear);
+	}
+
+	function sectionHome($clear = false) {
+		return $this->setValue(VARLinkToSectionHome, !$clear);
+	}
+
+	function sectionsHaveFiles($clear = false) {
+		return $this->setValue(VARSectionsHaveFiles, !$clear);
 	}
 
 	function logo($overwrite = true) {
@@ -135,16 +144,16 @@ function autoSetNode($level, $where, $overrides = []) {
 	if ($level > 1) { $bits = explode('/', $relPath); $endSlug = array_pop($bits); }
 
 	$prefix = valueIfSet($overrides, 'prefix-safeName') ? variable('safeName') . '-' : '';
-	if ($prefix && isset($overrides['nodeSafeName']))
-		$overrides['nodeSafeName'] = $prefix . $overrides['nodeSafeName'];
+	if ($prefix && isset($overrides[VARNodeSafeName]))
+		$overrides[VARNodeSafeName] = $prefix . $overrides[VARNodeSafeName];
 
 	$vars = array_merge([
 		'nodeSlug' => $relPath,
 		assetKey(NODEASSETS) => fileUrl($section . '/' . $relPath . '/assets/'),
-		'nodeSiteName' => humanize($endSlug),
-		'nodeSafeName' => $prefix . $endSlug,
-		'submenu-at-node' => true,
-		'nodes-have-files' => true,
+		VARNodeSiteName => humanize($endSlug),
+		VARNodeSafeName => $prefix . $endSlug,
+		VARSubmenuAtNode => true,
+		VARNodesHaveFiles => true,
 		'nodepath' => $where,
 	], $overrides);
 

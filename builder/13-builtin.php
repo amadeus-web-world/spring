@@ -61,7 +61,8 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		} else if (startsWith($raw, '<!--is-deck-->')) {
 			_renderedDeck($file, $pageName);
 		} else {
-			$settings = ['use-content-box' => (!variable('skip-content-box-for-this-page'))];
+			$wantsNoCB = variable('skip-content-box-for-this-page') || contains(disk_file_get_contents($file), WANTSNOCONTENTBOX);
+			$settings = ['use-content-box' => !$wantsNoCB];
 			if ($useHeading) $settings['heading'] = $pageName;
 			if (variable(FIRSTSECTIONONLY)) $settings[FIRSTSECTIONONLY] = true;
 			renderAny($file, $settings);

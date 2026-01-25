@@ -4,6 +4,7 @@ DEFINE('MORETAG', '<!--more-->');
 DEFINE('EXCERPTSTART', '<!--start-excerpt-->');
 DEFINE('WANTSNOPARATAGS', '<!--no-p-tags-->');
 DEFINE('WANTSNOPROCESSING', '<!--no-processing-->');
+DEFINE('WANTSNOCONTENTBOX', '<!--no-content-box-->');
 DEFINE('NOREPLACES', '<!--no-replaces-->');
 
 DEFINE('WANTSMARKDOWN', '<!--markdown-->' . NEWLINE); //NOTE: to detect content which doesnt start with a heading
@@ -41,7 +42,7 @@ abstract class builderBase {
 		foreach ($keys as $key)
 			unset($this->settings[$key]);
 
-			return $this;
+		return $this;
 	}
 }
 
@@ -395,7 +396,10 @@ function replaceHtmlShortcuts($output) {
 		' CRLF' => NEWLINE,
 
 		//generic html
+		'[cb-open]' => contentBox('', '', true),
 		'[cb-close-and-open]' => cbCloseAndOpen('container'),
+		'[cb-open-with-container]' => contentBox('', 'container', true),
+		'[cb-close]' => contentBox('end', 'mb-2', true),
 		'STARTDIV ' => '<div ',
 		' CLOSETAG' => '>',
 	]);

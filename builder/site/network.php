@@ -3,7 +3,7 @@ DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
 DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
 DEFINE('DAWN_ABBR', 'DAWN');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
-DEFINE('DOMAINS', ['networks', 'organizations', 'people', 'businesses', 'technology', 'authors']);
+DEFINE('DOMAINS', ['authors', 'creativity', 'networks', 'technology', 'organizations', 'people', 'work-folk']);
 
 function is_dawn($fol) {
 	return in_array($fol, ['dawn', 'public_html']);
@@ -115,7 +115,7 @@ function setupNetwork($noNetwork) {
 			}
 			$items[$file] = $file;
 		}
-	} else if (!$noNetwork) {
+	} else if (!$noNetwork && $networkName != 'dawn-only') {
 		$sheet = getSheet(NETWORKSDEFINEDAT . $networkName . '.tsv', false);
 		$items = $sheet->rows;
 	}

@@ -36,9 +36,10 @@ function _renderMenu($home, $folder, $where) {
 		h2(humanize($where), 'amadeus-icon');
 
 	if ($home) {
-		contentBox('home');
+		$wantsNoCB = contains(disk_file_get_contents($home), WANTSNOCONTENTBOX);
+		if (!$wantsNoCB) contentBox('home');
 		renderAny($home);
-		contentBox('end');
+		if (!$wantsNoCB) contentBox('end');
 	}
 
 	echo GOOGLEOFF;

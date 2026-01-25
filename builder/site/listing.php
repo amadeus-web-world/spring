@@ -8,7 +8,7 @@ function _is_heading($item) { return is_string($item) && startsWith($item, '~');
 
 $op = [];
 foreach (DOMAINS as $item)
-	$op[] = getLink(humanize($item), getDomainLink('', $item, '', true), 'btn btn-success me-1');
+	$op[] = getLink(humanize($item), getDomainLink('', $item, '', true), 'btn btn-success me-1 mb-1');
 
 echo _excludeFromGoogleSearch(
 	contentBox('root-header', 'text-center mt-5', true)

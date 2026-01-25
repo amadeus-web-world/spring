@@ -98,15 +98,15 @@ function getLogoOrIcon($what, $which = 'site') {
 
 	$netWorkManaged = variable('network-manages-site-assets');
 	$prefix = $netWorkManaged && DEFINED('SITENAME') ? SITENAME . '/' : '';
-	$site = variable('dont-overwrite-logo') && $what == 'logo';
+	$site = variable(VARDontOverwriteLogo) && $what == 'logo';
 
 	if (is_array($which) && !$site) {
 		$inNode = true;
-		$name = $which['nodeSafeName'] . $suffix;
+		$name = $which[VARNodeSafeName] . $suffix;
 		$where = $which[assetKey(NODEASSETS)];
 	} else {
-		$inNode = $which == 'node' && !$site && hasVariable('nodeSafeName') && DEFINED('NODEPATH');
-		$name = variableOr($inNode ? 'nodeSafeName' : 'safeName', 'amadeusweb9') . $suffix; //TODO: update when major version changes
+		$inNode = $which == 'node' && !$site && hasVariable(VARNodeSafeName) && DEFINED('NODEPATH');
+		$name = variableOr($inNode ? VARNodeSafeName : 'safeName', 'amadeusweb9') . $suffix; //TODO: update when major version changes
 
 		$where = $inNode ? STARTATNODE : ($netWorkManaged ? STARTATNETWORK : STARTATSITE);
 	}

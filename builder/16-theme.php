@@ -104,11 +104,11 @@ function runThemePart($what) {
 		$vars['body-classes'] = body_classes(true);
 
 		//TODO: icon link to node home, should have 2nd menu & back to home
-		$baseUrl = hasVariable('nodeSafeName') && !variable('dont-overwrite-logo') ? pageUrl(nodeValue()) : pageUrl();
+		$baseUrl = hasVariable(VARNodeSafeName) && !variable(VARDontOverwriteLogo) ? pageUrl(nodeValue()) : pageUrl();
 		$logo2x = getLogoOrIcon('logo', 'node');
 		$vars['logo'] = concatSlugs(['<a href="', $baseUrl . variableOr('nodeChildSlug', ''), '">' . NEWLINE
 			. '								<img src="', $logo2x, '" class="img-fluid img-max-',
-			variableOr('footer-logo-max-width', '500'), '" alt="', variableOr('nodeSiteName', variable('name')), '">' . NEWLINE
+			variableOr('footer-logo-max-width', '500'), '" alt="', variableOr(VARNodeSiteName, variable('name')), '">' . NEWLINE
 			. '							</a><br>'], '');
 
 		$vars['optional-page-css'] = [];
@@ -221,13 +221,13 @@ function _iconImage($src) {
 }
 
 function _page_menu($siteIcon, $nodeIcon) {
-	if (!variable('submenu-at-node')) return '<!--no-page-menu-->';
+	if (!variable(VARSubmenuAtNode)) return '<!--no-page-menu-->';
 
 	$menuFile = getThemeFile('snippets/page-menu.html');
 	$menuContent = disk_file_get_contents($menuFile);
 
-	$siteOnly = variable('dont-overwrite-logo') && lastNodeVarsIndex() < 2;
-	$name = humanize(variable('nodeSiteName'));
+	$siteOnly = variable(VARDontOverwriteLogo) && lastNodeVarsIndex() < 2;
+	$name = humanize(variable(VARNodeSiteName));
 	$menuVars = $siteOnly ? [
 		'menu-title' => NEWLINE . _iconLink($siteIcon) . BREADCRUMBSEPARATOR
 		 . getLink($name, pageUrl(variable('nodeSlug')), 'btn btn-site') . NEWLINE,
