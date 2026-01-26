@@ -64,7 +64,7 @@ function file_stats($file, $call) {
 
 function print_stats() {
 	if (!variable('stats')) return;
-	runFeature('tables'); //if not already loaded
+	features::ensureTables();
 
 	global $stat_all_size;
 	$files = array_map('file_stats', $files = get_included_files(), array_keys($files));

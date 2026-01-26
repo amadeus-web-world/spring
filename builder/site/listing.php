@@ -33,7 +33,7 @@ foreach ($sites as $ix => $item) {
 		showDebugging('7 url-key-missing', [variable(SITEURLKEY), $item], true);
 
 	$item['url'] = $item[variable(SITEURLKEY)];
-	$item['safeName'] = $item['key'];
+	$item[VARSafeName] = $item['key'];
 
 	$op[] = 'ARTICLE-3COL-BOX';
 	$op[] = replaceItems('<a href="%url%"><h3 class="h3 m-0 mb-1">%name%</h3><img src="%url%%safeName%-logo.png" class="img-fluid mb-2" />%byline%</a>', $item, '%');

@@ -1,5 +1,5 @@
 <?php
-if (variable('safeName') != 'amadeuswebworld') return ''; //TODO: in_array
+if (variable(VARSafeName) != 'amadeuswebworld') return ''; //TODO: in_array
 
 doToBuffering(1);
 

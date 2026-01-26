@@ -1,7 +1,7 @@
 <?php
 function sectionBaseOrSitePath($isThisContentQM = false) {
 	if ($isThisContentQM == '/content/') return SITEPATH;
-	return defined('SECTIONSBASE') ? SECTIONSBASE : variable('path');
+	return defined('SECTIONSBASE') ? SECTIONSBASE : SITEPATH;
 }
 
 function before_render() {
@@ -14,7 +14,7 @@ function before_render() {
 	if (hasBuiltin()) { afterSectionSet(); return; }
 
 	$canHaveFiles = variable(VARSectionsHaveFiles);
-	$node = variable('node');
+	$node = variable(VARNode);
 	$innerSlugs = variable('page_parameters');
 
 	$sectionsRoot = sectionBaseOrSitePath();
@@ -175,7 +175,7 @@ function did_render_page() {
 	if (renderedBuiltin()) return true;
 
 	if (variable('directory_of')) {
-		runFeature('directory');
+		features::ensureDirectory();
 		return true;
 	}
 

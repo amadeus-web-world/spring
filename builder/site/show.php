@@ -9,9 +9,9 @@ variables([
 	'custom-footer' => true,
 	VARMediakit => '?palette=1',
 
-	'node' => SITEHOME,
+	VARNode => SITEHOME,
 	'name' => SITESATNAME,
-	'byline' => DAWN_NAME,
+	VARByline => DAWN_NAME,
 ]);
 
 add_body_class('showing-sites');

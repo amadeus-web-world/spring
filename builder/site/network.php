@@ -223,11 +223,11 @@ function _getOrWarn($relativePath) {
 	$site = getSheet($file, 'key');
 
 	return [
-		'key' => $site->getValue($site->firstOfGroup('safeName'), 'value'),
-		'name' => $site->getValue($site->firstOfGroup('iconName'), 'value'),
+		'key' => $site->getValue($site->firstOfGroup(VARSafeName), 'value'),
+		'name' => $site->getValue($site->firstOfGroup(VARIconName), 'value'),
 
 		'siteName' => $site->getValue($site->firstOfGroup('name'), 'value'),
-		'byline' => $site->getValue($site->firstOfGroup('byline'), 'value'),
+		VARByline => $site->getValue($site->firstOfGroup(VARByline), 'value'),
 
 		'local-url' => $site->getValue($site->firstOfGroup('local-url'), 'value'),
 		'live-url' => $site->getValue($site->firstOfGroup('live-url'), 'value'),

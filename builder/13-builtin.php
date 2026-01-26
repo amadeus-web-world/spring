@@ -5,7 +5,7 @@ DEFINE('ENGAGEFILES', 'md, tsv');
 DEFINE('FILESWITHMETA', 'md, tsv');
 
 variables([
-	'exclude-folders' => ['home', 'assets', 'data', 'engage', 'home', 'images', 'thumbnails'],
+	'exclude-folders' => ['assets', 'data', 'engage'],
 ]);
 
 function isContentFile($fileOrRaw) {
@@ -30,12 +30,12 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 
 	//cannot use startsWith as edit in vs-code wouldnt work
 	$detectedEngage = contains($raw, '|is-engage') || contains($raw, '<!--is-engage-->');
-	if ($type != 'engage' && $detectedEngage) $type = 'engage';
+	if ($type != features::engage && $detectedEngage) $type = features::engage;
 
-	if ($type == 'engage') {
+	if ($type == features::engage) {
 		$md = !endsWith($file, '.tsv');
 
-		runFeature('engage');
+		features::ensureEngage();
 
 		if ($detectedEngage)
 			sectionId('special-form' . ($ix = variableOr('special-form', 1)), 'container');
@@ -56,10 +56,12 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 
 	if (endsWith($file, '.md')) {
 		sectionId('special-md', 'container');
-		if (startsWith($raw, '<!--is-blurbs-->')) {
-			_renderedBlurbs($file);
-		} else if (startsWith($raw, '<!--is-deck-->')) {
-			_renderedDeck($file, $pageName);
+		if (contains($raw, '<!--is-blurbs-->')) {
+			features::runWithFile(features::blurbs, $file);
+		} else if (contains($raw, '<!--is-deck-->')) {
+			features::runWithFile(features::deck, $file);
+		} else if (contains($raw, '<!--is-family-tree-->')) {
+			features::runWithFile(features::familyTree, $file);
 		} else {
 			$wantsNoCB = variable('skip-content-box-for-this-page') || contains(disk_file_get_contents($file), WANTSNOCONTENTBOX);
 			$settings = ['use-content-box' => !$wantsNoCB];
@@ -74,7 +76,7 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 	}
 
 	if (endsWith($file, '.tsv')) {
-		runFeature('tables');
+		features::ensureTables();
 
 		$meta = getSheet($file, false);
 		$istwt = contains($raw, '|is-table-with-template');
@@ -164,7 +166,7 @@ function processAI($raw, $aiName) {
 function adjustOutputOfAI($raw, $aiName) {
 	if (!contains($raw, '<p>| ')) return $raw;
 
-	runFeature('tables');
+	features::ensureTables();
 	_includeDatatables(false);
 	_includeTableAssets();
 

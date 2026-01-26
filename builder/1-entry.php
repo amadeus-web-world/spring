@@ -39,6 +39,10 @@ function runFeature($name, $variables = []) {
 	disk_include_once(AMADEUSFEATURES . $name . '.php', $variables);
 }
 
+function runFeatureMultiple($name, $variables = []) {
+	disk_include(AMADEUSFEATURES . $name . '.php', $variables);
+}
+
 runFrameworkFile('0-varnames');
 runFrameworkFile('0-builder-base'); //2nd as uses varnames
 
@@ -100,7 +104,7 @@ function bootstrap($config) {
 
 	$noRewrite = variable('no_url_rewrite');
 	if ($noRewrite) $node = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
-	else $node = isset($_GET['node']) && $_GET['node'] ? $_GET['node'] : '';
+	else $node = getQueryParameter(VARNode, '');
 
 	if (endsWith($node, '/')) $node = substr($node, 0, strlen($node) - 1);
 	if (startsWith($node, '/')) $node = substr($node, 1);
@@ -142,7 +146,7 @@ function render() {
 	$theme = variable('theme') ? variable('theme') : 'default';
 	$embed = variable('embed');
 
-	$folder = variable('path') . '/' . (variable('folder') ? variable('folder') : '');
+	$folder = SITEPATH . '/' . (variable('folder') ? variable('folder') : '');
 	$contentExt = disk_one_of_files_exist($contentFWE = $folder . nodeValue() . '.', CONTENTFILES);
 	if ($contentExt) {
 		read_seo($contentFWE . $contentExt, true);
@@ -154,11 +158,11 @@ function render() {
 		if (function_exists('before_file')) before_file();
 	}
 
-	if (variable('under-construction')) {
-		runFeature('under-construction');
+	if (variable(features::underConstruction)) {
+		runFeature(features::underConstruction);
 		$rendered = true;
-	} else if (isset($_GET['share'])) {
-		runFeature('share');
+	} else if (isset($_GET[features::share])) {
+		runFeature(features::share);
 		$rendered = true;
 	} else if (isset($_GET['cta'])) {
 		echo getCodeSnippet('cta-or-engage', CORESNIPPET);
@@ -247,7 +251,7 @@ function _credits($pre = '', $return = false) {
 	$spring = replaceHtml('%urlOf-spring%');
 	$imran = replaceHtml('%urlOf-imran%');
 
-	$url = $world . '?utm_content=site-credits&utm_referrer=' . variable('safeName');
+	$url = $world . '?utm_content=site-credits&utm_referrer=' . variable(VARSafeName);
 	$img = '<img src="' . $world . 'assets/amadeuswebworld-credits.png" height="40" alt="Amadeus Web World" class="m-2 align-middle rounded-2">';
 
 	$result = $pre . 'Powered by' . getLink($img, $url, '', true, ' style="display: inline-block;"') . NEWLINE;

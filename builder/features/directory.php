@@ -90,7 +90,7 @@ function _renderMenu($home, $folder, $where) {
 	$relativeUrl = (nodeIsNot(variable('section')) ? nodeValue() . '/' : '') . ($breadcrumbs ? implode('/', $breadcrumbs) . '/' : '');
 
 	if (hasPageParameter('generate-index')) {
-		addScript('engage', COREASSETS);
+		addScript(features::engage, COREASSETS);
 		echo '<textarea class="autofit">' . NEWLINE;
 		echo '<!--use-blocks-->' . NEWLINES2;
 		foreach ($sectionItems as $item) {
@@ -110,7 +110,7 @@ function _renderMenu($home, $folder, $where) {
 			renderExcerpt($file . 'md', pageUrl($slug), h2(makeLink($item['name_humanized'], pageUrl($slug)), '', true));
 		}
 	} else {
-		runFeature('tables');
+		features::ensureTables();
 		$template = '<tr><td><a href="%url%' . $relativeUrl .
 			'%name_urlized%">%name_humanized%</a></td><td>%about%</td><td>%tags%</td><td>%size%</td></tr>';
 		$params = ['use-datatables' => count($sectionItems) > 5];

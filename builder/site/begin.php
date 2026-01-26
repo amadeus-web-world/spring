@@ -130,12 +130,12 @@ function _visane($siteVars) {
 function _always($siteVars) {
 	$op = [];
 	$always = [
-		'name',
-		'byline',
-		'safeName',
-		'iconName',
-		'footer-message',
-		'siteMenuName',
+		VARName,
+		VARByline,
+		VARSafeName,
+		VARIconName,
+		VARFooterMessage,
+		VARSiteMenuName,
 	];
 	foreach ($always as $item)
 		$op[$item] = $siteVars[$item];
@@ -149,7 +149,7 @@ function _always($siteVars) {
 _visane($siteVars);
 _always($siteVars);
 
-$safeName = $siteVars['safeName'];
+$safeName = $siteVars[VARSafeName];
 
 variables($op = [
 	'folder' => 'content/',

@@ -7,6 +7,7 @@ DEFINE('BOOLYes', true);
 	DEFINE('PleaseDie', BOOLYes);
 DEFINE('BOOLNo', false);
 	DEFINE('BlockExecution', BOOLNo); ///dead code
+DEFINE('EmptyArray', []);
 
 function bool_r(bool $value) {
 	return ($value ? 'true (yes)' : 'false (no)') . ' type: bool';
@@ -20,7 +21,26 @@ define('VARUseAmadeusWeb', '--use-amadeusweb');
 DEFINE('VARWrapper', '%');
 function wrap_variable($var) { return VARWrapper . $var / VARWrapper; }
 
-//4-array
+class features {
+	const blurbs = 'blurbs';
+	const deck = 'deck';
+	const directory = 'directory';
+	const engage = 'engage';
+	const familyTree = 'family-tree';
+	const pollen = 'pollen';
+	const share = 'share';
+	const underConstruction = 'under-construction';
+	const tables = 'tables';
+
+	static function ensureDirectory() { runFeature(self::directory); } //call either this, OR runMultiple for sitemap
+	static function ensureEngage() { runFeature(self::engage); }
+	static function ensureTables() { runFeature(self::tables); }
+	static function runMultiple($what, $vars = []) { runFeatureMultiple($what, $vars); }
+	static function runWithFile($what, $file) { self::runMultiple($what, ['file' => $file]); }
+	static function runPollen($items = []) { runFeature(self::pollen, ['items' => $items]); }
+}
+
+//4-array.php
 DEFINE('TYPENOCHANGE', 'no-change');
 DEFINE('TYPEBOOLEAN', 'bool');
 DEFINE('TYPEARRAY', 'array');
@@ -64,11 +84,13 @@ function wants_md_in_parser($raw) { return contains($raw, '<!--markdown-when-pro
 //12-macros.php
 DEFINE('VARCTAONLY', '?cta=1&content=1');
 
-//14-main
+//14-main.php
 DEFINE('VARSystemEmail', 'imran@amadeusweb.world');
 function plus_email($email, $plusFolder) { return str_replace('@', '+' . $plusFolder . '@', $email); }
 
-//15-routing - todo cleanup
+//15-routing.php
+DEFINE('VARNode', 'node');
+
 DEFINE('VARNodeSiteName', 'nodeSiteName');
 DEFINE('VARDontOverwriteLogo', 'dont-overwrite-logo');
 DEFINE('VARPrefixSafeName', 'prefix-safeName');
@@ -95,6 +117,15 @@ function notSetOrNotLive($var) {
 	return false;
 }
 
+//always
+DEFINE('VARName', 'name');
+DEFINE('VARByline', 'byline');
+DEFINE('VARSafeName', 'safeName');
+DEFINE('VARIconName', 'iconName');
+DEFINE('VARFooterMessage', 'footer-message');
+DEFINE('VARSiteMenuName', 'siteMenuName');
+
+//_visane
 DEFINE('VARFooterName', 'footer-name');
 DEFINE('VARLinkToSiteHome', 'link-to-site-home');
 DEFINE('VARLinkToSectionHome', 'link-to-section-home');

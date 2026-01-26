@@ -140,14 +140,14 @@ function runThemePart($what) {
 			$logo = NEWLINE . '			' . concatSlugs(['<a href="', pageUrl(), '">' . NEWLINE .
 				'				<img src="', $logo2x, '" style="border-radius: 8px;" class="img-fluid img-logo img-max-500" alt="', variable('name'), '">' . NEWLINE . '			</a><br>'], '');
 
-			$message = !variable('footer-message') ? '' : (NEWLINE . '			<span class="btn btn-secondary mb-2">' . returnLine(variable('footer-message')) . '		</span>');
+			$message = !variable(VARFooterMessage) ? '' : (NEWLINE . '			<span class="btn btn-secondary mb-2">' . returnLine(variable(VARFooterMessage)) . '		</span>');
 
 			$contact = getSnippet('contact');
 			if (!$contact) $contact = getSnippet('contact', CORESNIPPET);
 
 			//https://www.toptal.com/designers/htmlarrows/arrows/
 			$rightArrow = '<span class="h4">&#8608;</span> '; $leftArrow = ' <span class="h4">&#8606;</span>';
-			$nodeLink = makeLink(variableOr('nodeSiteName', humanize((nodeValue()))), pageUrl(nodeIs(SITEHOME) ? '' : nodeValue()), true, false, 'btn-has-icon');
+			$nodeLink = makeLink(variableOr(VARNodeSiteName, humanize((nodeValue()))), pageUrl(nodeIs(SITEHOME) ? '' : nodeValue()), true, false, 'btn-has-icon');
 			$nodeName = nodeIs(SITEHOME) ? '' : NEWLINE .
 				'				<span class="btn btn-success" style="letter-spacing: 2px;"> ' . $rightArrow
 				. $nodeLink . $leftArrow . '</span>' . NEWLINE;
@@ -158,7 +158,7 @@ function runThemePart($what) {
 			$fwVars = [
 				'footer-logo' => $logo . NEWLINE . '			<div class="text-center mt-2">' . ($altDesign ? '' : $nodeName) . '</div>',
 				'site-widgets' => siteWidgets(),
-				'footer-message' => '<div class="mt-3">' . ($altDesign ? $nodeName . '<hr class="my-2">' . $message : $message) . '</div>',
+				VARFooterMessage => '<div class="mt-3">' . ($altDesign ? $nodeName . '<hr class="my-2">' . $message : $message) . '</div>',
 				'footer-contact' => $contact,
 				'copyright' => _copyright(true),
 				'credits' => _credits('', true),

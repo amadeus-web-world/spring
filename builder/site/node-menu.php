@@ -29,7 +29,7 @@ function renderNodeMenu() {
 		if (in_array($page, $standalones)) {
 			variable('page_parameter1_safe', $page);
 			$tiss = true;
-			$menuFile = concatSlugs([variable('path'), variable('section'), variable(SAFENODEVAR), $page, 'menu.php']);
+			$menuFile = concatSlugs([SITEPATH, variable('section'), variable(SAFENODEVAR), $page, 'menu.php']);
 			$files = disk_include($menuFile, ['callingFrom' => 'header-page-menu', 'limit' => 5]);
 			if ($tsmn = variable(getSectionKey($page, MENUNAME)))
 				$page_r = $tsmn;

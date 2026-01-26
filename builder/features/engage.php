@@ -1,9 +1,9 @@
 <?php
-addStyle('engage', COREASSETS);
-addScript('engage', COREASSETS);
+addStyle(features::engage, COREASSETS);
+addScript(features::engage, COREASSETS);
 
 //TODO: Make a toggle-more when the md contains <!--more-->
-function renderEngage($name, $raw, $echo = true, $meta = []) {
+function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
 	//if (!$open) echo engageButton($name, $class);
 
 	$salutation = variableOr('salutation', 'Dear ' . variable('name')) . ',';
@@ -22,7 +22,8 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 	$systemIncluded = contains($addressee, VARSystemEmail) || contains($additionalCC, VARSystemEmail);
 	$defaultCC = $systemIncluded ? '' : ';' . VARSystemEmail;
 
-	$class = contains($raw, VARWantsNoEngageBox) ? '" ' : '" class="' . _getCBClassIfWanted('engage') . '" ';
+	$class = valueIfSet($settings, VARNoContentBoxes) ? features::engage : _getCBClassIfWanted(features::engage);
+	$class = '" class="' . $class . '" ';
 
 	$result = '	<div id="engage-' . urlize($name) . $class .
 		//($open ? '' : 'style="display: none" ') .

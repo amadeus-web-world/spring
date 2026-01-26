@@ -51,6 +51,7 @@ function getSectionFrom($dir) {
 	return pathinfo($dir, PATHINFO_FILENAME);
 }
 
+//TODO: HI: cleanup
 DEFINE('LASTPARAM', 'last-page');
 DEFINE('NODEVAR', 'node');
 DEFINE('SITEHOME', 'index');
@@ -142,7 +143,7 @@ function autoSetNode($level, $where, $overrides = []) {
 	$endSlug = nodeValue();
 	if ($level > 1) { $bits = explode('/', $relPath); $endSlug = array_pop($bits); }
 
-	$prefix = valueIfSet($overrides, 'prefix-safeName') ? variable('safeName') . '-' : '';
+	$prefix = valueIfSet($overrides, 'prefix-safeName') ? variable(VARSafeName) . '-' : '';
 	if ($prefix && isset($overrides[VARNodeSafeName]))
 		$overrides[VARNodeSafeName] = $prefix . $overrides[VARNodeSafeName];
 

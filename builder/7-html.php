@@ -239,8 +239,8 @@ function replaceHtml($html) {
 			'%networkName%' => DAWN_NAME,
 			'%siteName%' => $sn = variable('name'),
 			'%siteName_subject%' => urlencode($sn),
-			'%byline%' =>  variable('byline'),
-			'%safeName%' =>  variable('safeName'),
+			'%byline%' =>  variable(VARByline),
+			'%safeName%' =>  variable(VARSafeName),
 			'%section%' => $section, //let archives break!
 			'%section_r%' => humanize($section),
 
@@ -310,7 +310,7 @@ function prepareLinks($output) {
 
 	//TODO: " class="analytics-event" data-payload="{clickFrom:'%safeName%' //leave end " as a hack to pile on attributes
 	$campaign = isset($_GET['utm_campaign']) ? '&utm_campaign=' . $_GET['utm_campaign'] : '';
-	$output = str_replace('#utm', '?utm_source=' . variable('safeName') . $campaign, $output);
+	$output = str_replace('#utm', '?utm_source=' . variable(VARSafeName) . $campaign, $output);
 
 	$output = bootstrapAndUX::toButtons($output);
 	$output = replaceHtmlShortcuts($output);
@@ -717,7 +717,7 @@ function body_classes($return = false) {
 	$loadingPollen = false; //wantsPollen();
 	$op = [];
 
-	$op[] = 'site-' . variable('safeName');
+	$op[] = 'site-' . variable(VARSafeName);
 	$op[] = 'theme-' . variable('theme');
 	if (hasVariable('sub-theme')) $op[] =  'sub-theme-' . variable('sub-theme');
 

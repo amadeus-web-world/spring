@@ -32,7 +32,7 @@ function title($what = 'default') {
 	$siteRoot = $node == SITEHOME || variable('under-construction');
 
 	if ($siteRoot)
-		return variable('name') . ' | ' . variable('byline');
+		return variable('name') . ' | ' . variable(VARByline);
 
 	$forHeading = $what == FORHEADING;
 	$result = $forHeading ? [humanize($node)] : [];
@@ -106,7 +106,7 @@ function getLogoOrIcon($what, $which = 'site') {
 		$where = $which[assetKey(NODEASSETS)];
 	} else {
 		$inNode = $which == 'node' && !$site && hasVariable(VARNodeSafeName) && DEFINED('NODEPATH');
-		$name = variableOr($inNode ? VARNodeSafeName : 'safeName', 'amadeusweb9') . $suffix; //TODO: update when major version changes
+		$name = variableOr($inNode ? VARNodeSafeName : VARSafeName, 'amadeusweb9') . $suffix; //TODO: update when major version changes
 
 		$where = $inNode ? STARTATNODE : ($netWorkManaged ? STARTATNETWORK : STARTATSITE);
 	}

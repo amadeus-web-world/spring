@@ -2,17 +2,17 @@
 variable('toggle-list', 'toggle-list-below');
 
 DEFINE('MENUPADLEFT', '							');
-DEFINE('NOPAGESTART', '--page-start--');
+DEFINE('NOPAGESTART', '--page-start--'); //todo: document this!
 function _menuULStart($endAndName = false) {
 	if ($endAndName && $endAndName != NOPAGESTART) { echo MENUPADLEFT . '</ul><!-- #end ' . $endAndName . ' menu -->' . NEWLINES2; return; }
 
 	extract(variable('menu-settings'));
-	if (!isset($groupOuterUlClass) && $endAndName != NODEPAGESTART) $groupOuterUlClass = $outerUlClass;
+	if (!isset($groupOuterUlClass) && $endAndName != NOPAGESTART) $groupOuterUlClass = $outerUlClass;
 	if (!$noOuterUl) echo NEWLINE . MENUPADLEFT . '<ul class="' . $groupOuterUlClass . '">' . NEWLINE;
 
 	if ($endAndName == NOPAGESTART) return;
 
-	$mainMenu = variable($isPageMenu ? 'nodeSiteName' : 'siteMenuName') . $topLevelAngle;
+	$mainMenu = variable($isPageMenu ? VARNodeSiteName : VARSiteMenuName) . $topLevelAngle;
 	if ($wrapTextInADiv) $mainMenu = '<div>' . $mainMenu . '</div>';
 	echo MENUPADLEFT . '	<li class="' . $itemClass . '"><a class="' . $anchorClass . '" href="javascript: void(0);">' . $mainMenu . '</a>' . NEWLINE;
 }
@@ -86,12 +86,12 @@ function pageMenu($file) {
 		variable('in-node', true);
 
 		variable('directory_of', sectionValue() . '/' . nodeValue());
-		runFeature('directory');
+		features::ensureDirectory();
 		return;
 	}
 
 	variable('directory_of', sectionValue() . '/' . nodeValue() . '/' . concatSlugs($breadcrumbs));
-	runFeature('directory');
+	features::ensureDirectory();
 }
 
 DEFINE('ABSOLUTEPATHPREFIX', 'ABSOLUTE=');

@@ -1,6 +1,6 @@
 <?php
 function renderPulse($featured) {
-	runFeature('tables');
+	features::ensureTables();
 
 	contentBox('pageHeading', 'container mt-4');
 	h2('Social Media - A Pulse of Activities', 'text-center');

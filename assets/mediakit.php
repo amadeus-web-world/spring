@@ -67,7 +67,7 @@ echo replaceItems($op, [
 if (valueIfSetAndNotEmpty($palette, 'dont-round-logo', false, TYPEBOOLEAN))
 	echo '.img-logo { border-radius: 0px!important; }' . NEWLINES2;
 
-if ($node = _color($palette, 'node', false))
+if ($node = _color($palette, VARNode, false))
 	echo '#page-menu-wrap { background-color: ' . $node . ' }' . NEWLINES2;
 
 if ($content)

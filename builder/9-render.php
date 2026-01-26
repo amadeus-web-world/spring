@@ -2,7 +2,6 @@
 class renderSET extends builderBase {
 	const default = 'implementation';
 	//TODO: const excerpt = 'excerpt';
-	const engage = 'engage';
 
 	private $method, $pageId;
 
@@ -19,10 +18,12 @@ class renderSET extends builderBase {
 		$op = _renderImplementation($fileOrRaw, $this->settings);
 
 		$noEcho = $this->settings[VAREcho] == BOOLDontEcho;
-		if ($this->method == self::engage) {
+		if ($this->method == features::engage) {
 			if (!$noEcho) showDebugging('renderSET.render', ['$noEcho for render implementation expected as: ' . bool_r(BOOLDontEcho)], true);
-			runFeature('engage');
-			renderEngage($this->pageId, $op);
+			features::ensureEngage();
+			$settings = [];
+			if ($this->settingIs(VARNoContentBoxes)) $settings[VARNoContentBoxes] = true;
+			renderEngage($this->pageId, $op, BOOLYes, EmptyArray, $settings);
 		}
 		
 		if ($noEcho) return $op;
@@ -104,14 +105,8 @@ function renderAny($file, $settings = []) {
 		return _renderImplementation($file, $settings);
 }
 
-//_ denotees its not to be called from outside - see flavours above + remove deprecated
+//_ denotes its not to be called from outside - see flavours above + remove deprecated
 function _renderImplementation($fileOrRaw, $settings) {
-	if (endsWith($fileOrRaw, 'family-tree.md')) {
-		runFeature('family-tree');
-		renderFamilyTree($fileOrRaw); //only echoes for now
-		return;
-	}
-
 	$endsWithMd = BOOLNo;
 	$raw = $fileOrRaw; $fileName = '[RAW]';
 	$treatAsMarkdown = valueIfSet($settings, 'markdown');
@@ -184,7 +179,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 		}
 
 		if (is_engage($raw) && !contains($raw, $inProgress)) {
-			runFeature('engage');
+			features::ensureEngage();
 			$settings[VARUseContentBox] = BOOLNo;
 			$meta = $wasFile ? variable('meta_' . $fileName) : [];
 			$no = variable(VARNoContentBoxes);
@@ -229,7 +224,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 	if (!$noReplaces && isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
 
 	if ($engageContent) {
-		runFeature('engage');
+		features::ensureEngage();
 		$settings[VARUseContentBox] = BOOLNo;
 		$meta = $wasFile ? read_seo($fileName) : [];
 		$no = variable(VARNoContentBoxes);

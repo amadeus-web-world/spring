@@ -11,6 +11,8 @@ function read_seo($file, $inContent = false) {
 		$meta = parseMeta($raw);
 	} else if (endsWith($file, '.tsv')) {
 		$meta = getSheet($file, false)->values;
+	} else {
+		$raw = $file;
 	}
 
 	if (false && !$meta) {
@@ -105,7 +107,7 @@ function print_seo() {
 	echo GOOGLEOFF;
 	contentBox('meta', 'container');
 	h2('About This Page / SEO Information');
-	runFeature('tables');
+	features::ensureTables();
 	_tableHeadingsOnLeft(['id' => 'piece'], $info);
 	contentBox('end');
 	echo GOOGLEON;
