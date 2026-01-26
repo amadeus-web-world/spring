@@ -1,5 +1,6 @@
 <?php
 header("Content-type: text/css");
+include_once '../builder/0-varnames.php';
 include_once '../builder/4-array.php';
 DEFINE('NEWLINE', "\r\n");
 DEFINE('NEWLINES2', NEWLINE . NEWLINE);

@@ -13,6 +13,12 @@ function bool_r(bool $value) {
 }
 
 DEFINE('VARLocal', 'local');
+DEFINE('VARLive', 'live');
+DEFINE('VARUsePreview', 'use-preview');
+define('VARUseAmadeusWeb', '--use-amadeusweb');
+
+DEFINE('VARWrapper', '%');
+function wrap_variable($var) { return VARWrapper . $var / VARWrapper; }
 
 //4-array
 DEFINE('TYPENOCHANGE', 'no-change');
@@ -60,6 +66,7 @@ DEFINE('VARCTAONLY', '?cta=1&content=1');
 
 //14-main
 DEFINE('VARSystemEmail', 'imran@amadeusweb.world');
+function plus_email($email, $plusFolder) { return str_replace('@', '+' . $plusFolder . '@', $email); }
 
 //15-routing - todo cleanup
 DEFINE('VARNodeSiteName', 'nodeSiteName');
@@ -75,11 +82,43 @@ DEFINE('VARNodeSafeName', 'nodeSafeName');
 DEFINE('VARSubmenuAtNode', 'submenu-at-node');
 
 //features/engage.php
+DEFINE('VAREngageNote', 'engage-note');
+DEFINE('VAREngageNoteAbove', 'engage-note-above');
 DEFINE('VARWantsNoEngageBox', '<!--no-engage-box-->');
+
+//site/begin.php
+DEFINE('VARChatraID', 'ChatraID');
+DEFINE('VARGoogleAnalytics', 'google-analytics');
+function notSetOrNotLive($var) {
+	if (!variable($var) || variable(VARLocal)) return true;
+	if (variable(VARUsePreview) && variable(VARLive) === false) return true;
+	return false;
+}
+
+DEFINE('VARFooterName', 'footer-name');
+DEFINE('VARLinkToSiteHome', 'link-to-site-home');
+DEFINE('VARLinkToSectionHome', 'link-to-section-home');
+DEFINE('VAREmail', 'email');
+DEFINE('VAREmail2', 'email2');
+DEFINE('VAREmail3', 'email3');
+DEFINE('VARPhone', 'phone');
+DEFINE('VARWhatsapp', 'whatsapp');
+DEFINE('VARPhone2', 'phone2');
+DEFINE('VARWhatsapp2', 'whatsapp2');
+DEFINE('VARAddress', 'address');
+DEFINE('VARAddressUrl', 'address-url');
+DEFINE('VARFullAddress', 'full-address');
+DEFINE('VARTimings', 'timings');
+DEFINE('VAROwnedBy', 'owned-by');
+DEFINE('VARMediakit', 'mediakit');
+DEFINE('VARFonts', 'fonts');
+DEFINE('VARDescription', 'description');
+DEFINE('VARWelcomeMessage', 'welcome-message');
+DEFINE('VARNoSearch', 'no-search');
+DEFINE('VARNetwork', 'network');
 
 //site/header-menu.php
 DEFINE('VARLinkToNodeHome', 'link-to-node-home');
-DEFINE('VARLinkToSectionHome', 'link-to-section-home');
 DEFINE('VARSectionsHaveFiles', 'sections-have-files');
 
 //site/network.php

@@ -66,9 +66,11 @@ function _renderMenu($home, $folder, $where) {
 	}
 
 	//doesnt need / (copied from node-menu)
+	$namesOfFiles = false;
 	if (disk_file_exists($folder . '_menu-items.tsv')) {
 		$tsvInfo = menu('/' . $where . '/', ['return-tsv-info' => true]);
 		$files = $tsvInfo['files'];
+		$namesOfFiles = $tsvInfo['namesOfFiles'];
 	} else {
 		$files = disk_scandir($folder);
 		natsort($files);
@@ -80,6 +82,8 @@ function _renderMenu($home, $folder, $where) {
 		$item = getFolderMeta($folder, $fol, '', $ix++);
 		if ($lastName == $item['name_urlized']) { $ix--; continue; }
 		$lastName = $item['name_urlized'];
+		if ($namesOfFiles && isset($namesOfFiles[$lastName]))
+			$item['name_humanized'] = $namesOfFiles[$lastName];
 		$sectionItems[] = $item;
 	}
 

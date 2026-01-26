@@ -146,7 +146,7 @@ DEFINE('INPAGETABLE', 'sections-table');
 //TEST: http://localhost/amadeus8/code/
 
 function add_table($id, $dataFile, $columnList, $template, $values = []) {
-	variable('allow-internal', variable('local') || isset($_GET['internal']));
+	variable('allow-internal', variable(VARLocal) || isset($_GET['internal']));
 	$tsv = is_string($dataFile) && endsWith($dataFile, '.tsv');
 	$json = is_string($dataFile) && endsWith($dataFile, '.json');
 	$dontTreat = valueIfSetAndNotEmpty($values, 'dont-treat-array', false);

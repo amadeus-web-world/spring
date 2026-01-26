@@ -156,7 +156,7 @@ function replaceUPIs($html) {
 	$items = variableOr('upi', []);
 
 	if (empty($items)) {
-		if (variable('local') || isset($_GET['debug'])) showDebugging('Amadeus Variable for **upi** missing', ['html' => $html]);
+		if (variable(VARLocal) || isset($_GET['debug'])) showDebugging('Amadeus Variable for **upi** missing', ['html' => $html]);
 		return $html;
 	}
 

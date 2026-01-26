@@ -6,7 +6,7 @@ _menuULStart();
 
 $append = variable('scaffold') ? array_merge(['----'], variable('scaffold')) : false;
 menu('/' . variable('folder'), [
-	'link-to-home' => variable('link-to-site-home'),
+	'link-to-home' => variable(VARLinkToSiteHome),
 	'files-to-append' => $append,
 	'a-class' => $anchorClass,
 	'ul-class' => $ulClass,

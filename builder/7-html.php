@@ -219,22 +219,22 @@ function replaceHtml($html) {
 			'%leafNodeAssets%' => variableOr(assetKey(LEAFNODEASSETS), ''),
 
 			'%admin-email%' => variableOr('systemEmail', variableOr('assistantEmail', '#error--no-email-configured')),
-			'%email%' => variableOr('email', ''),
-			'%email2%' => variableOr('email2', ''),
-			'%email3%' => variableOr('email3', ''),
-			'%phone%' => variableOr('phone', ''),
-			'%phone2%' => variableOr('phone2', ''),
-			'%whatsapp-number%' => ($wa = variableOr('whatsapp', '##no-number-specified')),
+			'%email%' => variableOr(VAREmail, ''),
+			'%email2%' => variableOr(VAREmail2, ''),
+			'%email3%' => variableOr(VAREmail3, ''),
+			'%phone%' => variableOr(VARPhone, ''),
+			'%phone2%' => variableOr(VARPhone2, ''),
+			'%whatsapp-number%' => ($wa = variableOr(VARWhatsapp, '##no-number-specified')),
 			'%whatsapp%' => $wame = _whatsAppME($wa),
-			'%whatsapp2-number%' => ($wa2 = variableOr('whatsapp2', '##no-number2-specified')),
+			'%whatsapp2-number%' => ($wa2 = variableOr(VARWhatsapp2, '##no-number2-specified')),
 			'%whatsapp2%' => _whatsAppME($wa2),
 
-			'%address%' => variableOr('address', '[no-address]'),
+			'%address%' => variableOr(VARAddress, '[no-address]'),
 			'%address2%' => variableOr('address2', '[no-address2]'),
 			'%timings%' => variableOr('timings', '[no-timings]'),
 			'%address-url%' => variableOr('address-url', '#no-link'),
 
-			'%welcomeMessage%' => markdown(pipeToNL(variable('welcome-message'))), //links will get picked up
+			'%welcomeMessage%' => markdown(pipeToNL(variable(VARWelcomeMessage))), //links will get picked up
 			'%network-link%' => networkLink('btn btn-success', '<hr class="mt-5" />'),
 			'%networkName%' => DAWN_NAME,
 			'%siteName%' => $sn = variable('name'),
@@ -350,9 +350,9 @@ class htmlUX {
 	private static function ensureVars() {
 		$custom = [
 			self::cbOPEN[0] => contentBox('', '', true),
-			self::cbCNO[0] => ['[cb-close-and-open]', cbCloseAndOpen('container')],
-			self::cbOWC[0] => ['[cb-open-with-container]', contentBox('', 'container', true)],
-			self::cbCLOSE[0] => ['[cb-close]', contentBox('end', 'mb-2', true)],
+			self::cbCNO[0] => cbCloseAndOpen('container'),
+			self::cbOWC[0] => contentBox('', 'container', true),
+			self::cbCLOSE[0] => contentBox('end', 'mb-2', true),
 		];
 
 		if (empty(self::$vars)) {
@@ -365,6 +365,11 @@ class htmlUX {
 
 	static function keyOf(array $array) {
 		return $array[0];
+	}
+
+	static function valueOf(array $array) {
+		$vars = self::ensureVars();
+		return $vars[self::keyOf($array)];
 	}
 
 	static function replaceAll($output) {
@@ -411,13 +416,13 @@ class htmlUX {
 
 	const artHAuto3 = ['ARTICLE-3COL-HAUTO-BOX', '<article class="col-lg-4 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">'];
 	const artHAuto4 = ['ARTICLE-HAUTO-BOX', '<article class="col-lg-3 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">'];
-	const artHAuto6 = ['ARTICLE-50-HAUTO-BOX', '<article class="portfolio-item col-6"><div class="grid-inner content-box minh-100">'];
-	const artHAuto12 = ['ARTICLE-100-HAUTO-BOX', '<article class="portfolio-item col-12"><div class="grid-inner content-box minh-100">'];
+	const artHAuto6 = ['ARTICLE-50-HAUTO-BOX', '<article class="portfolio-item col-6 mb-4"><div class="grid-inner content-box minh-100">'];
+	const artHAuto12 = ['ARTICLE-100-HAUTO-BOX', '<article class="portfolio-item col-12 mb-4"><div class="grid-inner content-box minh-100">'];
 
-	const art3 = ['ARTICLE-3COL-BOX', '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12"><div class="grid-inner content-box">'];
-	const art4 = ['ARTICLE-BOX', '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">'];
-	const art6 = ['ARTICLE-50-BOX', '<article class="portfolio-item col-6"><div class="grid-inner content-box">'];
-	const art12 = ['ARTICLE-100-BOX', '<article class="portfolio-item col-12"><div class="grid-inner content-box">'];
+	const art3 = ['ARTICLE-3COL-BOX', '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12 mb-4"><div class="grid-inner content-box">'];
+	const art4 = ['ARTICLE-BOX', '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12 mb-4"><div class="grid-inner content-box">'];
+	const art6 = ['ARTICLE-50-BOX', '<article class="portfolio-item col-6 mb-4"><div class="grid-inner content-box">'];
+	const art12 = ['ARTICLE-100-BOX', '<article class="portfolio-item col-12 mb-4"><div class="grid-inner content-box">'];
 	//7 - whitespace (4)
 	const wsNewLines2 = [' NEWLINES2', '<br /><br />' . NEWLINE];
 	const wsNewLine = [' NEWLINE', '<br />' . NEWLINE];
@@ -455,20 +460,20 @@ function specialLinkVars($item) {
 	//$url sent
 	$text = $name;
 
-	if ($type == 'email') $classType = 'fa-classic amadeus-2x-icon rounded-circle bg-info fa-envelope';
-	if ($type == 'phone') $classType = 'fa-classic amadeus-2x-icon rounded-circle bg-info fa-solid fa-phone';
+	if ($type == VAREmail) $classType = 'fa-classic amadeus-2x-icon rounded-circle bg-info fa-envelope';
+	if ($type == VARPhone) $classType = 'fa-classic amadeus-2x-icon rounded-circle bg-info fa-solid fa-phone';
 
 	$class = isset($classType) ? $classType : 'amadeus-2x-icon rounded-circle fa-brands fa-'. $type . ' bg-' . $type;
 
-	if ($type == 'phone') {
+	if ($type == VARPhone) {
 		$url = 'tel:' . $url;
 	}
 
-	if ($type == 'whatsapp') {
+	if ($type == VARWhatsapp) {
 		$url = _whatsAppME($url);
 	}
 
-	if ($type == 'email') {
+	if ($type == VAREmail) {
 		$url = 'mailto:' . $url . '?subject=' . replaceItems($text, [' ' => '+']);
 	}
 
@@ -590,7 +595,7 @@ class linkBuilder extends builderBase {
 		if (in_array('lightbox', $do)) {
 			$result->attrs .= ' data-lightbox="iframe"';
 			$result->href .= contains($result->href, '?') ? str_replace('/?', '&', self::content) : self::content;
-			$result->href .= str_replace('?', '&', variable('mediakit'));
+			$result->href .= str_replace('?', '&', variable(VARMediakit));
 		}
 
 		if (in_array('noPageUrl', $do))
@@ -721,7 +726,7 @@ function body_classes($return = false) {
 
 	$op[] = 'mobile-click-to-expand'; //TODO: configurable!
 
-	if (hasVariable('ChatraID') && variable('ChatraID') != 'none' && !variable('local') && !$loadingPollen) $op[] = 'has-chatra';
+	if (hasVariable(VARChatraID) && variable(VARChatraID) != 'none' && !variable(VARLocal) && !$loadingPollen) $op[] = 'has-chatra';
 
 	if (hasVariable(BODYCLASSES)) $op[] = implode(' ', variable(BODYCLASSES));
 

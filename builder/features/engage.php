@@ -26,7 +26,7 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 
 	$result = '	<div id="engage-' . urlize($name) . $class .
 		//($open ? '' : 'style="display: none" ') .
-		'data-to="' . ($email = $addressee . variable('email')) .
+		'data-to="' . ($email = $addressee . variable(VAREmail)) .
 		'" data-cc="' . $additionalCC . $defaultCC .
 		'" data-whatsapp="' . $whatsapp .
 		'" data-site-name="' . variable('name') .
@@ -34,11 +34,11 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 
 	$replaces = [];
 	if (disk_file_exists($note = (AMADEUSCORE . 'data/engage-note.md'))) {
-		$replaces['engage-note'] = '<div class="engage-note-hint d-none">' . returnLine($note) . '</div>';
+		$replaces[VAREngageNote] = '<div class="engage-note-hint d-none">' . returnLine($note) . '</div>';
 		if (disk_file_exists($note2 = (AMADEUSCORE . 'data/engage-note-above.md')))
-			$replaces['engage-note-above'] = returnLine($note2);
-		$replaces['email'] = $email;
-		$replaces['whatsapp'] = getHtmlVariable('whatsapp') . getHtmlVariable('enquiry');
+			$replaces[VAREngageNoteAbove] = returnLine($note2);
+		$replaces[VAREmail] = $email;
+		$replaces[VARWhatsapp] = getHtmlVariable(VARWhatsapp) . getHtmlVariable('enquiry');
 	}
 
 	$result .= renderMarkdown($raw, ['replaces' => $replaces, 'echo' => false]);

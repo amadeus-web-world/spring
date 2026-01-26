@@ -182,6 +182,6 @@ function styles_and_scripts() {
 	foreach (variable('3pStyles') as $url) cssTag($url);
 	foreach (variable('3pScripts') as $url) scriptTag($url);
 
-	if (variable('mediakit'))
-		cssTag(variable('app') . 'assets/mediakit.php' . variable('mediakit'));
+	if (variable(VARMediakit))
+		cssTag(variable('app') . 'assets/mediakit.php' . variable(VARMediakit));
 }

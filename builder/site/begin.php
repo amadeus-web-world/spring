@@ -80,30 +80,31 @@ parseSectionsAndGroups($siteVars);
 function _visane($siteVars) {
 	//defaults are given, hence guaranteed and site is the only way
 	$guarantees = [
-		['footer-name', null], //needs null as uses !== in variableOr
-		['link-to-site-home', true, TYPEBOOLEAN],
-		['link-to-section-home', false, TYPEBOOLEAN],
-		['ChatraID', '--use-amadeusweb'],
-		['google-analytics', '--use-amadeusweb'],
+		[VARFooterName, null], //needs null as uses !== in variableOr
+		[VARLinkToSiteHome, true, TYPEBOOLEAN],
+		[VARLinkToSectionHome, false, TYPEBOOLEAN],
+		[VARChatraID, VARUseAmadeusWeb],
+		[VARGoogleAnalytics, VARUseAmadeusWeb],
 
-		['email', 'imran@amadeusweb.world'],
-		['email2', 'imran+owner@amadeusweb.world'],
-		['email3', 'imran+hr@amadeusweb.world'],
-		['phone', '+91-9841223313'],
-		['whatsapp', '919841223313'],
-		['phone2', '+91-9566166880'],
-		['whatsapp2', '#no-alt-wa-number'],
-		['address', 'Chennai, India'],
-		['timings', 'Mon - Sat 11am to 7pm'],
-		//['address-url', '#address'], //not here as needed for social too
-		['owned-by', false], //in _copyright
+		[VAREmail, VARSystemEmail],
+		[VAREmail2, plus_email(VARSystemEmail, 'owner')],
+		[VAREmail3, plus_email(VARSystemEmail, 'hr')],
+		[VARPhone, $ph1 = '+91-9841223313'],
+		[VARWhatsapp, _whatsAppME($ph1, '', true)],
+		[VARPhone2, $ph2 = '+91-9500001909'],
+		[VARWhatsapp2, _whatsAppME($ph2, '', true)],
+		[VARAddress, 'Chennai, India'],
+		[VARAddressUrl, '#no-maps-set'],
+		[VARFullAddress, 'Devakalam, Mahalingapuram, Chennai, India'],
+		[VARTimings, 'Mon - Sat 11am to 7pm'],
+		[VAROwnedBy, false], //in _copyright
 
-		['mediakit', '?palette=polished'],
-		['fonts', ''], //used in mediakit.php
-		['description', false],
-		['welcome-message', 'Welcomes you!'],
-		['no-search', true], //TODO: GPSE - high
-		['network', 'Webring'],
+		[VARMediakit, '?palette=polished'],
+		[VARFonts, ''], //used in mediakit.php
+		[VARDescription, false],
+		[VARWelcomeMessage, 'Welcomes you!'],
+		[VARNoSearch, true], //TODO: GPSE - high
+		[VARNetwork, 'Webring'],
 	];
 
 	if (!hasVariable('theme')) {
@@ -117,8 +118,8 @@ function _visane($siteVars) {
 		$op[$cfg[0]] = valueIfSetAndNotEmpty($siteVars, $cfg[0], $cfg[1], isset($cfg[2]) ? $cfg[2] : 'no-change');
 	}
 
-	if ($op['fonts'])
-		$op['mediakit'] .= '&' . $op['fonts'];
+	if ($op[VARFonts])
+		$op[VARMediakit] .= '&' . $op[VARFonts];
 
 	__testSiteVars($op);
 	variables($op);

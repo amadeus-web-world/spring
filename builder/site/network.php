@@ -32,14 +32,14 @@ if (defined('SHOWSITESAT')) {
 }
 
 //setup continues
-$networkName = variable('network');
+$networkName = variable(VARNetwork);
 $noNetwork = in_array($networkName, BOOLLISTFALSE);
 setupNetwork($noNetwork);
 
 if (!$noNetwork) {
 	function network_menu() {
-		if (variable('network') != 'dawn-only')
-			__flatMenu(variable('networkSites'), variable('network'));
+		if (variable(VARNetwork) != 'dawn-only')
+			__flatMenu(variable('networkSites'), variable(VARNetwork));
 		dawn_menu();
 	}
 }
@@ -59,7 +59,7 @@ function dawn_menu() {
 }
 
 function getDomainLink($name, $site, $urlKey, $hrefOnly = false) {
-	$href = variable('local') ? replaceVariables('http://localhost%port%/', 'port') : 'https://amadeusweb.world/';
+	$href = variable(VARLocal) ? replaceVariables('http://localhost%port%/', 'port') : 'https://amadeusweb.world/';
 	if ($site) $href .= $site . '/';
 	if ($hrefOnly) return $href;
 	return [$urlKey => $href, 'name' => $name];
@@ -100,9 +100,9 @@ function setupNetwork($noNetwork) {
 	addNetworkUrl(SITEWORLD, getDomainLink('', 'oases', '', true));
 	addNetworkUrl(SITESPRING, getDomainLink('', 'spring', '', true));
 
-	$networkName = urldecode(getQueryParameter('network', variable('network')));
+	$networkName = urldecode(getQueryParameter(VARNetwork, variable(VARNetwork)));
 
-	//TEST: $networkName; variable('network', $networkName = 'Learning');
+	//TEST: $networkName; variable(VARNetwork, $networkName = 'Learning');
 	$urlKey = _getUrlKeySansPreview();
 
 	$items = [];
@@ -126,7 +126,7 @@ function setupNetwork($noNetwork) {
 			}
 
 			if (startsWith($file, '==') || !disk_file_exists($tsv = ALLSITESROOT . $file . '/data/site.tsv')) {
-				if (variable('local')) echo '<!-- missing tsv: ' . $tsv . '-->' . NEWLINE;
+				if (variable(VARLocal)) echo '<!-- missing tsv: ' . $tsv . '-->' . NEWLINE;
 				continue;
 			}
 			$items[$file] = $file;
@@ -177,7 +177,7 @@ function getSitesToShow($at) {
 	foreach ($fols as $relativePath) {
 		$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
 		if (!sheetExists($file)) {
-			if (variable('local')) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV missing' => $file, 'hint' => 'IS NETWORK / Site Grouping?'], DEBUGVERBOSE);
+			if (variable(VARLocal)) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV missing' => $file, 'hint' => 'IS NETWORK / Site Grouping?'], DEBUGVERBOSE);
 			continue;
 		}
 
@@ -185,7 +185,7 @@ function getSitesToShow($at) {
 		$showInConfig = $site->firstOfGroup(DOMAINKEY, false, false);
 
 		if (!$showInConfig) {
-			if (variable('local')) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "' . DOMAINKEY . '" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
+			if (variable(VARLocal)) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "' . DOMAINKEY . '" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
 			continue;
 		}
 
@@ -216,7 +216,7 @@ function getSitesToShow($at) {
 function _getOrWarn($relativePath) {
 	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
 	if (!sheetExists($file)) {
-		if (variable('local')) debug(__FILE__, '_getOrWarn', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
+		if (variable(VARLocal)) debug(__FILE__, '_getOrWarn', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
 		return false;
 	}
 

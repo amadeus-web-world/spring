@@ -246,7 +246,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 }
 
 function _txtInfo($msg, $info) {
-	if (BOOLYes || !variable('local')) return '';
+	if (BOOLYes || !variable(VARLocal)) return '';
 	return textBoxWithCopyOnClick($msg, _makeSlashesConsistent($info), 'Link Copied');
 }
 

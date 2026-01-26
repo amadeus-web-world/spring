@@ -30,18 +30,18 @@ class main {
 	}
 
 	static function chat() {
-		$val = variable('ChatraID');
+		$val = variable(VARChatraID);
 		$val = $val && $val != 'none' ? ($val != '--use-amadeusweb' ? $val : 'wqzHJQrofB47q5oFj') : false;
 		if (!$val) return;
-		variable('ChatraID', $val);
+		variable(VARChatraID, $val);
 		runModule('chatra');
 	}
 
 	static function analytics() {
-		$val = variable('google-analytics');
+		$val = variable(VARGoogleAnalytics);
 		$val = $val && $val != 'none' ? ($val != '--use-amadeusweb' ? $val : 'G-LN2JB9GLDC') : false;
 		if (!$val) return;
-		variable('google-analytics', $val);
-		runModule('google-analytics');
+		variable(VARGoogleAnalytics, $val);
+		runModule(VARGoogleAnalytics);
 	}
 }

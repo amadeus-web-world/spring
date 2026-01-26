@@ -67,8 +67,8 @@ function before_bootstrap() {
 	
 	variable('port', $port != $testMobile ? ':' . $port : '');
 
-	variable('local', $local = startsWith($_SERVER['HTTP_HOST'], 'localhost'));
-	variable('live', defined('SHOWSITESAT') ? false : contains(SITEPATH, 'live'));
+	variable(VARLocal, $local = startsWith($_SERVER['HTTP_HOST'], 'localhost'));
+	variable(VARLive, defined('SHOWSITESAT') ? false : contains(SITEPATH, VARLive));
 
 	variable('app', $url = ($local && !$isMobile ? replaceVariables('http://localhost%port%/spring/', 'port') : '//amadeusweb.world/spring/'));
 
@@ -235,8 +235,8 @@ function _copyright($return = false) {
 	$start = variable('start_year');
 	$from = ($start && ($start != $year)) ? $start . ' - ' : '';
 
-	$before = variable('owned-by') ? '<strong>' . variable('name') . '</strong>, ' : '';
-	$after = variable('owned-by') ? variable('owned-by') : variable('name');
+	$before = variable(VAROwnedBy) ? '<strong>' . variable('name') . '</strong>, ' : '';
+	$after = variable(VAROwnedBy) ? variable(VAROwnedBy) : variable('name');
 
 	$result = '&copy; ' . $before . 'Copyright <strong><span>' . $after . '</span></strong>. ' . $from . $year . ' All Rights Reserved.';
 	if ($return) return $result; else echo $result;

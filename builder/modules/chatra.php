@@ -1,11 +1,8 @@
-<?php
-if (!variable('ChatraID') || variable('local')) return;
-if (variable('use-preview') && variable('live') === false) return;
-?>
+<?php if (notSetOrNotLive(VARChatraID)) return; ?>
 <!-- Chatra {literal} -->
 <script>
 	(function(d, w, c) {
-		w.ChatraID = '<?php echo variable("ChatraID"); ?>';
+		w.ChatraID = '<?php echo variable(VARChatraID); ?>';
 		var s = d.createElement('script');
 		w[c] = w[c] || function() {
 			(w[c].q = w[c].q || []).push(arguments);

@@ -114,7 +114,7 @@ function runThemePart($what) {
 		$vars['optional-page-css'] = [];
 		$vars['optional-page-menu'] = _page_menu($siteIcon, $nodeIcon);
 
-		if (!variable('no-search')) {
+		if (!variable(VARNoSearch)) {
 			$vars['optional-search-trigger'] = getThemeSnippet('search-trigger');
 			$vars['optional-search'] = replaceItems(getThemeSnippet('search'), ['search-url' => searchUrl()], '##');
 		}
@@ -153,7 +153,7 @@ function runThemePart($what) {
 				. $nodeLink . $leftArrow . '</span>' . NEWLINE;
 
 			$altDesign = _useAltFooterDesign();
-			$nodeName = NEWLINE . '			<h4 class="' . ($altDesign ? '' : 'mt-sm-4 ') . 'mb-0">' . variableOr('footer-name', variable('name')) . '</h4>' . $nodeName;
+			$nodeName = NEWLINE . '			<h4 class="' . ($altDesign ? '' : 'mt-sm-4 ') . 'mb-0">' . variableOr(VARFooterName, variable('name')) . '</h4>' . $nodeName;
 
 			$fwVars = [
 				'footer-logo' => $logo . NEWLINE . '			<div class="text-center mt-2">' . ($altDesign ? '' : $nodeName) . '</div>',
@@ -296,7 +296,7 @@ function siteWidgets() {
 
 	$colsInUse = 0;
 
-	$showSections = variable('link-to-section-home') && !variable('no-sections-in-footer');
+	$showSections = variable(VARLinkToSectionHome) && !variable('no-sections-in-footer');
 	if ($showSections) $showSections = count($sections = variableOr('sections', []));
 	if ($showSections) $colsInUse += 1;
 

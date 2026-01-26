@@ -117,7 +117,7 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 function hasBuiltin() {
 	$scaffold = variableOr('scaffold', []);
 	//NOTE: sitemap always needed
-	$always = false; //variable('local') && nodeIs('sitemap');
+	$always = false; //variable(VARLocal) && nodeIs('sitemap');
 	if (!$always && !nodeIsOneOf($scaffold))
 		return false;
 
