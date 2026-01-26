@@ -177,7 +177,7 @@ function textBoxWithCopyOnClick($title, $value, $label = false, $icon = '') {
 	$bits[] = '<div title="' . ($icon == '' ? $title : '') . '">' . ($label ? '<label class="d-block"><i class="' . $icon . '"></i> ' . $label . '<br>' : '');
 	$bits[] = '<textarea class="autofit copyable" style="text-align: center; width: 100%" onfocus="this.select(); document.execCommand(\'copy\'); this.setSelectionRange(0, 0); if (!this.classList.contains(\'text-copied\')) { this.classList.add(\'text-copied\'); alert(\'Copied: \' + $(this).text()); }" rows="3" readonly>' . $value . '</textarea>';
 
-	if ($label) $bits[] = '</label>';
+	if ($label) $bits[] = '</label>' . TAGDIVEND;
 
 	return implode(NEWLINE, $bits) . NEWLINES2;
 }

@@ -134,7 +134,8 @@ function disk_one_of_files_exist($fwe, $extensions = 'php, html') {
 }
 
 function disk_file_exists($file) {
-	if (contains($file, _makeSlashesConsistent('/.')) || contains($file, variable('safeNL'))) return false;
+	if (function_exists('contains'))
+		if (contains($file, _makeSlashesConsistent('/.')) || contains($file, variable('safeNL'))) return false;
 
 	if (($result = _diskCached('file_exists', $file)) == null) {
 		_disk_start();
@@ -152,7 +153,7 @@ function disk_include_once($file, $variables = []) {
 	if (function_exists('debug'))
 		debug(__FILE__, 'disk_include_once', ['$file' => $file]);
 
-	if (!$file) showDebugging('$file', $file, true);
+	if (!$file || !disk_file_exists($file)) showDebugging('$file', $file, PleaseDie, IncludeTrace);
 	_disk_start();
 	$file = _makeSlashesConsistent($file);
 	extract($variables);

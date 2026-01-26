@@ -364,7 +364,7 @@ function appendSocial($social, &$op) {
 	$lastIndex = count($social) - 1;
 	$class = variableOr('social-class', 'text-light');
 	foreach($social as $ix => $item) {
-		if ($item == '----') { $op[] = '<hr class="mt-3 mb-0 w-50 mx-auto" />'; continue; }
+		if ($item == socialBuilder::HR) { $op[] = '<hr class="mt-3 mb-0 w-50 mx-auto" />'; continue; }
 
 		$wantsItalics = !contains($item['type'], 'png-icon');
 		$nextIsSpacer = $ix < count($social) - 1 && $social[$ix + 1] == '----';

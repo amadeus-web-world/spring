@@ -106,8 +106,7 @@ function bootstrap($config) {
 	if ($noRewrite) $node = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
 	else $node = getQueryParameter(VARNode, '');
 
-	if (endsWith($node, '/')) $node = substr($node, 0, strlen($node) - 1);
-	if (startsWith($node, '/')) $node = substr($node, 1);
+	$node = removeSlash($node, 'both');
 
 	if ($node == '') $node = SITEHOME;
 	variable('all_page_parameters', $node); //let it always be available
@@ -127,8 +126,20 @@ function getPageParameterAt($index = 1, $or = false) {
 	return variableOr('page_parameter' . $index, $or);
 }
 
-function getPageParameters($trail = '/') {
-	return concatSlugs(variable('page_parameters')) . $trail;
+function removeSlash($node, $where) {
+	if (in_array($where, ['both', 'end']) AND endsWith($node, '/')) $node = substr($node, 0, strlen($node) - 1);
+	if (in_array($where, ['both', 'start']) AND startsWith($node, '/')) $node = substr($node, 1);
+	return $node;
+}
+
+function getPageParameters($trail = '/', $baseUrl = true) {
+	$base = $baseUrl ? getHtmlVariable('url') : '';
+	$all = variable('all_page_parameters');
+	if ($all == SITEHOME) {
+		$all = '';
+		$trail = removeSlash($trail, 'start');
+	}
+	return $base . ($all ? $all : '') . $trail;
 }
 
 function hasPageParameter($param) {
@@ -162,7 +173,7 @@ function render() {
 		runFeature(features::underConstruction);
 		$rendered = true;
 	} else if (isset($_GET[features::share])) {
-		runFeature(features::share);
+		features::runPage(features::share);
 		$rendered = true;
 	} else if (isset($_GET['cta'])) {
 		echo getCodeSnippet('cta-or-engage', CORESNIPPET);

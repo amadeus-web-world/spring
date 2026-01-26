@@ -5,6 +5,7 @@ DEFINE('VAR ', );
 */
 DEFINE('BOOLYes', true);
 	DEFINE('PleaseDie', BOOLYes);
+	DEFINE('IncludeTrace', BOOLYes);
 DEFINE('BOOLNo', false);
 	DEFINE('BlockExecution', BOOLNo); ///dead code
 DEFINE('EmptyArray', []);
@@ -32,9 +33,12 @@ class features {
 	const underConstruction = 'under-construction';
 	const tables = 'tables';
 
+	const shareQS = '?share=1&content=1';
+
 	static function ensureDirectory() { runFeature(self::directory); } //call either this, OR runMultiple for sitemap
 	static function ensureEngage() { runFeature(self::engage); }
 	static function ensureTables() { runFeature(self::tables); }
+	static function runPage($what) { runFrameworkFile('pages/' . $what); }
 	static function runMultiple($what, $vars = []) { runFeatureMultiple($what, $vars); }
 	static function runWithFile($what, $file) { self::runMultiple($what, ['file' => $file]); }
 	static function runPollen($items = []) { runFeature(self::pollen, ['items' => $items]); }
@@ -89,6 +93,7 @@ DEFINE('VARSystemEmail', 'imran@amadeusweb.world');
 function plus_email($email, $plusFolder) { return str_replace('@', '+' . $plusFolder . '@', $email); }
 
 //15-routing.php
+DEFINE('VARSlash', '/');
 DEFINE('VARNode', 'node');
 
 DEFINE('VARNodeSiteName', 'nodeSiteName');
@@ -109,6 +114,7 @@ DEFINE('VAREngageNoteAbove', 'engage-note-above');
 DEFINE('VARWantsNoEngageBox', '<!--no-engage-box-->');
 
 //site/begin.php
+DEFINE('VARGithubRepo', 'github-repo');
 DEFINE('VARChatraID', 'ChatraID');
 DEFINE('VARGoogleAnalytics', 'google-analytics');
 function notSetOrNotLive($var) {
@@ -124,6 +130,7 @@ DEFINE('VARSafeName', 'safeName');
 DEFINE('VARIconName', 'iconName');
 DEFINE('VARFooterMessage', 'footer-message');
 DEFINE('VARSiteMenuName', 'siteMenuName');
+DEFINE('VARYear', 'year');
 
 //_visane
 DEFINE('VARFooterName', 'footer-name');

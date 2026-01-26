@@ -1,13 +1,80 @@
 <?php
-//NOTE: allows referring to values by name and avoids duplication
+class socialBuilder {
+	const HR = '----';
+	const shareBtn = 'bi bi-send-plus bg-success';
+	const dawnBtn = 'bi bi-heart-pulse bg-danger';
+	const springBtn = 'bi bi-tools bg-warning';
+
+	private $items = [];
+	function getItems() { return $this->items; }
+
+	static function create($items = []) {
+		$r = new socialBuilder();
+		if (!empty($items)) $r->items = $items;
+		return $r;
+	}
+
+	function addHR() : socialBuilder {
+		$this->items[] = self::HR;
+		return $this;
+	}
+
+	private function add($type, $url, $name) : socialBuilder {
+		$this->items[] = [ 'type' => $type, 'url' => $url, 'name' => $name ];
+		return $this;
+	}
+
+	function addInternal($relUrl, $name, $type) {
+		if (!contains($relUrl, 'http') AND !isSpecialLink($relUrl))
+			$relUrl = pageUrl($relUrl);
+		return $this->add($type, $relUrl, $name);
+	}
+
+	function addLinkedIn($relUrl, $name, $type = 'linkedin') {
+		return $this->add($type, 'https://www.linkedin.com/' . $relUrl, $name);
+	}
+
+	function addYoutube($relUrl, $name, $type = 'youtube') {
+		return $this->add($type, 'https://www.youtube.com/' . $relUrl, $name);
+	}
+
+	function addGithub($relUrl, $name, $skip = false, $type = 'github') {
+		if ($skip) return $this;
+		return $this->add($type, 'https://www.github.com/' . $relUrl, $name);
+	}
+
+	function addShare() {
+		return $this
+			->addInternal(getPageParameters(VARSlash . features::shareQS), 'Share Via&hellip;', self::shareBtn);
+	}
+
+	function addGithubGroup() {
+		return $this
+			->addHR()
+			->addGithub('amadeus-web-world/', 'AW World')
+			->addGithub('amadeus-web-world/', 'AW Spring')
+			->addGithub(variable('github-repo'), 'This Site', !variable('github-repo'));
+	}
+
+	function addUtilityGroup() {
+		return $this
+			->addHR()
+			->addShare()
+			->addInternal(replaceNetworkUrls(getSiteKey(SITEROOT)), 'DAWN', self::dawnBtn)
+			->addInternal(replaceNetworkUrls(getSiteKey(SITESPRING)), 'AW Spring', self::springBtn);
+	}
+}
+
+
 class main {
-	static function defaultSocial() {
-		return [
-			[ 'type' => 'linkedin', 'url' => 'https://www.linkedin.com/in/imran-ali-namazi/', 'name' => 'Imran Ali Namazi' ],
-			[ 'type' => 'linkedin', 'url' => 'https://www.linkedin.com/company/amadeusweb/', 'name' => 'Amadeus Web' ],
-			//[ 'type' => 'youtube', 'url' => 'https://www.youtube.com/@amadeuswebbuilder', 'name' => 'Amadeus Core' ],
-			[ 'type' => 'github', 'url' => 'https://github.com/amadeus-web-world/', 'name' => 'GitHub Code' ],
-		];
+	static function defaultSocial($prepend = []) {
+		return socialBuilder::create($prepend)
+			->addLinkedIn('in/imran-ali-namazi/', 'Imran Ali Namazi')
+			->addLinkedIn('company/amadeusweb/', 'Amadeus Web')
+			->addYoutube('@amadeuswebbuilder', 'Amadeus Core')
+			->addGithubGroup()
+			->addUtilityGroup()
+			->getItems();
 	}
 
 	static function defaultSearches() {
@@ -31,7 +98,7 @@ class main {
 
 	static function chat() {
 		$val = variable(VARChatraID);
-		$val = $val && $val != 'none' ? ($val != '--use-amadeusweb' ? $val : 'wqzHJQrofB47q5oFj') : false;
+		$val = $val && $val != 'none' ? ($val != VARUseAmadeusWeb ? $val : 'wqzHJQrofB47q5oFj') : false;
 		if (!$val) return;
 		variable(VARChatraID, $val);
 		runModule('chatra');
@@ -39,7 +106,7 @@ class main {
 
 	static function analytics() {
 		$val = variable(VARGoogleAnalytics);
-		$val = $val && $val != 'none' ? ($val != '--use-amadeusweb' ? $val : 'G-LN2JB9GLDC') : false;
+		$val = $val && $val != 'none' ? ($val != VARUseAmadeusWeb ? $val : 'G-LN2JB9GLDC') : false;
 		if (!$val) return;
 		variable(VARGoogleAnalytics, $val);
 		runModule(VARGoogleAnalytics);

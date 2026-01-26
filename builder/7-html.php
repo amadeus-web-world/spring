@@ -12,6 +12,9 @@ DEFINE('WANTSAUTOPARA', '<!--autop-->');
 
 DEFINE('TAGSECTION', '<section>');
 DEFINE('TAGSECTIONEND', '</section>');
+DEFINE('TAGDIVEND', '</div>');
+DEFINE('TAGBOLD', '<strong class="bg-info py-2 px-4 rounded-pill my-2 d-inline-block">');
+DEFINE('TAGBOLDEND', '</strong>');
 
 ///Tag Helpers
 function currentUrl() {
@@ -67,7 +70,7 @@ function sectionEnd($echo = true) {
 function iframe($url, $wrapContainer = true) {
 	if ($wrapContainer) echo '<div class="video-container">';
 	echo '<iframe src="' . $url . '" style="width: 100%; height: 90vh;"></iframe>';
-	if ($wrapContainer) echo '</div>';
+	if ($wrapContainer) echo TAGDIVEND;
 }
 
 function cbWrapAndReplaceHr($raw, $class = '') {
@@ -93,7 +96,7 @@ function _getCBClassIfWanted($additionalClass) {
 
 function contentBox($id, $class = '', $return = false) {
 	if ($id == 'end') {
-		$result = NEWLINE . '</div>' . variable('2nl');
+		$result = NEWLINE . TAGDIVEND . NEWLINES2;
 		if ($return) return $result;
 		echo $result;
 		return;
@@ -124,17 +127,17 @@ function startDiv($id, $class = '') {
 }
 
 function endDiv() {
-	echo '</div>';
+	echo TAGDIVEND;
 }
 
 function div($what = 'start', $h1 = '', $class = 'video-container') {
 	if ($h1) $h1 = '<h1>' . $h1 . '</h1>';
-	echo $what == 'start' ? '<div class="' . $class . '">' . $h1 . NEWLINE : '</div>' . variable('2nl');
+	echo $what == 'start' ? '<div class="' . $class . '">' . $h1 . NEWLINE : TAGDIVEND . NEWLINES2;
 }
 
 function h2($text, $class = '', $return = false) {
 	if ($class) $class = ' class="' . $class . '"';
-	$result = '<h2'.$class.'>';
+	$result = '<h2' . $class . '>';
 	$result .= renderSingleLineMarkdown($text, ['echo' => false]);
 	$result .= '</h2>' . NEWLINE;
 	if ($return) return $result;
@@ -395,8 +398,8 @@ class htmlUX {
 	//3 - divs (5)
 	const divClear = ['DIV-CLEAR', '<div class="clearfix"></div>'];
 	const divBox = ['DIV-WITHBOX', '<div class="content-box">'];
-	const divClose = ['DIV-CLOSE', '</div>'];
-	const divSFClose = ['DIV-SPACEFIX-CLOSE', '</div>'];
+	const divClose = ['DIV-CLOSE', TAGDIVEND];
+	const divSFClose = ['DIV-SPACEFIX-CLOSE', TAGDIVEND];
 	const divSF = ['DIV-SPACEFIX', '<div>'];
 	//4 - bs grid (6)
 	const gridRow = ['DIV-ROW', '<div class="row">'];
@@ -406,7 +409,7 @@ class htmlUX {
 	const grid8 = ['DIV-CELL8', '<div class="col-md-8 col-sm-12">'];
 	const grid9 = ['DIV-CELL9', '<div class="col-md-9 col-sm-12">'];
 	//5 - articles / grid (4)
-	const artAllClose = ['ALLARTICLES-CLOSE', '</div>'];
+	const artAllClose = ['ALLARTICLES-CLOSE', TAGDIVEND];
 	const artAllHAuto = ['ALLARTICLES-HAUTO', '<div class="row">'];
 	const artAll = ['ALLARTICLES', '<div class="portfolio row grid-container">'];
 	const artClose = ['ARTICLE-CLOSE', '</div></article>'];
@@ -450,9 +453,17 @@ function url_r($url, $domainOnly = false) {
 	return $domainOnly ? explode('/', $url)[0] : $url;
 }
 
+DEFINE('WAME', 'https://wa.me/');
+
 function _whatsAppME($mob, $txt = '?text=', $stripOnly = false) {
 	$mob = replaceItems($mob, ['+' => '', '-' => '', '.' => '']);
-	return $stripOnly ? $mob : 'https://wa.me/' . $mob . $txt;
+	return $stripOnly ? $mob : WAME . $mob . $txt;
+}
+
+function isSpecialLink($link) {
+	foreach (['tel:', WAME, 'mailto:'] as $needle)
+		if (contains($link, $needle)) return true;
+	return false;
 }
 
 function specialLinkVars($item) {
@@ -738,7 +749,7 @@ function body_classes($return = false) {
 function error($html, $renderAny = false, $settings = []) {
 	$settings['echo'] = false;
 	if ($renderAny) $html = renderAny($html, $settings);
-	echo variable('_errorStart') . $html . '</div>';
+	echo variable('_errorStart') . $html . TAGDIVEND;
 }
 
 define('DEBUGPLAIN', '1');

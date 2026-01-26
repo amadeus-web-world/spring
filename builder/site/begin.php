@@ -83,16 +83,20 @@ function _visane($siteVars) {
 		[VARFooterName, null], //needs null as uses !== in variableOr
 		[VARLinkToSiteHome, true, TYPEBOOLEAN],
 		[VARLinkToSectionHome, false, TYPEBOOLEAN],
+
 		[VARChatraID, VARUseAmadeusWeb],
 		[VARGoogleAnalytics, VARUseAmadeusWeb],
+		[VARGithubRepo, false],
 
 		[VAREmail, VARSystemEmail],
 		[VAREmail2, plus_email(VARSystemEmail, 'owner')],
 		[VAREmail3, plus_email(VARSystemEmail, 'hr')],
+
 		[VARPhone, $ph1 = '+91-9841223313'],
 		[VARWhatsapp, _whatsAppME($ph1, '', true)],
 		[VARPhone2, $ph2 = '+91-9500001909'],
 		[VARWhatsapp2, _whatsAppME($ph2, '', true)],
+
 		[VARAddress, 'Chennai, India'],
 		[VARAddressUrl, '#no-maps-set'],
 		[VARFullAddress, 'Devakalam, Mahalingapuram, Chennai, India'],
@@ -140,7 +144,7 @@ function _always($siteVars) {
 	foreach ($always as $item)
 		$op[$item] = $siteVars[$item];
 
-	$op['start_year'] = $siteVars['year'];
+	$op['start_year'] = $siteVars[VARYear];
 
 	__testSiteVars($op);
 	variables($op);
