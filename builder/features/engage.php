@@ -19,13 +19,15 @@ function renderEngage($name, $raw, $echo = true, $meta = []) {
 		if (isset($meta['WhatsApp To'])) $whatsapp = _whatsAppME($meta['WhatsApp To']);
 	}
 
-	$class = contains($raw, '<!--no-engage-box-->') ? '' : '" class="' . _getCBClassIfWanted('engage') . '" ';
+	$systemIncluded = contains($addressee, VARSystemEmail) || contains($additionalCC, VARSystemEmail);
+	$defaultCC = $systemIncluded ? '' : ';' . VARSystemEmail;
+
+	$class = contains($raw, VARWantsNoEngageBox) ? '" ' : '" class="' . _getCBClassIfWanted('engage') . '" ';
 
 	$result = '	<div id="engage-' . urlize($name) . $class .
 		//($open ? '' : 'style="display: none" ') .
 		'data-to="' . ($email = $addressee . variable('email')) .
-		'" data-cc="' . $additionalCC .
-			variableOr('assistantEmail', variable('systemEmail')) .
+		'" data-cc="' . $additionalCC . $defaultCC .
 		'" data-whatsapp="' . $whatsapp .
 		'" data-site-name="' . variable('name') .
 		'" data-salutation="' . $salutation . '">' . NEWLINE;

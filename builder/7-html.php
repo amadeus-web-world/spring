@@ -10,41 +10,8 @@ DEFINE('NOREPLACES', '<!--no-replaces-->');
 DEFINE('WANTSMARKDOWN', '<!--markdown-->' . NEWLINE); //NOTE: to detect content which doesnt start with a heading
 DEFINE('WANTSAUTOPARA', '<!--autop-->');
 
-//added in 8..5
-abstract class builderBase {
-	public $settings;
-
-	//called in constructor, check so doesnt override
-	protected function setDefault($key, $value) {
-		if (!isset($this->settings[$key]))
-			$this->set([$key => $value]);
-		return $this;
-	}
-
-	protected function settingIs($key, $value = true) {
-		return isset($this->settings[$key]) ? $this->settings[$key] == $value : false;
-	}
-
-	function setValue($key, $value) {
-		return $this->set([$key => $value]);
-	}
-
-	function set($override = []) {
-		foreach ($override as $key => $value)
-		$this->settings[$key] = $value;
-		return $this;
-	}
-
-	function unset($keys = []) {
-		if (is_string($keys))
-			$keys = [$keys];
-
-		foreach ($keys as $key)
-			unset($this->settings[$key]);
-
-		return $this;
-	}
-}
+DEFINE('TAGSECTION', '<section>');
+DEFINE('TAGSECTIONEND', '</section>');
 
 ///Tag Helpers
 function currentUrl() {
@@ -104,7 +71,7 @@ function iframe($url, $wrapContainer = true) {
 }
 
 function cbWrapAndReplaceHr($raw, $class = '') {
-	if (variable('no-content-boxes')) return $raw;
+	if (variable(VARNoContentBoxes)) return $raw;
 
 	$closeAndOpen = ($end = contentBox('end', '', true)) . ($start = contentBox('', $class, true));
 	//TODO: asap! if (substr_count($raw, HRTAG) > 3) runFeature('page-menu');
@@ -116,7 +83,7 @@ function cbCloseAndOpen($class = '') {
 }
 
 function _getCBClassIfWanted($additionalClass) {
-	$no = variable('no-content-boxes');
+	$no = variable(VARNoContentBoxes);
 	if ($no && $additionalClass == '') return '';
 	$classes = [];
 	if ($additionalClass) $classes[] = $additionalClass;
@@ -269,12 +236,18 @@ function replaceHtml($html) {
 
 			'%welcomeMessage%' => markdown(pipeToNL(variable('welcome-message'))), //links will get picked up
 			'%network-link%' => networkLink('btn btn-success', '<hr class="mt-5" />'),
+			'%networkName%' => DAWN_NAME,
 			'%siteName%' => $sn = variable('name'),
 			'%siteName_subject%' => urlencode($sn),
 			'%byline%' =>  variable('byline'),
 			'%safeName%' =>  variable('safeName'),
 			'%section%' => $section, //let archives break!
 			'%section_r%' => humanize($section),
+
+			'%network-signup%' => replaceNetworkUrls(getSiteKey(SITEWORLD)) . VARCTAONLY,
+			'%network-helping%' => replaceNetworkUrls(getSiteKey(SITEZVM)) . 'helping/',
+			'%work-signup%' => replaceNetworkUrls(getSiteKey(SITEWORK)) . 'signup/',
+			'%gmail-reponses%' => 'https://mail.google.com/mail/u/0/?ogbl#advanced-search/subject=responds+on+website',
 			'%site-engage-btn%' => engageButton('Engage With Us', 'btn btn-lg btn-site'),
 
 			'%nodeUrlUptoLeaf%' => $loc = variable('all_page_parameters'), //experimental
@@ -293,13 +266,6 @@ function replaceHtml($html) {
 	$html = replaceNetworkUrls($html);
 
 	return replaceItems($html, $replaces);
-}
-
-function replaceNetworkUrls($html) {
-	if (($nw = variable('networkUrls')) && contains($html, OTHERSITEPREFIX))
-		$html = replaceItems($html, $nw, '%');
-
-	return $html;
 }
 
 function replaceIfContained($html, $variable) {
@@ -356,53 +322,115 @@ function prepareLinks($output) {
 }
 
 function replaceHtmlShortcuts($output) {
-	return replaceItems($output, [
-		//divs
-		'DIV-LARGELISTWITHITEMSEPARATOR' => '<div class="large-list item-separator">',
-		'DIV-LARGELISTLOWERALPHA' => '<div class="large-list lower-alpha item-separator">',
-		'DIV-LARGELISTLOWERROMAN' => '<div class="large-list lower-roman item-separator">',
-		'DIV-LARGELIST' => '<div class="large-list">',
-		'DIV-PLAINCONTAINER' => '<div class="container">',
-		'DIV-MAX-500-CENTER' => '<div class="m-auto img-max-500">',
-		'DIV-CENTER' => '<div class="text-center">',
-		'DIV-RIGHT' => '<div class="float-right">',
-		'DIV-CLEAR' => '<div class="clearfix"></div>',
+	return htmlUX::replaceAll($output);
+}
 
-		//bs grid
-		'DIV-ROW' => '<div class="row">',
-		'DIV-CELL3' => '<div class="col-md-3 col-sm-12">',
-		'DIV-CELL4' => '<div class="col-md-4 col-sm-12">',
-		'DIV-CELL6' => '<div class="col-md-6 col-sm-12">',
-		'DIV-CELL8' => '<div class="col-md-8 col-sm-12">',
-		'DIV-CELL9' => '<div class="col-md-9 col-sm-12">',
-		'DIV-CLOSE' => '</div>',
-		'DIV-SPACEFIX-CLOSE' => '</div>',
-		'DIV-SPACEFIX' => '<div>',
+class htmlUX {
+	private static $vars = [];
+	private static $names = [
+		///note the order is important and should match exactly
+		//1 - divs (5)
+		self::divLargeListSep, self::divLargeListLA, self::divLargeListLR, self::divLargeList, self::divLargeList,
+		//2 - divs (4)
+		self::divContainer, self::divCenter500, self::divCenter, self::divRight,
+		//3 - divs (5)
+		self::divClear, self::divBox, self::divClose, self::divSFClose, self::divSF,
+		//4 - bs grid (6)
+		self::gridRow, self::grid3, self::grid4, self::grid6, self::grid8, self::grid9,
+		//5 - articles / grid (4)
+		self::artAllClose, self::artAllHAuto, self::artAll, self::artClose,
+		//6 - articles / box (8)
+		self::artHAuto3, self::artHAuto4, self::artHAuto6, self::artHAuto12, self::art3, self::art4, self::art6, self::art12,
+		//7 - whitespace (4)
+		self::wsNewLines2, self::wsNewLine, self::wsJustBR, self::wsCrLf,
+		//8 - generic html (6)
+		self::cbOPEN, self::cbCNO, self::cbOWC, self::cbCLOSE, self::tagDivStart, self::tagCloseGT,
+	];
 
-		//articles / grid
-		'ALLARTICLES-CLOSE' => '</div>',
-		'ALLARTICLES-HAUTO' => '<div class="row">',
-		'ARTICLE-3COL-HAUTO-BOX' => '<article class="col-lg-4 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">',
-		'ARTICLE-HAUTO-BOX' => '<article class="col-lg-3 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">',
+	private static function ensureVars() {
+		$custom = [
+			self::cbOPEN[0] => contentBox('', '', true),
+			self::cbCNO[0] => ['[cb-close-and-open]', cbCloseAndOpen('container')],
+			self::cbOWC[0] => ['[cb-open-with-container]', contentBox('', 'container', true)],
+			self::cbCLOSE[0] => ['[cb-close]', contentBox('end', 'mb-2', true)],
+		];
 
-		'ALLARTICLES' => '<div class="portfolio row grid-container">',
-		'ARTICLE-3COL-BOX' => '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12"><div class="grid-inner content-box">',
-		'ARTICLE-BOX' => '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">',
-		'ARTICLE-CLOSE' => '</div></article>',
-		'DIV-WITHBOX' => '<div class="content-box">',
-		' NEWLINES2' => '<br /><br />' . NEWLINE,
-		' NEWLINE' => '<br />' . NEWLINE,
-		' JUSTBR' => '<br />',
-		' CRLF' => NEWLINE,
+		if (empty(self::$vars)) {
+			foreach (self::$names as $kv)
+				self::$vars[$kv[0]] = $kv[1] == VARCustom ? $custom[$kv[0]] : $kv[1];
 
-		//generic html
-		'[cb-open]' => contentBox('', '', true),
-		'[cb-close-and-open]' => cbCloseAndOpen('container'),
-		'[cb-open-with-container]' => contentBox('', 'container', true),
-		'[cb-close]' => contentBox('end', 'mb-2', true),
-		'STARTDIV ' => '<div ',
-		' CLOSETAG' => '>',
-	]);
+		}
+		return self::$vars;
+	}
+
+	static function keyOf(array $array) {
+		return $array[0];
+	}
+
+	static function replaceAll($output) {
+		$vars = self::ensureVars();
+		//showDebugging(359, $vars, PleaseDie);
+		foreach ($vars as $search => $replace)
+			if (contains($output, $search))
+				$output = str_replace($search, $replace, $output);
+		return $output;
+	}
+
+	//1 - divs (5)
+	const divLargeListSep = ['DIV-LARGELISTWITHITEMSEPARATOR', '<div class="large-list item-separator">'];
+	const divLargeListLA = [
+	'DIV-LARGELISTLOWERALPHA', '<div class="large-list lower-alpha item-separator">'];
+	const divLargeListLR = ['DIV-LARGELISTLOWERROMAN', '<div class="large-list lower-roman item-separator">'];
+	const divLargeList = ['DIV-LARGELIST', '<div class="large-list">'];
+	//2 - divs (4)
+	const divContainer = ['DIV-PLAINCONTAINER', '<div class="container">'];
+	const divCenter500 = ['DIV-MAX-500-CENTER', '<div class="m-auto img-max-500">'];
+	const divCenter = ['DIV-CENTER', '<div class="text-center">'];
+	const divRight = ['DIV-RIGHT', '<div class="float-right">'];
+	//3 - divs (5)
+	const divClear = ['DIV-CLEAR', '<div class="clearfix"></div>'];
+	const divBox = ['DIV-WITHBOX', '<div class="content-box">'];
+	const divClose = ['DIV-CLOSE', '</div>'];
+	const divSFClose = ['DIV-SPACEFIX-CLOSE', '</div>'];
+	const divSF = ['DIV-SPACEFIX', '<div>'];
+	//4 - bs grid (6)
+	const gridRow = ['DIV-ROW', '<div class="row">'];
+	const grid3 = ['DIV-CELL3', '<div class="col-md-3 col-sm-12">'];
+	const grid4 = ['DIV-CELL4', '<div class="col-md-4 col-sm-12">'];
+	const grid6 = ['DIV-CELL6', '<div class="col-md-6 col-sm-12">'];
+	const grid8 = ['DIV-CELL8', '<div class="col-md-8 col-sm-12">'];
+	const grid9 = ['DIV-CELL9', '<div class="col-md-9 col-sm-12">'];
+	//5 - articles / grid (4)
+	const artAllClose = ['ALLARTICLES-CLOSE', '</div>'];
+	const artAllHAuto = ['ALLARTICLES-HAUTO', '<div class="row">'];
+	const artAll = ['ALLARTICLES', '<div class="portfolio row grid-container">'];
+	const artClose = ['ARTICLE-CLOSE', '</div></article>'];
+	//6 - articles / box (8)
+	const aSet3 = '-3COL'; const aSet4 = ''; const aSet50 = '-50'; const aSet100 = '-100'; const hAuto = '-HAUTO';
+	static function article($aSet = 4, $hauto = true) { return 'ARTICLE' . $aSet . ($hauto ? self::hAuto : '') . '-BOX'; }
+
+	const artHAuto3 = ['ARTICLE-3COL-HAUTO-BOX', '<article class="col-lg-4 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">'];
+	const artHAuto4 = ['ARTICLE-HAUTO-BOX', '<article class="col-lg-3 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">'];
+	const artHAuto6 = ['ARTICLE-50-HAUTO-BOX', '<article class="portfolio-item col-6"><div class="grid-inner content-box minh-100">'];
+	const artHAuto12 = ['ARTICLE-100-HAUTO-BOX', '<article class="portfolio-item col-12"><div class="grid-inner content-box minh-100">'];
+
+	const art3 = ['ARTICLE-3COL-BOX', '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12"><div class="grid-inner content-box">'];
+	const art4 = ['ARTICLE-BOX', '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12"><div class="grid-inner content-box">'];
+	const art6 = ['ARTICLE-50-BOX', '<article class="portfolio-item col-6"><div class="grid-inner content-box">'];
+	const art12 = ['ARTICLE-100-BOX', '<article class="portfolio-item col-12"><div class="grid-inner content-box">'];
+	//7 - whitespace (4)
+	const wsNewLines2 = [' NEWLINES2', '<br /><br />' . NEWLINE];
+	const wsNewLine = [' NEWLINE', '<br />' . NEWLINE];
+	const wsJustBR = [' JUSTBR', '<br />'];
+	const wsCrLf = [' CRLF', NEWLINE];
+	//8 - generic html (6)
+	const cbOPEN = ['[cb-open]', VARCustom];
+	const cbCNO = ['[cb-close-and-open]', VARCustom];
+	const cbOWC = ['[cb-open-with-container]', VARCustom];
+	const cbCLOSE = ['[cb-close]', VARCustom];
+
+	const tagDivStart = ['STARTDIV ', '<div '];
+	const tagCloseGT = [' CLOSETAG', '>'];
 }
 
 function url_r($url, $domainOnly = false) {

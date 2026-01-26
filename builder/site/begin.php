@@ -35,7 +35,7 @@ variable(assetKey(SITEASSETS), $url . 'assets/');
 function parseSectionsAndGroups($siteVars, $return = false, $forNetwork = false) {
 	if (variable('sections') && !$forNetwork) return;
 	$sections = isset($siteVars['sections']) ? $siteVars['sections'] : false;
-	if (isset($siteVars['sections_local'])) $sections = $siteVars['sections_local'];
+	if (variable(VARLocal) && isset($siteVars['sections_local'])) $sections = $siteVars['sections_local'];
 
 	if (!$sections) {
 		$sections = [];

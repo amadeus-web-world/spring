@@ -6,5 +6,8 @@ Humanity is full of **caring compassionate souls** trying to [help tip the scale
 in the Direction of a **Loving Tomorrow that Nature** is TRYING SO HARD TO BUILD.
 <hr />
 
-Peruse [Oases](%urlOf-world%BTNSUCCESS) and
-[cta-link]%urlOf-world%[cta-delimiter]Join DAWN[/cta-link]
+Peruse [Oases](%urlOf-world%BTNINFO) to
+[Join DAWN](%network-signup%BTNDANGER) by
+[Starting to Help](%network-helping%BTNWARNING) so you can
+[Signup for Services](%work-signup%BTNSUCCESS) by
+[Imran and Team](%urlOf-work%BTNPRIMARY)

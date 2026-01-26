@@ -4,18 +4,36 @@ DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
 DEFINE('DAWN_ABBR', 'DAWN');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
 DEFINE('DOMAINS', ['authors', 'creativity', 'networks', 'technology', 'organizations', 'people', 'work-folk']);
+DEFINE('DOMAINNames', ['creativity' => 'Creativity Corner']);
 
-function is_dawn($fol) {
-	return in_array($fol, ['dawn', 'public_html']);
+function is_dawn($fol) { return in_array($fol, ['dawn', 'public_html']); }
+function domain_name($domain) { return array_key_exists($domain, DOMAINNames) ? DOMAINNames[$domain] : humanize($domain); }
+
+global $networkUrls;
+$networkUrls = [];
+
+function addNetworkUrl($site, $url) {
+	global $networkUrls;
+	$networkUrls[URLOFPREFIX . $site] = $url;
 }
+
+function replaceNetworkUrls($html) {
+	global $networkUrls;
+	if (!contains($html, URLOFPREFIX) || empty($networkUrls)) return $html;
+	//if (endsWith($html, '%')) showDebugging(23, [$html, $networkUrls], PleaseDie);
+	return replaceItems($html, $networkUrls, '%');
+}
+
+function getSiteKey($site) { return '%' . URLOFPREFIX . $site . '%'; }
 
 if (defined('SHOWSITESAT')) {
 	setupNetwork(null);
 	return;
 }
 
+//setup continues
 $networkName = variable('network');
-$noNetwork = in_array($networkName, BOOLFALSE);
+$noNetwork = in_array($networkName, BOOLLISTFALSE);
 setupNetwork($noNetwork);
 
 if (!$noNetwork) {
@@ -35,7 +53,7 @@ function dawn_menu() {
 	$items[] = DAWN_SECTION . 'Domains';
 
 	foreach (DOMAINS as $item)
-		$items[] = getDomainLink(humanize($item), $item, $urlKey);
+		$items[] = getDomainLink(domain_name($item), $item, $urlKey);
 
 	__flatMenu($items, DAWN_ABBR);
 }
@@ -78,11 +96,9 @@ function __flatMenu($items, $name) {
 function setupNetwork($noNetwork) {
 	$dawnSites = [];
 	$networkSites = [];
-	$networkUrls = [
-		OTHERSITEPREFIX . 'root' => getDomainLink('', '', '', true),
-		OTHERSITEPREFIX . 'world' => getDomainLink('', 'oases', '', true),
-		OTHERSITEPREFIX . 'spring' => getDomainLink('', 'spring', '', true),
-	];
+	addNetworkUrl(SITEROOT, getDomainLink('', '', '', true));
+	addNetworkUrl(SITEWORLD, getDomainLink('', 'oases', '', true));
+	addNetworkUrl(SITESPRING, getDomainLink('', 'spring', '', true));
 
 	$networkName = urldecode(getQueryParameter('network', variable('network')));
 
@@ -128,7 +144,7 @@ function setupNetwork($noNetwork) {
 		if ($item === false) continue;
 		$subsiteItems[] = $networkSites[] = $item;
 		if (!isset($subsiteHome)) $subsiteHome = $item;
-		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
+		addNetworkUrl($key, $item[$urlKey]);
 	}
 	if ($subsiteItems) showDebugging('151', variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]), false, false, true);
 
@@ -143,13 +159,12 @@ function setupNetwork($noNetwork) {
 		$item = _getOrWarn($plain ? $row : $sheet->getValue($row, 'path'));
 		if ($item === false) continue;
 		$networkSites[] = $item;
-		$networkUrls[OTHERSITEPREFIX . $key] = $item[$urlKey];
+		addNetworkUrl($key, $item[$urlKey]);
 	}
 
 	variables([
 		'dawnSites' => $dawnSites,
 		'networkSites' => $networkSites,
-		'networkUrls' => $networkUrls
 	]);
 }
 
@@ -190,7 +205,7 @@ function getSitesToShow($at) {
 
 	foreach (DOMAINS as $domain) {
 		if (!isset($byDomain[$domain])) continue;
-		$op[] = '~' . humanize($domain);
+		$op[] = '~' . domain_name($domain);
 		$op = array_merge($op, $byDomain[$domain]);
 	}
 

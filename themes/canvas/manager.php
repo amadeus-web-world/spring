@@ -1,16 +1,40 @@
 <?php
 class CanvasTheme {
-	static function HeadCssFor($page) {
+	const beauty = 'beauty';
+	const realEstate = 'real-estate';
+	const spa = 'spa';
+	const dontUseTag = false;
+
+	static function addAssets($page) {
+		foreach (self::HeadCssFor($page, self::dontUseTag) as $css)
+			add3pStyle($css);
+
+		if (!in_array($page, [self::beauty])) return;
+
+		$cp = 'js/components/';
+		$scripts = [
+			self::beauty => [$cp . 'event.move', $cp . 'image-changer'],
+		][$page];
+
+		$base = getThemeBaseUrl();
+		foreach ($scripts as $js)
+			add3pScript($base . $js . '.js');
+	}
+
+	static function HeadCssFor($page, $useTag = true) {
+		$format = $useTag ? CSSTAG : '%s';
 		$css = [];
 		$base = getThemeBaseUrl();
 		$demo = $base . 'demos/' . $page . '/';
-		if ($page == 'spa') {
+		if ($page == self::spa) {
 			//$demo = '//canvastemplate.com/demo/spa/';
-			$css[] = sprintf(CSSTAG, $demo . 'spa.css');
-			$css[] = sprintf(CSSTAG, $demo . 'css/fonts/spa-icons.css');
-		} else if ($page == 'real-estate') {
-			$css[] = sprintf(CSSTAG, $demo . 'real-estate.css');
-			$css[] = sprintf(CSSTAG, $demo . 'css/font-icons.css');
+			$css[] = sprintf($format, $demo . $page . '.css');
+			$css[] = sprintf($format, $demo . 'css/fonts/spa-icons.css');
+		} else if ($page == self::realEstate) {
+			$css[] = sprintf($format, $demo . $page . '.css');
+			$css[] = sprintf($format, $demo . 'css/font-icons.css');
+		} else if ($page == self::beauty) {
+			$css[] = sprintf($format, $demo . $page . '.css');
 		}
 		return $css;
 	}

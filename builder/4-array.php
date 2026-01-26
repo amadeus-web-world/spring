@@ -20,13 +20,6 @@ function valueIfSet($array, $key, $default = false) {
 	return isset($array[$key]) ? $array[$key] : $default;
 }
 
-DEFINE('TYPENOCHANGE', 'no-change');
-DEFINE('TYPEBOOLEAN', 'bool');
-DEFINE('TYPEARRAY', 'array');
-
-DEFINE('BOOLFALSE', [false, 'false', 'no', '0']);
-DEFINE('BOOLTRUE', [true, 'true', 'yes', '1']);
-
 function valueIfSetAndNotEmpty($array, $key, $default = false, $type = TYPENOCHANGE) {
 	return isset($array[$key]) && $array[$key] ? parseAnyType($array[$key], $type) : $default;
 }
@@ -34,8 +27,8 @@ function valueIfSetAndNotEmpty($array, $key, $default = false, $type = TYPENOCHA
 function parseAnyType($val, $type) {
 	if ($type == TYPENOCHANGE) return $val;
 	if ($type == TYPEBOOLEAN) {
-		$false = in_array($val, BOOLFALSE);
-		return !$false && in_array($val, BOOLTRUE);
+		$false = in_array($val, BOOLLISTFALSE);
+		return !$false && in_array($val, BOOLLISTTRUE);
 	} else if ($type == TYPEARRAY) {
 		return explode(', ', $val);
 	}

@@ -1,4 +1,4 @@
 <?php
 variables([
-	'sections-have-files' => true,
+	VARSectionsHaveFiles => true,
 ]);

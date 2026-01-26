@@ -1,14 +1,59 @@
 <?php
-//removed renderAnyFile, _renderSingleFile in 8.5, extensions like jpg & pdf can be done in before/after file
+class renderSET extends builderBase {
+	const default = 'implementation';
+	//TODO: const excerpt = 'excerpt';
+	const engage = 'engage';
 
-function renderExcerpt($file, $link, $prefix = '', $echo = true) {
+	private $method, $pageId;
+
+	static function create($method = self:: default, $echo = BOOLYes, $pageId = null) {
+		$r = new renderSET();
+		if ($echo) $r->echo($echo);
+		$r->method = $method;
+		$r->pageId = $pageId != null ? $pageId : nodeValue();
+		return $r;
+	}
+
+	function render($fileOrRaw, $settings = []) {
+		$this->settings = array_merge($this->settings, $settings);
+		$op = _renderImplementation($fileOrRaw, $this->settings);
+
+		$noEcho = $this->settings[VAREcho] == BOOLDontEcho;
+		if ($this->method == self::engage) {
+			if (!$noEcho) showDebugging('renderSET.render', ['$noEcho for render implementation expected as: ' . bool_r(BOOLDontEcho)], true);
+			runFeature('engage');
+			renderEngage($this->pageId, $op);
+		}
+		
+		if ($noEcho) return $op;
+	}
+
+	function echo($yes = BOOLNo) {
+		return $this->setValue(VAREcho, $yes);
+	}
+
+	function noParas($yes = BOOLYes) {
+		return $this->setValue(VARStripParagraphTag, $yes);
+	}
+
+	function noCB($yes = BOOLYes) {
+		return $this->setValue(VARNoContentBoxes, $yes);
+	}
+}
+
+function renderWith($fileOrRaw, renderSET $settingsObj, $settings = []) {
+	$settingsObj->render($fileOrRaw, $settings);
+}
+
+function renderExcerpt($file, $link, $prefix = '', $echo = BOOLYes) {
 	$prefix = $prefix ? renderMarkdown($prefix) : '';
 
 	$meta = read_seo($file);
 
-	$hasMoreTag = disk_file_exists($file) ? contains(disk_file_get_contents($file), MORETAG) : false;
+	$text = disk_file_exists($file) ? disk_file_get_contents($file) : $file;
+	$hasMoreTag = contains($text, MORETAG);
 	if (!$hasMoreTag && $meta && isset($meta['excerpt'])) $raw = returnLine($meta['excerpt']); else
-	$raw = renderAny($file, ['excerpt' => true, 'echo' => false]);
+	$raw = renderAny($text, [VARExcerpt => BOOLYes, VAREcho => BOOLNo]);
 
 	$raw .= '<hr class="m-2" /><div style="text-align: right;">';
 	if ($meta && isset($meta['meta']['Date'])) $raw .= 'on ' . $meta['meta']['Date'] . '';
@@ -32,24 +77,24 @@ function renderOnlyMarkdownOrRaw($raw, $wantsMD, $settings = []) {
 }
 
 function renderMarkdown($raw, $settings = []) {
-	$settings['markdown'] = true;
+	$settings[VARMarkdown] = BOOLYes;
 	return _renderImplementation($raw, $settings);
 }
 
 function returnLines($raw) {
-	return renderMarkdown($raw, ['echo' => false]);
+	return renderMarkdown($raw, [VAREcho => BOOLDontEcho]);
 }
 
 function returnLinesNoParas($raw) {
-	return renderSingleLineMarkdown($raw, ['echo' => false, 'strip-paragraph-tag' => true]);
+	return renderSingleLineMarkdown($raw, [VAREcho => BOOLDontEcho, VARStripParagraphTag => BOOLYes]);
 }
 
 function returnLine($raw) {
-	return renderSingleLineMarkdown($raw, ['echo' => false]);
+	return renderSingleLineMarkdown($raw, [VAREcho => BOOLDontEcho]);
 }
 
 function renderSingleLineMarkdown($raw, $settings = []) {
-	return renderMarkdown($raw, array_merge($settings, ['strip-paragraph-tag' => true]));
+	return renderMarkdown($raw, array_merge($settings, [VARStripParagraphTag => BOOLYes]));
 }
 
 function renderAny($file, $settings = []) {
@@ -59,9 +104,6 @@ function renderAny($file, $settings = []) {
 		return _renderImplementation($file, $settings);
 }
 
-DEFINE('FIRSTSECTIONONLY', 'FirstSectionOnly');
-DEFINE('FULLACCESSNOTICE', 'FullAccessNotice');
-
 //_ denotees its not to be called from outside - see flavours above + remove deprecated
 function _renderImplementation($fileOrRaw, $settings) {
 	if (endsWith($fileOrRaw, 'family-tree.md')) {
@@ -70,11 +112,11 @@ function _renderImplementation($fileOrRaw, $settings) {
 		return;
 	}
 
-	$endsWithMd = false;
+	$endsWithMd = BOOLNo;
 	$raw = $fileOrRaw; $fileName = '[RAW]';
 	$treatAsMarkdown = valueIfSet($settings, 'markdown');
-	$echo = valueIfSet($settings, 'echo', true);
-	$noReplaces = false;
+	$echo = valueIfSet($settings, VAREcho, BOOLYes);
+	$noReplaces = BOOLNo;
 
 	if ($wasFile = isContentFile($fileOrRaw)) {
 		$fileName = $fileOrRaw;
@@ -89,9 +131,9 @@ function _renderImplementation($fileOrRaw, $settings) {
 			$raw .= '---' . NEWLINE . $fan;
 	}
 
-	$excerpt = valueIfSet($settings, 'excerpt', false);
-	$no_processing = $noReplaces || valueIfSet($settings, 'raw', false) || contains($raw, WANTSNOPROCESSING) || do_md_in_parser($raw);
-	if (!$noReplaces && contains($raw, WANTSNOPARATAGS)) $settings['strip-paragraph-tag'] = true;
+	$excerpt = valueIfSet($settings, 'excerpt', BOOLNo);
+	$no_processing = $noReplaces || valueIfSet($settings, 'raw', BOOLNo) || contains($raw, WANTSNOPROCESSING) || wants_md_in_parser($raw);
+	if (!$noReplaces && contains($raw, WANTSNOPARATAGS)) $settings[VARStripParagraphTag] = BOOLYes;
 
 	if ($excerpt) $raw = explode(MORETAG, $raw)[0];
 	if ($excerpt && contains($raw, EXCERPTSTART)) $raw = explode(EXCERPTSTART, $raw)[1];
@@ -111,11 +153,11 @@ function _renderImplementation($fileOrRaw, $settings) {
 	$raw = replaceItems($raw, $plainReplaces, '');
 	$raw = replaceItems($raw, $builtinReplaces, '##');
 
-	if ($svars = variable('siteReplaces')) $raw = replaceItems($raw, $svars, '%', true);
+	if ($svars = variable('siteReplaces')) $raw = replaceItems($raw, $svars, '%', BOOLYes);
 
 	$autop = $raw != '' && contains($raw, WANTSAUTOPARA);
 	$md = $raw != '' && ($raw[0] == '#' || startsWith($raw, WANTSMARKDOWN));
-	$engageContent = false;
+	$engageContent = BOOLNo;
 
 	if ($rawVars = variable('rawReplaces'))
 		$raw = replaceItems($raw, $rawVars, '%');
@@ -133,8 +175,8 @@ function _renderImplementation($fileOrRaw, $settings) {
 		$output = $raw;
 	} else {
 		$inProgress = '<!--render-processing-->';
-		$engageSansCB = false;
-		if (engage_until_eof($raw)) {
+		$engageSansCB = BOOLNo;
+		if (wants_engage_until_eof($raw)) {
 			$engageBits = explode(ENGAGESTART, $raw);
 			$engageSansCB = contains($raw, ENGAGESANSCB);
 			$raw = $engageBits[0];
@@ -143,15 +185,15 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 		if (is_engage($raw) && !contains($raw, $inProgress)) {
 			runFeature('engage');
-			$settings['use-content-box'] = false;
+			$settings[VARUseContentBox] = BOOLNo;
 			$meta = $wasFile ? variable('meta_' . $fileName) : [];
-			$no = variable('no-content-boxes');
-			variable('no-content-boxes', $engageSansCB);
+			$no = variable(VARNoContentBoxes);
+			variable(VARNoContentBoxes, $engageSansCB);
 
 			if ($autop) $raw = wpautop($raw);
 			$raw = runAllMacros($raw);
-			$output = renderEngage(getPageName(), $raw . $inProgress, false, $meta);
-			variable('no-content-boxes', $no);
+			$output = renderEngage(getPageName(), $raw . $inProgress, BOOLNo, $meta);
+			variable(VARNoContentBoxes, $no);
 		} else {
 			$ai = contains($raw, FROM_GEMINI_AI);
 			if ($ai) $raw = processAI($raw, 'gemini');
@@ -167,32 +209,33 @@ function _renderImplementation($fileOrRaw, $settings) {
 		$output = replaceHtml($output);
 	}
 
-	if (!$noReplaces && !isset($settings['dont-prepare-links']))
+	if (!$noReplaces && !isset($settings[VARDontPrepareLinks]))
 		$output = prepareLinks($output); //if doing before markdown then this gets messed up
 
-	if (!$noReplaces && isset($settings['strip-paragraph-tag']))
+	if (!$noReplaces && isset($settings[VARStripParagraphTag]))
 		$output = strip_paragraph($output);
 
 	if (contains($output, '%fileName%'))
 		$output = replaceItems($output, ['%fileName%' => '<u>EDIT FILE:</u> ' .
 			replaceItems($fileName, [SITEPATH => '', '//' => '/'])]);
 
-	if (!$noReplaces && isset($settings['wrap-in-section']))
-		$output = '<section>' . NEWLINE . $output . NEWLINE . '</section>' . variable('2nl');
+	if (!$noReplaces && isset($settings[VARWrapInSection]))
+		$output = TAGSECTION . NEWLINE . $output . NEWLINE . TAGSECTIONEND . NEWLINES2;
 
-	if (isset($settings['use-content-box']) && $settings['use-content-box'])
+	if (valueIfSet($settings, VARUseContentBox, BOOLNo))
 		$output = cbWrapAndReplaceHr($output);
 
-	if (!$noReplaces && isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-icon', true)) . NEWLINES2 . $output;
+	//TODO: HI: Jan 26 - no need var for now!
+	if (!$noReplaces && isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
 
 	if ($engageContent) {
 		runFeature('engage');
-		$settings['use-content-box'] = false;
+		$settings[VARUseContentBox] = BOOLNo;
 		$meta = $wasFile ? read_seo($fileName) : [];
-		$no = variable('no-content-boxes');
-		variable('no-content-boxes', $engageSansCB);
-		$output .= renderEngage(getPageName(), $engageContent . $inProgress . WANTSNOPARATAGS, false, $meta);
-		variable('no-content-boxes', $no);
+		$no = variable(VARNoContentBoxes);
+		variable(VARNoContentBoxes, $engageSansCB);
+		$output .= renderEngage(getPageName(), $engageContent . $inProgress . WANTSNOPARATAGS, BOOLNo, $meta);
+		variable(VARNoContentBoxes, $no);
 	}
 
 	if ($wasFile)
@@ -203,7 +246,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 }
 
 function _txtInfo($msg, $info) {
-	if (true || !variable('local')) return '';
+	if (BOOLYes || !variable('local')) return '';
 	return textBoxWithCopyOnClick($msg, _makeSlashesConsistent($info), 'Link Copied');
 }
 
@@ -211,19 +254,4 @@ function renderRichPage($sheetFile, $groupBy = 'section', $templateName = 'home'
 	variable('home', getSheet($sheetFile, $groupBy));
 	$call = variable('theme_folder') . $templateName . '.php';
 	disk_include_once($call);
-}
-
-function is_engage($raw) {
-	return contains($raw, ' //engage-->') || contains($raw, ENGAGE) || contains($raw, ENGAGESTART);
-}
-
-DEFINE('ENGAGE', '<!--engage-->');
-DEFINE('ENGAGESTART', '<!--start-engage-->');
-DEFINE('ENGAGESANSCB', '<!--engage-without-cb-->');
-function engage_until_eof($raw) {
-	return contains($raw, ENGAGESTART);
-}
-
-function do_md_in_parser($raw) {
-	return contains($raw, '<!--markdown-when-processing-->');
 }

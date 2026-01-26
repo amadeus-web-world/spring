@@ -110,8 +110,8 @@ function renderHeaderMenu($slug, $node = '', $name = false) {
 		'ul-class' => $ulClass . ($node ? ' of-node node-' . $node : ''),
 		'files' => $files, 'this-is-standalone-section' => $tiss,
 		'list-only-folders' => $node == '',
-		'list-only-files' => variable('sections-have-files'),
-		'link-to-home' => variable('link-to-section-home') && !$homeNA,
+		'list-only-files' => variable(VARSectionsHaveFiles),
+		'link-to-home' => variable(VARLinkToSectionHome) && !$homeNA,
 		'parent-slug-for-home-link' => $parentSlug . '/',
 		'parent-slug' => $parentSlugForMenuItem,
 	]);

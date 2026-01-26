@@ -39,6 +39,9 @@ function runFeature($name, $variables = []) {
 	disk_include_once(AMADEUSFEATURES . $name . '.php', $variables);
 }
 
+runFrameworkFile('0-varnames');
+runFrameworkFile('0-builder-base'); //2nd as uses varnames
+
 runFrameworkFile('4-array');
 runFrameworkFile('5-vars');
 runFrameworkFile('6-text'); //needs vars

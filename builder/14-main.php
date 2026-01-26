@@ -1,16 +1,6 @@
 <?php
-main::initialize();
-
 //NOTE: allows referring to values by name and avoids duplication
 class main {
-
-	static function initialize() {
-		variables([
-			'assistantEmail' => 'imran+assistant@amadeusweb.world',
-			'systemEmail' => 'imran@amadeusweb.world',
-		]);
-	}
-
 	static function defaultSocial() {
 		return [
 			[ 'type' => 'linkedin', 'url' => 'https://www.linkedin.com/in/imran-ali-namazi/', 'name' => 'Imran Ali Namazi' ],

@@ -2,7 +2,6 @@
 DEFINE('OURNETWORK', '');
 DEFINE('DOMAINKEY', 'showIn');
 
-DEFINE('OTHERSITEPREFIX', 'urlOf-');
 function sluggize($relPath) {
 	if (!contains($relPath, '/')) return $relPath;
 	$slugs = explode('/', $relPath);

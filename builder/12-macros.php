@@ -185,10 +185,10 @@ function textBoxWithCopyOnClick($title, $value, $label = false, $icon = '') {
 function processCtaShortcode($html) {
 	return replaceItems($html, [
 		'[cta-link]' => '<a href="',
-		'[cta-delimiter]' => bootstrapAndUX::toButtons('?cta=1&content=1BTNSITE">'),
+		'[cta-delimiter]' => bootstrapAndUX::toButtons(VARCTAONLY . 'BTNSITE">'),
 		'[/cta-link]' => '</a>',
 		'[cta]' => '<div class="video-container google-video"><iframe src="',
-		'[/cta]' => '?cta=1&content=1" title="AW Spring Engage" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allow="autoplay"></iframe></div>',
+		'[/cta]' => VARCTAONLY . '" title="AW Spring Engage" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allow="autoplay"></iframe></div>',
 	]);
 }
 

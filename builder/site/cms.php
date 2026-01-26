@@ -13,7 +13,7 @@ function before_render() {
 
 	if (hasBuiltin()) { afterSectionSet(); return; }
 
-	$canHaveFiles = variable('sections-have-files');
+	$canHaveFiles = variable(VARSectionsHaveFiles);
 	$node = variable('node');
 	$innerSlugs = variable('page_parameters');
 
