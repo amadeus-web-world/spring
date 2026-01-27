@@ -258,19 +258,15 @@ function _copyright($return = false) {
 }
 
 function _credits($pre = '', $return = false) {
-	$world = replaceHtml('%urlOf-world%');
-	$spring = replaceHtml('%urlOf-spring%');
-	$imran = replaceHtml('%urlOf-imran%');
+	$root = replaceNetworkUrls(getSiteKey(SITEROOT));
+	$work = replaceNetworkUrls(getSiteKey(SITEWORK));
+	$utm = '?utm_content=site-credits&utm_referrer=' . variable(VARSafeName);
 
-	$url = $world . '?utm_content=site-credits&utm_referrer=' . variable(VARSafeName);
-	$img = '<img src="' . $world . 'assets/amadeuswebworld-credits.png" height="40" alt="Amadeus Web World" class="m-2 align-middle rounded-2">';
+	$url = $work . $utm;
+	$img = '<img src="' . $root . 'amadeusweb-work-logo.png" height="40" alt="' . DAWN_NAME . '" class="m-2 align-middle rounded-2">';
 
-	$result = $pre . 'Powered by' . getLink($img, $url, '', true, ' style="display: inline-block;"') . NEWLINE;
-	/*
-		. ' by ' . getLink('Imran', $imran . 'whoami/', 'm-2 btn btn-dark', true)
-		. ' and abiding by it\'s ' . getLink('Courtesies', $spring . 'courtesies/', 'm-2 btn btn-info', true)
-		. ' and ' . getLink('DNA', $world . 'courtesies/', 'm-2 btn btn-success', true);
-	*/
+	$result = $pre . 'Powered by' . getLink($img, $url, 'd-inline-block', true) . NEWLINE
+		. returnLine('[Do Request a Service](%work-signup%' . $utm . 'BTNPRIMARY)');
 
 	if ($return) return $result; else echo $result;
 }

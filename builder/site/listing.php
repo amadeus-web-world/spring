@@ -45,3 +45,4 @@ $op[] = 'ALLARTICLES-CLOSE';
 echo returnLinesNoParas(implode(NEWLINE, $op));
 
 sectionEnd();
+print_stats(BOOLYes);

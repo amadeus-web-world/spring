@@ -19,12 +19,13 @@ function addNetworkUrl($site, $url) {
 
 function replaceNetworkUrls($html) {
 	global $networkUrls;
+	if ($html === PleaseDie) showDebugging(22, $networkUrls, true);
 	if (!contains($html, URLOFPREFIX) || empty($networkUrls)) return $html;
 	//if (endsWith($html, '%')) showDebugging(23, [$html, $networkUrls], PleaseDie);
 	return replaceItems($html, $networkUrls, '%');
 }
 
-function getSiteKey($site) { return '%' . URLOFPREFIX . $site . '%'; }
+function getSiteKey($site, $suffix = '') { return '%' . URLOFPREFIX . $site . '%' . $suffix; }
 
 if (defined('SHOWSITESAT')) {
 	setupNetwork(null);
@@ -97,13 +98,12 @@ function setupNetwork($noNetwork) {
 	$dawnSites = [];
 	$networkSites = [];
 	addNetworkUrl(SITEROOT, getDomainLink('', '', '', true));
-	addNetworkUrl(SITEWORLD, getDomainLink('', 'oases', '', true));
-	addNetworkUrl(SITESPRING, getDomainLink('', 'spring', '', true));
 
 	$networkName = urldecode(getQueryParameter(VARNetwork, variable(VARNetwork)));
 
-	//TEST: $networkName; variable(VARNetwork, $networkName = 'Learning');
 	$urlKey = _getUrlKeySansPreview();
+	getSitesToShow(null, $urlKey); //replaceNetworkUrls(PleaseDie);
+	addNetworkUrl(SITEWORLDOLD, replaceNetworkUrls(getSiteKey(SITEWORLD))); //so old files will work too
 
 	$items = [];
 
@@ -139,13 +139,12 @@ function setupNetwork($noNetwork) {
 	$subsiteItems = DEFINED('SUBSITES') ? [] : false;
 	if (DEFINED('SUBSITES')) foreach (getSitesToShow(SUBSITES) as $path) {
 		$key = $path;
-		//if (contains($key, '/')) { $bits = explode('/', $path); $key = array_shift($bits); } //TODO: HI: check network like JE
 		$item = _getOrWarn($path);
 		if ($item === false) continue;
 		$subsiteItems[] = $networkSites[] = $item;
 		if (!isset($subsiteHome)) $subsiteHome = $item;
-		addNetworkUrl($key, $item[$urlKey]);
 	}
+
 	if ($subsiteItems) showDebugging('151', variables(['subsiteItems' => $subsiteItems, 'subsiteHome' => $subsiteHome]), false, false, true);
 
 	foreach ($items as $key => $row) {
@@ -159,7 +158,6 @@ function setupNetwork($noNetwork) {
 		$item = _getOrWarn($plain ? $row : $sheet->getValue($row, 'path'));
 		if ($item === false) continue;
 		$networkSites[] = $item;
-		addNetworkUrl($key, $item[$urlKey]);
 	}
 
 	variables([
@@ -168,7 +166,7 @@ function setupNetwork($noNetwork) {
 	]);
 }
 
-function getSitesToShow($at) {
+function getSitesToShow($at, $urlKey = false) {
 	$isDawn = is_dawn($at);
 	$byDomain = [];
 	$fols = _skipNodeFiles(scandir(ALLSITESROOT), ONLYFOLDERS);
@@ -180,6 +178,8 @@ function getSitesToShow($at) {
 			if (variable(VARLocal)) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV missing' => $file, 'hint' => 'IS NETWORK / Site Grouping?'], DEBUGVERBOSE);
 			continue;
 		}
+
+		if ($urlKey) { _getOrWarn($relativePath, $urlKey); continue; } //first pass
 
 		$site = getSheet($file, 'key');
 		$showInConfig = $site->firstOfGroup(DOMAINKEY, false, false);
@@ -209,12 +209,16 @@ function getSitesToShow($at) {
 		$op = array_merge($op, $byDomain[$domain]);
 	}
 
-	//showDebugging('211', $op, true);
 	return $op;
 }
 
-function _getOrWarn($relativePath) {
+function _getOrWarn($relativePath, $urlKey = false) {
+	$key = 'siteInfo_' . $relativePath;
+	$result = variable($key);
+	if ($result) return $result; //showDebugging(218, $result, PleaseDie);
+
 	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
+	//need the check again as it may be called from subsites/
 	if (!sheetExists($file)) {
 		if (variable(VARLocal)) debug(__FILE__, '_getOrWarn', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
 		return false;
@@ -222,7 +226,7 @@ function _getOrWarn($relativePath) {
 
 	$site = getSheet($file, 'key');
 
-	return [
+	$result = [
 		'key' => $site->getValue($site->firstOfGroup(VARSafeName), 'value'),
 		'name' => $site->getValue($site->firstOfGroup(VARIconName), 'value'),
 
@@ -234,4 +238,8 @@ function _getOrWarn($relativePath) {
 
 		'path' => $relativePath,
 	];
+
+	if ($urlKey) addNetworkUrl($relativePath, $result[$urlKey]); //if a / is there, lets leave it so %urlOf-imran/writing%
+	variable($key, $result);
+	return $result;
 }

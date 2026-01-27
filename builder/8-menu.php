@@ -306,13 +306,13 @@ function menu($folderRelative = false, $settings = []) {
 			$result .= $indent . '	<' . $itemTag . cssClass($class_li) . '>' . $innerHtml . '</' . $itemTag . '>' . NEWLINE;
 		} else {
 			if ($inHeader) {
-				$result .= $indent . '<hr>' . variable('2nl') . '<h2 class="' . variable('toggle-list') . '">' . humanize($file) .'</h2>' . NEWLINE;
+				$result .= $indent . '<hr>' . NEWLINES2 . '<h2 class="' . variable('toggle-list') . '">' . humanize($file) .'</h2>' . NEWLINE;
 				$result .= menu($folderRelative . $file . '/', [
 					'parent-slug' => nodeValue() . '/',
 					'menu-level' => $menuLevel + 1,
 					'return' => true,
 					'indent' => $indentGiven . '	',
-				]) . variable('2nl');
+				]) . NEWLINES2;
 			} else {
 				$thisClass = array_merge($class_li);
 				if (nodeIs($file) || in_array($file, variableOr('page_parameters', [])))

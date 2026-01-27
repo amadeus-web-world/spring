@@ -30,11 +30,15 @@ class socialBuilder {
 		return $this->add($type, $relUrl, $name);
 	}
 
-	function addLinkedIn($relUrl, $name, $type = 'linkedin') {
+	const linkedin = 'linkedin';
+	function addLinkedIn($relUrl, $name, $type = self::linkedin, $skip = false) {
+		if ($skip) return $this;
 		return $this->add($type, 'https://www.linkedin.com/' . $relUrl, $name);
 	}
 
-	function addYoutube($relUrl, $name, $type = 'youtube') {
+	const youtube = 'youtube';
+	function addYoutube($relUrl, $name, $type = self::youtube, $skip = false) {
+		if ($skip) return $this;
 		return $this->add($type, 'https://www.youtube.com/' . $relUrl, $name);
 	}
 
@@ -48,12 +52,24 @@ class socialBuilder {
 			->addInternal(getPageParameters(VARSlash . features::shareQS), 'Share Via&hellip;', self::shareBtn);
 	}
 
+	function addDawn($linkedIn = true, $youtube = true) {
+		return $this
+			->addLinkedIn('company/amadeusweb/', 'Amadeus Web', self::linkedin, !$linkedIn)
+			->addYoutube('@imran-thrives', 'Imran from DAWN', self::youtube, !$youtube);
+	}
+
+	function addThisSitesGithub() {
+		return $this
+				->addGithub(variable('github-repo'), 'This Site', !variable('github-repo'));
+	}
+
 	function addGithubGroup() {
 		return $this
 			->addHR()
 			->addGithub('amadeus-web-world/', 'AW World')
 			->addGithub('amadeus-web-world/', 'AW Spring')
-			->addGithub(variable('github-repo'), 'This Site', !variable('github-repo'));
+			->addGithub(variable('github-repo'), 'This Site', !variable('github-repo'))
+			;
 	}
 
 	function addUtilityGroup() {
@@ -61,7 +77,8 @@ class socialBuilder {
 			->addHR()
 			->addShare()
 			->addInternal(replaceNetworkUrls(getSiteKey(SITEROOT)), 'DAWN', self::dawnBtn)
-			->addInternal(replaceNetworkUrls(getSiteKey(SITESPRING)), 'AW Spring', self::springBtn);
+			->addInternal(replaceNetworkUrls(getSiteKey(SITESPRING)), 'AW Spring', self::springBtn)
+			;
 	}
 }
 
@@ -70,8 +87,7 @@ class main {
 	static function defaultSocial($prepend = []) {
 		return socialBuilder::create($prepend)
 			->addLinkedIn('in/imran-ali-namazi/', 'Imran Ali Namazi')
-			->addLinkedIn('company/amadeusweb/', 'Amadeus Web')
-			->addYoutube('@amadeuswebbuilder', 'Amadeus Core')
+			->addDawn(true, true)
 			->addGithubGroup()
 			->addUtilityGroup()
 			->getItems();

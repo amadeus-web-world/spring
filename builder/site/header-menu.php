@@ -34,7 +34,7 @@ if ($groups = variable('section-groups')) {
 			renderHeaderMenu($slug);
 		}
 
-		if ($isGroup) echo '	</ul>' . variable('2nl');
+		if ($isGroup) echo '	</ul>' . NEWLINES2;
 		if ($isGroup) echo '</li>' . NEWLINE;
 	}
 } else {

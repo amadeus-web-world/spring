@@ -62,8 +62,8 @@ function file_stats($file, $call) {
 	return compact('call', 'folder', 'name', 'size');
 }
 
-function print_stats() {
-	if (!variable('stats')) return;
+function print_stats($force = false) {
+	if (!variable('stats') && !$force) return;
 	features::ensureTables();
 
 	global $stat_all_size;
@@ -73,7 +73,7 @@ function print_stats() {
 	global $disk_calls;
 	global $disk_calls_by_type;
 
-	echo '<div id="statistics" class="after-content" style="margin-top: 20px;">' . variable('2nl');
+	echo '<div id="statistics" class="after-content my-4 p-3">' . NEWLINES2;
 
 	sectionId('statistics-summary', 'container');
 	contentBox('summary', 'after-content');
@@ -116,7 +116,7 @@ function print_stats() {
 	contentBox('end');
 	sectionEnd();
 	
-	echo '</div><!--end of #statistics-->' . variable('2nl');
+	echo '</div><!--end of #statistics-->' . NEWLINES2;
 }
 
 function size_r($bytes) {

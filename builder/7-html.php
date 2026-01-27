@@ -208,7 +208,7 @@ function replaceHtml($html) {
 			'%core-assets%' => _resolveFile('', STARTATCORE),
 			'##theme##' => getThemeBaseUrl(),
 
-			'%cdn%' => variableOr('cdn', variable(variable('is-mobile') ? 'live-url' : 'assets-url') . 'assets/cdn/'),
+			'%cdn%' => variableOr('cdn', variable(variable('is-mobile') || variable('live-cdn') ? 'live-url' : 'assets-url') . 'assets/cdn/'),
 
 			'%currentUrl%' => currentUrl(),
 			'%nodeSlug%' => $node,
@@ -455,8 +455,12 @@ function url_r($url, $domainOnly = false) {
 
 DEFINE('WAME', 'https://wa.me/');
 
+function stripForWhatsApp($mob) {
+	return replaceItems($mob, ['+' => '', '-' => '', '.' => '']);
+}
+
 function _whatsAppME($mob, $txt = '?text=', $stripOnly = false) {
-	$mob = replaceItems($mob, ['+' => '', '-' => '', '.' => '']);
+	$mob = stripForWhatsApp($mob);
 	return $stripOnly ? $mob : WAME . $mob . $txt;
 }
 
@@ -491,8 +495,10 @@ function specialLinkVars($item) {
 	return compact('text', 'url', 'class');
 }
 
-class bootstrapAndUX {
-	const colors = ['primary', 'secondary', 'info', 'success', 'warning', 'danger'];
+class bootstrapAndUX extends builderBase {
+	const primary = 'primary'; const secondary = 'secondary'; const info = 'info';
+	const success = 'success'; const warning = 'warning'; const danger = 'danger';
+	const colors = [self::primary, self::secondary, self::info, self::success, self::warning, self::danger];
 
 	const namedButtons = [
 		'DOWNLOAD' => 'btn btn-lg btn-primary" target="_blank',
@@ -513,9 +519,9 @@ class bootstrapAndUX {
 			$start = '" class="m-1 ';
 			foreach (self::colors as $color) {
 				$colorUpper = strtoupper($color);
-				self::$buttonVars[$btn . $colorUpper] = $start . 'btn btn-' . $color;
-				self::$buttonVars[$btn . 'OUTLINE' . $colorUpper] = $start . 'btn btn-outline-' . $color;
-				self::$buttonVars[$bigBtn . $colorUpper] = $start . 'btn btn-lg btn-' . $color;
+				self::$buttonVars[$btn . $colorUpper] = $start . self::button($color);
+				self::$buttonVars[$btn . 'OUTLINE' . $colorUpper] = $start . self::buttonOutline($color);
+				self::$buttonVars[$bigBtn . $colorUpper] = $start . self::buttonLarge($color);
 			}
 
 			foreach (self::namedButtons as $name => $class)
@@ -530,6 +536,21 @@ class bootstrapAndUX {
 		if (!contains($html, 'BTN')) return $html;
 		return replaceItems($html, self::buttonVars());
 	}
+
+	static function factory($yesColor, $noColor, $type = 'btn') {
+		if (!in_array($type, ['btn', 'btn-lg', 'btn-outline'])) throw new ErrorException(__METHOD__ . ' has unsupported $type: ' . $type); //dbc on the way in
+		return (new bootstrapAndUX())->setValue('yes', $yesColor)->setValue('no', $noColor)->setValue('type', $type);
+	}
+
+	function yesNobutton($condition, $suffix = '') {
+		$type = $this->getSetting('type');
+		$color = $this->getSetting($condition ? 'yes' : 'no');
+		return self::button($color) . $suffix;
+	}
+
+	static function button($color) { return 'btn btn-' . $color; }
+	static function buttonOutline($color) { return 'btn btn-outline-' . $color; }
+	static function buttonLarge($color) { return 'btn btn-lg btn-' . $color; }
 }
 
 class linkBuilder extends builderBase {

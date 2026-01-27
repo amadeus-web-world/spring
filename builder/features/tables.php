@@ -282,7 +282,7 @@ function _tableHeadingsOnLeft($id, $data) {
 			echo replaceItems(($hdg = startsWith($th, '+')) ? $header : $row, ['th' => $hdg ? substr($th, 1) : $th, 'td' => $td], '%');
 	}
 
-	echo '</tbody></table>' . variable('2nl');
+	echo '</tbody></table>' . NEWLINES2;
 }
 
 function _includeDatatables($rg) {

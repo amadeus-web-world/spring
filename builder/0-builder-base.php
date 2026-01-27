@@ -14,6 +14,10 @@ abstract class builderBase {
 		return isset($this->settings[$key]) ? $this->settings[$key] == $value : BOOLNo;
 	}
 
+	protected function getSetting($key) {
+		return isset($this->settings[$key]) ? $this->settings[$key] : BOOLNo;
+	}
+
 	function setValue($key, $value) {
 		return $this->set([$key => $value]);
 	}

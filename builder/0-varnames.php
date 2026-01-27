@@ -162,10 +162,14 @@ DEFINE('VARSectionsHaveFiles', 'sections-have-files');
 //site/network.php
 DEFINE('URLOFPREFIX', 'urlOf-');
 	DEFINE('OTHERSITEPREFIX', URLOFPREFIX); //TODO: cleanup
+
 DEFINE('SITEROOT', 'root');
 DEFINE('SITESPRING', 'spring');
-DEFINE('SITEWORLD', 'world');
+DEFINE('SITEWORLD', 'oases');
+DEFINE('SITEWORLDOLD', 'world'); //shim
 DEFINE('SITEWORK', 'work');
+
+DEFINE('SITEIMRAN', 'imran');
 DEFINE('SITEZVM', 'zvmworld');
 
 //site/node-menu.php
