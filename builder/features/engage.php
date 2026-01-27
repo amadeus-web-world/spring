@@ -16,7 +16,7 @@ function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
 		if (isset($meta['Salutation'])) $salutation = $meta['Salutation'];
 		if (isset($meta['Email To'])) $addressee = $meta['Email To'] . $mailSpacer;
 		if (isset($meta['Email Cc'])) $additionalCC = $meta['Email Cc'] . $mailSpacer;
-		if (isset($meta['WhatsApp To'])) $whatsapp = _whatsAppME($meta['WhatsApp To']);
+		if (isset($meta['WhatsApp To'])) $whatsapp = whatsapp_me($meta['WhatsApp To'], WAQS, false);
 	}
 
 	$systemIncluded = contains($addressee, VARSystemEmail) || contains($additionalCC, VARSystemEmail);

@@ -98,7 +98,7 @@ function getLogoOrIcon($what, $which = 'site') {
 
 	$netWorkManaged = variable('network-manages-site-assets');
 	$prefix = $netWorkManaged && DEFINED('SITENAME') ? SITENAME . '/' : '';
-	$site = variable(VARDontOverwriteLogo) && $what == 'logo';
+	$site = variable(VARDontOverwriteLogo);
 
 	if (is_array($which) && !$site) {
 		$inNode = true;

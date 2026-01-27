@@ -9,24 +9,6 @@ DEFINE('DOMAINNames', ['creativity' => 'Creativity Corner']);
 function is_dawn($fol) { return in_array($fol, ['dawn', 'public_html']); }
 function domain_name($domain) { return array_key_exists($domain, DOMAINNames) ? DOMAINNames[$domain] : humanize($domain); }
 
-global $networkUrls;
-$networkUrls = [];
-
-function addNetworkUrl($site, $url) {
-	global $networkUrls;
-	$networkUrls[URLOFPREFIX . $site] = $url;
-}
-
-function replaceNetworkUrls($html) {
-	global $networkUrls;
-	if ($html === PleaseDie) showDebugging(22, $networkUrls, true);
-	if (!contains($html, URLOFPREFIX) || empty($networkUrls)) return $html;
-	//if (endsWith($html, '%')) showDebugging(23, [$html, $networkUrls], PleaseDie);
-	return replaceItems($html, $networkUrls, '%');
-}
-
-function getSiteKey($site, $suffix = '') { return '%' . URLOFPREFIX . $site . '%' . $suffix; }
-
 if (defined('SHOWSITESAT')) {
 	setupNetwork(null);
 	return;
@@ -103,7 +85,7 @@ function setupNetwork($noNetwork) {
 
 	$urlKey = _getUrlKeySansPreview();
 	getSitesToShow(null, $urlKey); //replaceNetworkUrls(PleaseDie);
-	addNetworkUrl(SITEWORLDOLD, replaceNetworkUrls(getSiteKey(SITEWORLD))); //so old files will work too
+	addNetworkUrl(SITEWORLDOLD, getSiteUrl(SITEWORLD)); //so old files will work too
 
 	$items = [];
 

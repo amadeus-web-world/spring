@@ -172,5 +172,25 @@ DEFINE('SITEWORK', 'work');
 DEFINE('SITEIMRAN', 'imran');
 DEFINE('SITEZVM', 'zvmworld');
 
+global $networkUrls;
+$networkUrls = [];
+
+function addNetworkUrl($site, $url) {
+	global $networkUrls;
+	$networkUrls[URLOFPREFIX . $site] = $url;
+}
+
+function replaceNetworkUrls($html) {
+	global $networkUrls;
+	if (empty($networkUrls)) return $html; //assumes will be called again in render
+	if ($html === PleaseDie) showDebugging(22, $networkUrls, true);
+	if (!contains($html, URLOFPREFIX) || empty($networkUrls)) return $html;
+	//if (endsWith($html, '%')) showDebugging(23, [$html, $networkUrls], PleaseDie);
+	return replaceItems($html, $networkUrls, '%');
+}
+
+function getSiteKey($site, $suffix = '') { return '%' . URLOFPREFIX . $site . '%' . $suffix; }
+function getSiteUrl($site, $suffix = '') { return replaceNetworkUrls(getSiteKey($site)) . $suffix; }
+
 //site/node-menu.php
 DEFINE('VARNodesHaveFiles', 'nodes-have-files');

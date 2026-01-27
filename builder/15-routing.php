@@ -40,6 +40,13 @@ function getSiteUrlKey() {
 	return $result;
 }
 
+function wants_only_content($ctaCheck = true) {
+	$result = getQueryParameter('content');
+	if ($ctaCheck AND getQueryParameter('cta'))
+		$result = false;
+	return $result;
+}
+
 DEFINE('MENUNAME', 'menu_name');
 DEFINE('FILELOOKUP', 'file_lookup');
 DEFINE('MENUITEMS', 'menu_items');

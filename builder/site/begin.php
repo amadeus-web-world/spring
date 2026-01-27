@@ -93,9 +93,9 @@ function _visane($siteVars) {
 		[VAREmail3, plus_email(VARSystemEmail, 'hr')],
 
 		[VARPhone, $ph1 = '+91-9841223313'],
-		[VARWhatsapp, _whatsAppME($ph1, '', true)],
+		[VARWhatsapp, whatsapp_me($ph1, '', true)],
 		[VARPhone2, $ph2 = '+91-9500001909'],
-		[VARWhatsapp2, _whatsAppME($ph2, '', true)],
+		[VARWhatsapp2, whatsapp_me($ph2, '', true)],
 
 		[VARAddress, 'Chennai, India'],
 		[VARAddressUrl, '#no-maps-set'],

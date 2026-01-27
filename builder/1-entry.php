@@ -176,6 +176,7 @@ function render() {
 		features::runPage(features::share);
 		$rendered = true;
 	} else if (isset($_GET['cta'])) {
+		H2(title(FORHEADING), 'container text-center my-3');
 		echo getCodeSnippet('cta-or-engage', CORESNIPPET);
 		$rendered = true;
 	} else if (hasPageParameter('slider')) {
@@ -198,6 +199,11 @@ function render() {
 	if (!$rendered) {
 		if (function_exists('did_render_page') && did_render_page()) {
 			//noop
+		} else if ($missing = getSnippet('missing-page')) {
+			h2(title(FORHEADING), 'container text-center mt-4');
+			contentBox('missing-page', 'container');
+			renderMarkdown($missing);
+			contentBox('end');
 		} else {
 			//NOTE: Uses output buffering magic methods to delay sending of output until 404 header is sent 
 			header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found', true, 404);
@@ -258,8 +264,8 @@ function _copyright($return = false) {
 }
 
 function _credits($pre = '', $return = false) {
-	$root = replaceNetworkUrls(getSiteKey(SITEROOT));
-	$work = replaceNetworkUrls(getSiteKey(SITEWORK));
+	$root = getSiteUrl(SITEROOT);
+	$work = getSiteUrl(SITEWORK);
 	$utm = '?utm_content=site-credits&utm_referrer=' . variable(VARSafeName);
 
 	$url = $work . $utm;

@@ -96,7 +96,7 @@ function runThemePart($what) {
 
 		$icon = '<link rel="icon" href="' . $nodeIcon . '" sizes="192x192">';
 
-		if (getQueryParameter('content'))
+		if (wants_only_content())
 			add_body_class('wants-only-content');
 
 		$vars['head-includes'] = '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn();
@@ -172,7 +172,7 @@ function runThemePart($what) {
 		$atBody = !contains($footer, '##footer-includes##');
 		$bits = explode($atBody ? '</body>' : '##footer-includes##', $footer);
 
-		if (getQueryParameter('content')) {
+		if (wants_only_content()) {
 			//noop
 		} else if ($after = variable('after-wrapper')) {
 			if (!contains($bits[0], $sep = '<!-- #wrapper end -->'))
@@ -305,7 +305,7 @@ function siteWidgets() {
 	if ($showNetwork) $colsInUse += 1;
 
 	$showSocial = !variable('no-social-in-footer');
-	if ($showSocial) $showSocial = count($social = variableOr('social', main::defaultSocial()));
+	if ($showSocial) $showSocial = count($social = variableOr(socialBuilder::variableName, main::defaultSocial()));
 	if ($showSocial) $colsInUse += 1;
 
 	if ($colsInUse == 0) return '';
@@ -342,7 +342,7 @@ function siteWidgets() {
 	}
 
 	if ($showSocial) {
-		$op[] = str_replace('[WHAT]', 'social', $start);
+		$op[] = str_replace('[WHAT]', socialBuilder::variableName, $start);
 		$op[] = '<h4 class="mb-1">Social</h4>';
 		appendSocial($social, $op);
 		$op[] = '</div>'; $op[] = '';

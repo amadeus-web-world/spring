@@ -228,9 +228,9 @@ function replaceHtml($html) {
 			'%phone%' => variableOr(VARPhone, ''),
 			'%phone2%' => variableOr(VARPhone2, ''),
 			'%whatsapp-number%' => ($wa = variableOr(VARWhatsapp, '##no-number-specified')),
-			'%whatsapp%' => $wame = _whatsAppME($wa),
+			'%whatsapp%' => $wame = whatsapp_me($wa),
 			'%whatsapp2-number%' => ($wa2 = variableOr(VARWhatsapp2, '##no-number2-specified')),
-			'%whatsapp2%' => _whatsAppME($wa2),
+			'%whatsapp2%' => whatsapp_me($wa2),
 
 			'%address%' => variableOr(VARAddress, '[no-address]'),
 			'%address2%' => variableOr('address2', '[no-address2]'),
@@ -247,9 +247,9 @@ function replaceHtml($html) {
 			'%section%' => $section, //let archives break!
 			'%section_r%' => humanize($section),
 
-			'%network-signup%' => replaceNetworkUrls(getSiteKey(SITEWORLD)) . VARCTAONLY,
-			'%network-helping%' => replaceNetworkUrls(getSiteKey(SITEZVM)) . 'helping/',
-			'%work-signup%' => replaceNetworkUrls(getSiteKey(SITEWORK)) . 'signup/',
+			'%network-signup%' => getSiteUrl(SITEWORLD, VARCTAONLY),
+			'%network-helping%' => getSiteUrl(SITEZVM, 'helping/'),
+			'%work-signup%' => getSiteUrl(SITEWORK, 'signup/'),
 			'%gmail-reponses%' => 'https://mail.google.com/mail/u/0/?ogbl#advanced-search/subject=responds+on+website',
 			'%site-engage-btn%' => engageButton('Engage With Us', 'btn btn-lg btn-site'),
 
@@ -297,6 +297,9 @@ function engageButton($name, $class, $scroll = false) {
 /// Expects the whole link(s) html to be provided so href to target blank and mailto can be substituted.
 function prepareLinks($output) {
 	$output = str_replace(pageUrl(), '%url%', $output); //so site urls dont open in new tab. not sure when this became a problem. maybe a double call to prepareLinks as the render methods got more complex.
+
+	$output = str_replace('<a ' . ($find = 'href="' . WAME), '<a ' . NOFOLLOWPREFIX . $find, $output);
+
 	$output = str_replace('href="http', 'target="_blank" href="http', $output); //yea, baby! no need a js solution!
 	$output = str_replace('href="mailto', 'target="_blank" href="mailto', $output); //if gmail in chrome is the default, it will hijack current window
 	$output = str_replace('~~TARGETNEW', '" target="_blank', $output); //pdf links
@@ -307,9 +310,6 @@ function prepareLinks($output) {
 	$output = str_replace('rel="preconnect" target="_blank" ', 'rel="preconnect" ', $output); //new nuance
 	$output = str_replace('target="_blank" href="https://fonts.googleapis.com', 'href="https://fonts.googleapis.com', $output);
 	$output = str_replace('target="_blank" target="_blank" ', 'target="_blank" ', $output);
-
-	$output = str_replace('href="https://wa.me/', 'rel="nofollow" href="https://wa.me/', $output); //throws errorcode=429, too many requests while crawling
-	$output = str_replace('target="_blank" rel="nofollow" target="_blank" rel="nofollow" ', 'target="_blank" rel="nofollow" ', $output); //multiple calls :(
 
 	//TODO: " class="analytics-event" data-payload="{clickFrom:'%safeName%' //leave end " as a hack to pile on attributes
 	$campaign = isset($_GET['utm_campaign']) ? '&utm_campaign=' . $_GET['utm_campaign'] : '';
@@ -453,15 +453,20 @@ function url_r($url, $domainOnly = false) {
 	return $domainOnly ? explode('/', $url)[0] : $url;
 }
 
-DEFINE('WAME', 'https://wa.me/');
+DEFINE('NOFOLLOWSUFFIX', '" rel="nofollow');
+DEFINE('NOFOLLOWPREFIX', 'rel="nofollow" ');
+function nofollowReplace($url, $what = 'src') { return [$find = $what . '="' . $url => NOFOLLOWPREFIX . $find]; }
 
-function stripForWhatsApp($mob) {
+DEFINE('WAME', 'https://wa.me/');
+DEFINE('WAQS', '?text=');
+
+function whatsapp_clean($mob) {
 	return replaceItems($mob, ['+' => '', '-' => '', '.' => '']);
 }
 
-function _whatsAppME($mob, $txt = '?text=', $stripOnly = false) {
-	$mob = stripForWhatsApp($mob);
-	return $stripOnly ? $mob : WAME . $mob . $txt;
+//nofollow is set below
+function whatsapp_me($mob, $text = WAQS) {
+	return WAME . whatsapp_clean($mob) . $text;
 }
 
 function isSpecialLink($link) {
@@ -472,25 +477,21 @@ function isSpecialLink($link) {
 
 function specialLinkVars($item) {
 	extract($item);
-	//$url sent
-	$text = $name;
+	//$url, $name and $type sent
 
 	if ($type == VAREmail) $classType = 'fa-classic amadeus-2x-icon rounded-circle bg-info fa-envelope';
 	if ($type == VARPhone) $classType = 'fa-classic amadeus-2x-icon rounded-circle bg-info fa-solid fa-phone';
 
 	$class = isset($classType) ? $classType : 'amadeus-2x-icon rounded-circle fa-brands fa-'. $type . ' bg-' . $type;
 
-	if ($type == VARPhone) {
+	if ($type == VARPhone)
 		$url = 'tel:' . $url;
-	}
 
-	if ($type == VARWhatsapp) {
-		$url = _whatsAppME($url);
-	}
+	if ($type == VARWhatsapp)
+		$url = whatsapp_me($url);
 
-	if ($type == VAREmail) {
-		$url = 'mailto:' . $url . '?subject=' . replaceItems($text, [' ' => '+']);
-	}
+	if ($type == VAREmail)
+		$url = 'mailto:' . $url . '?subject=' . replaceItems($name, [' ' => '+']);
 
 	return compact('text', 'url', 'class');
 }
@@ -505,10 +506,10 @@ class bootstrapAndUX extends builderBase {
 		'SITE' => 'btn btn-info',
 		'SECURE' => 'btn btn-danger m-2 bi bi-shield-lock icon-2x',
 		'TODO' => 'btn btn-warning bi bi-journal-check" target="_blank',
-		'PHONE' => 'btn btn-has-icon btn-info bi bi-telephone ls-2" style="color: #fff;',
-		'WHATSAPP' => 'btn btn-has-icon btn-success bi bi-whatsapp ls-2',
-		'EMAIL' => 'btn btn-has-icon btn-danger bi bi-mailbox ls-2',
-		'MAP' => 'btn btn-has-icon btn-warning bi bi-pin-map ls-2',
+		'PHONE' => 'btn btn-has-icon btn-info bi bi-telephone ls-2" style="color: #fff;' . NOFOLLOWSUFFIX,
+		'WHATSAPP' => 'btn btn-has-icon btn-success bi bi-whatsapp ls-2', //nofollow taken care of in prepareLinks
+		'EMAIL' => 'btn btn-has-icon btn-danger bi bi-mailbox ls-2' . NOFOLLOWSUFFIX,
+		'MAP' => 'btn btn-has-icon btn-warning bi bi-pin-map ls-2' . NOFOLLOWSUFFIX,
 	];
 
 	static $buttonVars = []; //static on demand for optimizing

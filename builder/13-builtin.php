@@ -157,13 +157,22 @@ function processAI($raw, $aiName) {
 		'## Response:' => '[/prompt]' . NEWLINES2,
 	];
 
+	foreach (['https://www.geminiexporter.com/'] as $item)
+		$replaces[$item] = $item . NOFOLLOWSUFFIX;
+
+
 	if ($sr = variable('siteAIReplaces'))
 		$raw = replaceItems($raw, $sr);
 
 	return replaceItems($raw, $replaces);
 }
 
+DEFINE('GOOGLEIMAGES', 'https://lh3.googleusercontent.com');
+
 function adjustOutputOfAI($raw, $aiName) {
+	$noFollow = nofollowReplace(GOOGLEIMAGES);
+	$raw = replaceItems($raw, $noFollow);
+
 	if (!contains($raw, '<p>| ')) return $raw;
 
 	features::ensureTables();
