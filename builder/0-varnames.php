@@ -45,8 +45,8 @@ class features {
 }
 
 //4-array.php
-DEFINE('REPLACEWRAPNO', '');
-DEFINE('REPLACEWRAP', '%');
+DEFINE('NOWRAPREPLACE', '');
+DEFINE('WRAPREPLACE', '%');
 
 DEFINE('TYPENOCHANGE', 'no-change');
 DEFINE('TYPEBOOLEAN', 'bool');
@@ -190,7 +190,7 @@ function replaceNetworkUrls($html) {
 	if ($html === PleaseDie) showDebugging(22, $networkUrls, true);
 	if (!contains($html, URLOFPREFIX) || empty($networkUrls)) return $html;
 	//if (endsWith($html, '%')) showDebugging(23, [$html, $networkUrls], PleaseDie);
-	return replaceItems($html, $networkUrls, '%');
+	return replaceItems($html, $networkUrls, WRAPREPLACE);
 }
 
 function getSiteKey($site, $suffix = '') { return '%' . URLOFPREFIX . $site . '%' . $suffix; }

@@ -3,7 +3,7 @@ function itemOr($array, $key, $default = false) {
 	return isset($array[$key]) ? $array[$key] : $default;
 }
 
-function replaceItems($text, $array, $wrap = REPLACEWRAPNO, $arrayCheck = false) {
+function replaceItems($text, $array, $wrap = NOWRAPREPLACE, $arrayCheck = false) {
 	foreach($array as $key => $value) {
 		if ($arrayCheck && is_array($value)) continue;
 		$key = $wrap . $key . $wrap;

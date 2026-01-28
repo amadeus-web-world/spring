@@ -61,6 +61,7 @@ echo replaceItems($op, [
 	'body' => _color($palette, 'body', 'bee6f9'),
 	'link' => _color($palette, 'link', '30B1D4'),
 	'heading' => _color($palette, 'heading', '86cbffb2'),
+	'paler' => _color($palette, 'paler', 'ddd'),
 	'MOREROOTVARS' => implode(NEWLINE . '	', $moreVars),
 ], '%');
 
