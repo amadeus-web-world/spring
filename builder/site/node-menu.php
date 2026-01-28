@@ -59,7 +59,7 @@ function renderNodeMenu() {
 			extract(specialLinkVars($item));
 
 			echo '<li class="d-inline-block my-2"><a target="_blank" href="' . $url . '" class="mt-2 text-white">'
-				. '	<i class="social-icon si-mini text-light rounded-circle ' . $class . '"></i> <span class="d-sm-none btn-light">' . $text . '</span></a></li>';
+				. '	<i class="social-icon si-mini text-light rounded-circle ' . $type . '"></i> <span class="d-sm-none btn-light">' . $name . '</span></a></li>';
 		}
 	}
 

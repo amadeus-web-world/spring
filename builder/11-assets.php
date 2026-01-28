@@ -183,5 +183,5 @@ function styles_and_scripts() {
 	foreach (variable('3pScripts') as $url) scriptTag($url);
 
 	if (variable(VARMediakit))
-		cssTag(variable('app') . 'assets/mediakit.php' . variable(VARMediakit));
+		cssTag(getSiteUrl(SITESPRING) . 'assets/mediakit.php' . variable(VARMediakit));
 }

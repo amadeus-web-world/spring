@@ -133,7 +133,7 @@ function getJsonFromUrl($url) {
 
 function textToList($data) {
 	$r = array();
-	$lines = explode(variable('safeNL'), $data);
+	$lines = explode(SAFENEWLINE, $data);
 	foreach ($lines as $lin)
 	{
 		$lin = trimCrLf($lin);
@@ -172,7 +172,7 @@ function tsvToSheet($data) {
 	$rows = [];
 	$columns = null;
 	$values = [];
-	$lines = explode(variable('safeNL'), $data);
+	$lines = explode(SAFENEWLINE, $data);
 
 	foreach ($lines as $line)
 	{
@@ -181,7 +181,7 @@ function tsvToSheet($data) {
 
 		if ($line[0] == '#') {
 			if ($columns != null) showDebugging('Set Columns Only Once', [$columns, $line], true, true);
-			$columns = array_flip(explode("	", substr($line, 1)));
+			$columns = array_flip(explode(VARTab, substr($line, 1)));
 			continue;
 		}
 
@@ -196,7 +196,7 @@ function tsvToSheet($data) {
 			continue;
 		}
 
-		$rows[] = explode("	", $line);
+		$rows[] = explode(VARTab, $line);
 	}
 
 	return compact('rows', 'columns', 'values');
@@ -205,7 +205,7 @@ function tsvToSheet($data) {
 function tsvSetCols($lin, &$c)
 {
 	$lin = substr($lin, 1);
-	$r = explode("	", $lin);
+	$r = explode(VARTab, $lin);
 	$c = new stdClass();
 	foreach ($r as $key => $value)
 	{

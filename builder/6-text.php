@@ -1,23 +1,13 @@
 <?php
-variable('safeNL', $safeNL = "\r"); //platform safe
-DEFINE('SAFENEWLINE', $safeNL);
-DEFINE('NEWLINE', $nl= "\r\n");
-//NOTE: let it break - variable('nl', NEWLINE);
+$nl = NEWLINE;
 DEFINE('NEWLINES2', $nl . $nl);
 DEFINE('NEWLINES3', $nl . $nl . $nl);
-
-DEFINE('BRTAG', $br = '<br>');
-DEFINE('BRNL', $br . $nl);
 DEFINE('HRTAG', $hr = '<hr>');
 
 DEFINE('NBSP', ' &nbsp; ');
-DEFINE('PIPEWS', ' | '); //whitespace
+DEFINE('PIPEWS', ' | '); ////whitespace
 
 DEFINE('BREADCRUMBSEPARATOR', ' <large>&#8680;</large> ');
-
-function trimCrLf($txt) {
-	return trim($txt, "\r\n");
-}
 
 function urlize($txt) {
 	return replaceItems(strtolower($txt), ["'" => '', ' ' => '-', '&hellip;' => '__', '&' => 'and']);
@@ -58,27 +48,21 @@ function blog_heading($name, $fol) {
 	return humanize($fileName_r);
 }
 
-//https://github.com/yieldmore/MicroVC/blob/master/tlr/app/functions.io.php
+////https://github.com/yieldmore/MicroVC/blob/master/tlr/app/functions.io.php	orgin of contains, startsWith and endsWith	spring
 function startsWith($haystack, $needle)
 {
-  $length = strlen($needle);
-  return (substr($haystack, 0, $length) === $needle);
+	$length = strlen($needle);
+	return (substr($haystack, 0, $length) === $needle);
 }
 
 function endsWith($haystack, $needle)
 {
-  $length = strlen($needle);
-  if ($length == 0) {
-	return true;
-  }
-
-  return (substr($haystack, -$length) === $needle);
+	$length = strlen($needle);
+	if ($length == 0) return true;
+	return (substr($haystack, -$length) === $needle);
 }
 
-function contains($haystack, $needle)
-{
-	return stripos($haystack, $needle) !== false;
-}
+//contains moved to 0a-process.php
 
 function contact_r($text) {
 	$text = replaceItems($text, ['tel:' => '', 'mailto:' => '', 'https://' => '', 'www.' => '']);

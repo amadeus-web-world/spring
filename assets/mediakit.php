@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/css");
-include_once '../builder/0-varnames.php';
+include_once '../builder/0b-varnames.php';
 include_once '../builder/4-array.php';
 DEFINE('NEWLINE', "\r\n");
 DEFINE('NEWLINES2', NEWLINE . NEWLINE);
@@ -32,7 +32,6 @@ if ($contentFont || $cursive || $menu) {
 if ($menu) $moreVars[] = '--cnvs-primary-menu-font: "' . $menu . '", serif;';
 if ($cursive) $moreVars[] = '--amadeus-cursive-font: "' . $cursive . '", serif;';
 if ($contentFont) $moreVars[] = '--amadeus-content-font: "' . $contentFont . '", serif;';
-
 
 //TODO: rewrite with all as optional!
 $op = ':root {

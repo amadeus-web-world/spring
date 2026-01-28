@@ -14,7 +14,7 @@ foreach ($sheet->rows as $item) {
 	$path = $sheet->getValue($item, 'path');
 
 	$relPath = str_replace('/home', '', $path);
-	$url = replaceHtml(DEFINED('NETWORKPATH') && $site ? '%' . OTHERSITEPREFIX . $site . '%' : '%url%');
+	$url = replaceHtml(DEFINED('NETWORKPATH') && $site ? getSiteKey($site) : '%url%');
 
 	$link = $url . $relPath . '/';
 

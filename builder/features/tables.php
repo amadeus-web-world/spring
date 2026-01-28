@@ -15,7 +15,7 @@ variable('calendar-cells', explode(',', '1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,'
 function getTableTemplate($nameOrMeta) {
 	if (is_object($nameOrMeta))
 		$nameOrMeta = $nameOrMeta->values['use-template'];
-	return AMADEUSCORE . 'data/table-templates/' . $nameOrMeta . '.tsv';
+	return AMADEUSDATA . 'table-templates/' . $nameOrMeta . '.tsv';
 }
 
 function _table_row_values($item, $cols, $tsv, $values, $template) {

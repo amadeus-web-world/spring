@@ -32,12 +32,10 @@ function disk_call($function, $parameter, $timeER) {
 		if (function_exists('variable')
 				&& !defined('SHOWSITESAT')
 				&& variable(VARLocal))
-			showDebugging('SITEPATH', 'UNDEFINED');
-	} else {
-		$parameter = str_replace(SITEPATH, 'SITE', $parameter);
+			showDebugging('SITEPATH', 'UNDEFINED: SITEPATH');
 	}
 
-	$parameter = str_replace(AMADEUSCORE, 'CORE/', $parameter);
+	$parameter = shortPath($parameter);
 	$exact = time_r($timeER[0], 'micro', true); $time = $timeER[1];
 	$call = count($disk_calls) + 1;
 	$disk_calls[] = compact('call', 'function', 'parameter', 'exact', 'time');
@@ -55,7 +53,7 @@ function file_stats($file, $call) {
 	$size = filesize($file);
 	$stat_all_size += $size;
 	
-	$folder = replaceItems(dirname($file), [SITEPATH => 'SITE', AMADEUSCORE => 'CORE/']);
+	$folder = shortPath(dirname($file));
 	$name = basename($file);
 	$size = size_r($size);
 
@@ -63,6 +61,7 @@ function file_stats($file, $call) {
 }
 
 function print_stats() {
+	printOrSaveComments();
 	$allow = getQueryParameter('debug') || getQueryParameter('stats');
 	if (!$allow) return;
 

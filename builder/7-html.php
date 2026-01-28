@@ -199,7 +199,7 @@ function replaceHtml($html) {
 		variable($key, $replaces = [
 			//Also, we should incorporate dev tools like w3c & broken link checkers
 			'%url%' => variable('page-url'),
-			'%' . OTHERSITEPREFIX . 'core%' => variable('app'),
+			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
 
 			'%node-assets%' => _resolveFile('', STARTATNODE),
 			'%section-assets%' => _resolveFile('', STARTATSECTION),
@@ -279,7 +279,6 @@ function replaceIfContained($html, $variable) {
 }
 
 variable('_marqueeStart', '<marquee onmouseover="this.stop();" onmouseout="this.start();">');
-variable('_errorStart', '<div class="container mt-4 p-5 alert alert-warning text-center" style="border-radius: 25px;">');
 
 variable('_engageButtonFormat', '<a href="javascript: void(0);" class="btn btn-primary btn-%class% toggle-engage" data-engage-target="engage-%id%">%name%</a>');
 
@@ -495,7 +494,8 @@ function specialLinkVars($item) {
 	if ($type == VAREmail)
 		$url = 'mailto:' . $url . '?subject=' . replaceItems($name, [' ' => '+']);
 
-	return compact('text', 'url', 'class');
+	$type = $class;
+	return compact('url', 'name', 'type');
 }
 
 class bootstrapAndUX extends builderBase {
@@ -773,7 +773,7 @@ function body_classes($return = false) {
 function error($html, $renderAny = false, $settings = []) {
 	$settings['echo'] = false;
 	if ($renderAny) $html = renderAny($html, $settings);
-	echo variable('_errorStart') . $html . TAGDIVEND;
+	echo VARErrorStart . $html . TAGDIVEND;
 }
 
 define('DEBUGPLAIN', '1');
@@ -782,26 +782,11 @@ define('DEBUGVERBOSE', 'verbose');
 
 function debug($file, $function, $vars, $type = DEBUGPLAIN) {
 	if (getQueryParameter('debug') != $type) return;
-	$file = replaceItems($file, [ALLSITESROOT => 'ROOT/', AMADEUSCORE => 'CORE/', '\\' => '/']);
+	
+	$file = shortPath($file);
 	echo NEWLINE . '<!--' . NEWLINE
 		. 'INFO:' . NEWLINE . '	' . implode(NEWLINE . '	', explode(PHP_EOL, printReadable($vars))) . NEWLINE
 		. 'FILE: ' . $file . NEWLINE
 		. 'FUNCTION: ' . $function . NEWLINE
 		. '-->' . NEWLINES2;
-}
-
-function printReadable($array) {
-	$r = print_r($array, 1);
-	$r = substr($r, strlen('Array' . PHP_EOL . '(' . NEWLINE . '  '));
-	return substr($r, 0, strlen($r) - strlen(')' . PHP_EOL));
-}
-
-function showDebugging($msg, $param, $die = false, $trace = false, $echo = true, $skip = false) {
-	if ($skip) return;
-	$op = variable('_errorStart') . $msg . '<hr><pre>' . print_r($param, 1);
-	if ($trace) { $op .= '</pre><br>STACK TRACE:<hr><pre>'; debug_print_backtrace(); }
-	$op .= '</pre></div>';
-	if (!$echo) return $op;
-	echo $op;
-	if ($die) die();
 }

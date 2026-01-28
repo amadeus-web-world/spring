@@ -17,34 +17,54 @@
 DEFINE('AMADEUSROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 DEFINE('AMADEUSSITEROOT', dirname(__DIR__, 1) . DIRECTORY_SEPARATOR);
 DEFINE('ALLSITESROOT', dirname(AMADEUSROOT) . DIRECTORY_SEPARATOR);
-DEFINE('AMADEUSFRAMEWORK', __DIR__ . DIRECTORY_SEPARATOR);
-DEFINE('AMADEUSCORE', __DIR__ . DIRECTORY_SEPARATOR);
-DEFINE('AMADEUSFEATURES', AMADEUSCORE . 'features/');
-DEFINE('AMADEUSMODULES', AMADEUSFRAMEWORK . 'modules/');
 DEFINE('AMADEUSTHEMESFOLDER', AMADEUSROOT . 'themes/');
-DEFINE('AMADEUSEXTENSIONS', AMADEUSCORE . 'extensions/');
 
-include_once AMADEUSFRAMEWORK . '2-stats.php'; //start time, needed to log disk load in files.php
-include_once AMADEUSFRAMEWORK . '3-files.php'; //disk_calls, needed first to measure include times
+DEFINE('AMADEUSBUILDER', __DIR__ . DIRECTORY_SEPARATOR);
+	DEFINE('AMADEUSFRAMEWORK', __DIR__ . DIRECTORY_SEPARATOR);
+	DEFINE('AMADEUSCORE', __DIR__ . DIRECTORY_SEPARATOR);
+
+DEFINE('AMADEUSFEATURES', AMADEUSBUILDER . 'features/');
+DEFINE('AMADEUSMODULES', AMADEUSBUILDER . 'modules/');
+DEFINE('AMADEUSDATA', AMADEUSBUILDER . 'data/');
+
+function handoverSansStats() {
+	$critical = [
+		AMADEUSBUILDER . '0a-process.php', //for parsing when ?process=1
+		AMADEUSBUILDER . '2-stats.php', //start time, needed to log disk load in files.php
+		AMADEUSBUILDER . '3-files.php', //disk_calls, needed first to measure include times
+	];
+
+	foreach ($critical as $file)
+		include_once($file);
+
+	foreach ($critical as $file)
+		processComments($file);
+}
+
+handoverSansStats();
 
 function runFrameworkFile($name) {
-	disk_include_once(AMADEUSFRAMEWORK . $name . '.php');
+	$file = AMADEUSBUILDER . $name . '.php';
+	disk_include_once($file);
+	processComments($file);
 }
 
 function runModule($name) {
-	disk_include_once(AMADEUSMODULES . $name . '.php');
+	runFrameworkFile('modules/' . $name);
 }
 
 function runFeature($name, $variables = []) {
-	disk_include_once(AMADEUSFEATURES . $name . '.php', $variables);
+	runFrameworkFile('features/' . $name, $variables);
 }
 
 function runFeatureMultiple($name, $variables = []) {
-	disk_include(AMADEUSFEATURES . $name . '.php', $variables);
+	$file = AMADEUSBUILDER . 'features' . $name . '.php';
+	disk_include($file, $variables);
+	processComments($file);
 }
 
-runFrameworkFile('0-varnames');
-runFrameworkFile('0-builder-base'); //2nd as uses varnames
+runFrameworkFile('0b-varnames');
+runFrameworkFile('0c-builder-base');
 
 runFrameworkFile('4-array');
 runFrameworkFile('5-vars');
@@ -61,7 +81,34 @@ runFrameworkFile('13-builtin'); //was special
 runFrameworkFile('14-main');
 runFrameworkFile('15-routing');
 runFrameworkFile('16-theme');
+
+//New in v9.3
+runFrameworkFile('17-pollen');
 runFrameworkFile('18-related');
+runFrameworkFile('19-spring');
+runFrameworkFile('20-social-builder');
+
+class features {
+	const blurbs = 'blurbs';
+	const deck = 'deck';
+	const directory = 'directory';
+	const engage = 'engage';
+	const familyTree = 'family-tree';
+	const pollen = 'pollen';
+	const share = 'share';
+	const underConstruction = 'under-construction';
+	const tables = 'tables';
+
+	const shareQS = '?share=1&content=1';
+
+	static function ensureDirectory() { runFeature(self::directory); } //call either this, OR runMultiple for sitemap
+	static function ensureEngage() { runFeature(self::engage); }
+	static function ensureTables() { runFeature(self::tables); }
+	static function runPage($what) { runFrameworkFile('pages/' . $what); }
+	static function runMultiple($what, $vars = []) { runFeatureMultiple($what, $vars); }
+	static function runWithFile($what, $file) { self::runMultiple($what, ['file' => $file]); }
+	static function runPollen($items = []) { runFeature(self::pollen, ['items' => $items]); }
+}
 
 function before_bootstrap() {
 	$port = $_SERVER['SERVER_PORT'];
@@ -264,11 +311,11 @@ function _credits($pre = '', $return = false) {
 	$work = getSiteUrl(SITEWORK);
 	$utm = '?utm_content=site-credits&utm_referrer=' . variable(VARSafeName);
 
-	$url = $work . $utm;
+	$url = $work . 'opus/' . $utm;
 	$img = '<img src="' . $root . 'amadeusweb-work-logo.png" height="40" alt="' . DAWN_NAME . '" class="m-2 align-middle rounded-2">';
 
 	$result = $pre . 'Powered by' . getLink($img, $url, 'd-inline-block', true) . NEWLINE
-		. returnLine('[Do Request a Service](%work-signup%' . $utm . 'BTNPRIMARY)');
+		. returnLine('[Request a Service](%work-signup%' . $utm . 'BTNPRIMARY)');
 
 	if ($return) return $result; else echo $result;
 }

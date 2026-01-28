@@ -45,7 +45,7 @@
 
 			Reveal.initialize({
 				hash: true,
-				<?php echo hasPageparameter('print') ? variableOr('print-config', '') . NEWLINE : '' ?>
+				<?php echo hasPageparameter('print') ? variableOr('print-config', '') . NEWLINE : ''; ?>
 				// Learn about plugins: https://revealjs.com/plugins/
 				// NOTE: making it superlight
 				// plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]

@@ -34,9 +34,9 @@ function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
 		'" data-salutation="' . $salutation . '">' . NEWLINE;
 
 	$replaces = [];
-	if (disk_file_exists($note = (AMADEUSCORE . 'data/engage-note.md'))) {
+	if (disk_file_exists($note = (AMADEUSDATA . 'engage-note.md'))) {
 		$replaces[VAREngageNote] = '<div class="engage-note-hint d-none">' . returnLine($note) . '</div>';
-		if (disk_file_exists($note2 = (AMADEUSCORE . 'data/engage-note-above.md')))
+		if (disk_file_exists($note2 = (AMADEUSDATA . 'engage-note-above.md')))
 			$replaces[VAREngageNoteAbove] = returnLine($note2);
 		$replaces[VAREmail] = $email;
 		$replaces[VARWhatsapp] = getHtmlVariable(VARWhatsapp) . getHtmlVariable('enquiry');

@@ -140,8 +140,8 @@ function _renderImplementation($fileOrRaw, $settings) {
 	$builtinReplaces = [
 		'site-assets' => variable(assetKey(SITEASSETS)),
 		'site-assets-images' => variable(assetKey(SITEASSETS)) . 'images/',
-		'app' => variable('app'),
-		'app-assets' => variable(assetKey(COREASSETS)),
+		'spring' => getSiteUrl(SITESPRING),
+		'spring-assets' => variable(assetKey(COREASSETS)),
 	];
 
 	$raw = replaceItems($raw, $replacesParams, '%');

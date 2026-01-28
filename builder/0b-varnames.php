@@ -1,15 +1,4 @@
 <?php
-/*
-//.php
-DEFINE('VAR ', );
-*/
-DEFINE('BOOLYes', true);
-	DEFINE('PleaseDie', BOOLYes);
-	DEFINE('IncludeTrace', BOOLYes);
-DEFINE('BOOLNo', false);
-	DEFINE('BlockExecution', BOOLNo); ///dead code
-DEFINE('EmptyArray', []);
-
 function bool_r(bool $value) {
 	return ($value ? 'true (yes)' : 'false (no)') . ' type: bool';
 }
@@ -22,28 +11,6 @@ define('VARUseAmadeusWeb', '--use-amadeusweb');
 DEFINE('VARWrapper', '%');
 function wrap_variable($var) { return VARWrapper . $var / VARWrapper; }
 
-class features {
-	const blurbs = 'blurbs';
-	const deck = 'deck';
-	const directory = 'directory';
-	const engage = 'engage';
-	const familyTree = 'family-tree';
-	const pollen = 'pollen';
-	const share = 'share';
-	const underConstruction = 'under-construction';
-	const tables = 'tables';
-
-	const shareQS = '?share=1&content=1';
-
-	static function ensureDirectory() { runFeature(self::directory); } //call either this, OR runMultiple for sitemap
-	static function ensureEngage() { runFeature(self::engage); }
-	static function ensureTables() { runFeature(self::tables); }
-	static function runPage($what) { runFrameworkFile('pages/' . $what); }
-	static function runMultiple($what, $vars = []) { runFeatureMultiple($what, $vars); }
-	static function runWithFile($what, $file) { self::runMultiple($what, ['file' => $file]); }
-	static function runPollen($items = []) { runFeature(self::pollen, ['items' => $items]); }
-}
-
 //4-array.php
 DEFINE('NOWRAPREPLACE', '');
 DEFINE('WRAPREPLACE', '%');
@@ -54,9 +21,6 @@ DEFINE('TYPEARRAY', 'array');
 
 DEFINE('BOOLLISTFALSE', [false, 'false', 'no', '0']);
 DEFINE('BOOLLISTTRUE', [true, 'true', 'yes', '1']);
-	//TODO: deprecated. remove once testing process is in places
-	DEFINE('BOOLFALSE', BOOLLISTFALSE);
-	DEFINE('BOOLTRUE', BOOLLISTTRUE);
 
 //7-html.php
 DEFINE('VARNoContentBoxes', 'no-content-boxes');
@@ -68,7 +32,6 @@ DEFINE('VAREcho', 'echo');
 DEFINE('VARStripParagraphTag', 'strip-paragraph-tag');
 DEFINE('VARExcerpt', 'excerpt');
 DEFINE('VARMarkdown', 'markdown');
-//DEFINE('VAR ', );
 
 DEFINE('VARFirstSectionOnly', 'FirstSectionOnly');
 DEFINE('VARFullAccessNotice', 'FullAccessNotice');
@@ -165,7 +128,6 @@ DEFINE('VARSectionsHaveFiles', 'sections-have-files');
 
 //site/network.php
 DEFINE('URLOFPREFIX', 'urlOf-');
-	DEFINE('OTHERSITEPREFIX', URLOFPREFIX); //TODO: cleanup
 
 DEFINE('SITEROOT', 'root');
 DEFINE('SITESPRING', 'spring');
