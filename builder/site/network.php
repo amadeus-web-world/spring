@@ -3,7 +3,7 @@ DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
 DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
 DEFINE('DAWN_ABBR', 'DAWN');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
-DEFINE('DOMAINS', ['authors', 'creativity', 'networks', 'technology', 'organizations', 'people', 'work-folk']);
+DEFINE('DOMAINS', ['authors', 'creativity', 'networks', 'retreats', 'technology', 'organizations', 'people', 'work-folk']);
 DEFINE('DOMAINNames', ['creativity' => 'Creativity Corner']);
 
 function is_dawn($fol) { return in_array($fol, ['dawn', 'public_html']); }

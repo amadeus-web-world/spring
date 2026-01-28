@@ -157,6 +157,7 @@ DEFINE('VARNetwork', 'network');
 
 //site/header-menu.php
 DEFINE('VARLinkToNodeHome', 'link-to-node-home');
+DEFINE('VARLinkToSubnodeHome', 'link-to-sub-node-home');
 DEFINE('VARSectionsHaveFiles', 'sections-have-files');
 
 //site/network.php

@@ -121,6 +121,10 @@ class nodeSettings extends builderBase {
 		return $this->setValue(VARLinkToNodeHome, !$clear);
 	}
 
+	function subNodeHome($clear = false) {
+		return $this->setValue(VARLinkToSubnodeHome, !$clear);
+	}
+
 	function sectionHome($clear = false) {
 		return $this->setValue(VARLinkToSectionHome, !$clear);
 	}

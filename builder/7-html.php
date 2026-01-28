@@ -227,9 +227,9 @@ function replaceHtml($html) {
 			'%email3%' => variableOr(VAREmail3, ''),
 			'%phone%' => variableOr(VARPhone, ''),
 			'%phone2%' => variableOr(VARPhone2, ''),
-			'%whatsapp-number%' => ($wa = variableOr(VARWhatsapp, '##no-number-specified')),
-			'%whatsapp%' => $wame = whatsapp_me($wa),
-			'%whatsapp2-number%' => ($wa2 = variableOr(VARWhatsapp2, '##no-number2-specified')),
+			'%whatsapp-number%' => $wa = variable(VARWhatsapp), //guaranteed
+			'%whatsapp%' => $wame = whatsapp_me($wa), //var used below
+			'%whatsapp2-number%' => $wa2 = variable(VARWhatsapp2),
 			'%whatsapp2%' => whatsapp_me($wa2),
 
 			'%address%' => variableOr(VARAddress, '[no-address]'),
