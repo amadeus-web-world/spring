@@ -34,6 +34,7 @@ function _skipNodeFiles($files, $excludeExtensions = 'pdf') {
 }
 
 define('ONLYFOLDERS', 'FOLDER'); //only folders without dots
+define('SKIPFOLDERS', 'NOFOLDER');
 
 function _skipExcludedFiles($files, $excludeNames = 'home', $excludeExtensions = 'jpg, png', $stripExtension = false) {
 	$op = [];
@@ -43,6 +44,7 @@ function _skipExcludedFiles($files, $excludeNames = 'home', $excludeExtensions =
 	$checkNames = count($excludeNames) > 0;
 
 	$onlyFolders = $excludeExtensions == ONLYFOLDERS;
+	$onlyFiles = $excludeExtensions == SKIPFOLDERS;
 	$excludeExtensions = explode(', ', $excludeExtensions);
 	$checkExtensions = count($excludeExtensions) > 0 && $excludeExtensions[0] != '';
 
@@ -51,6 +53,9 @@ function _skipExcludedFiles($files, $excludeNames = 'home', $excludeExtensions =
 			continue;
 
 		if ($onlyFolders && contains($item, '.'))
+			continue;
+
+		if ($onlyFiles && !contains($item, '.'))
 			continue;
 
 		if ($checkNames && in_array(stripExtension($item), $excludeNames))

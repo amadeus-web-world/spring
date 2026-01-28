@@ -3,7 +3,7 @@ function itemOr($array, $key, $default = false) {
 	return isset($array[$key]) ? $array[$key] : $default;
 }
 
-function replaceItems($text, $array, $wrap = '', $arrayCheck = false) {
+function replaceItems($text, $array, $wrap = REPLACEWRAPNO, $arrayCheck = false) {
 	foreach($array as $key => $value) {
 		if ($arrayCheck && is_array($value)) continue;
 		$key = $wrap . $key . $wrap;
@@ -12,9 +12,6 @@ function replaceItems($text, $array, $wrap = '', $arrayCheck = false) {
 
 	return $text;
 }
-
-function replaceDictionary($text, $array) { return replaceVars($text, $array); }
-
 
 function valueIfSet($array, $key, $default = false) {
 	return isset($array[$key]) ? $array[$key] : $default;

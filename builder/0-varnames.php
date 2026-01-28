@@ -45,6 +45,9 @@ class features {
 }
 
 //4-array.php
+DEFINE('REPLACEWRAPNO', '');
+DEFINE('REPLACEWRAP', '%');
+
 DEFINE('TYPENOCHANGE', 'no-change');
 DEFINE('TYPEBOOLEAN', 'bool');
 DEFINE('TYPEARRAY', 'array');
