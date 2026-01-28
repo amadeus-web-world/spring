@@ -339,7 +339,7 @@ class htmlUX {
 		//3 - divs (5)
 		self::divClear, self::divBox, self::divClose, self::divSFClose, self::divSF,
 		//4 - bs grid (6)
-		self::gridRow, self::grid3, self::grid4, self::grid6, self::grid8, self::grid9,
+		self::gridRow, self::grid3, self::grid4, self::grid5, self::grid6, self::grid7, self::grid8, self::grid9,
 		//5 - articles / grid (4)
 		self::artAllClose, self::artAllHAuto, self::artAll, self::artClose,
 		//6 - articles / box (8)
@@ -405,7 +405,9 @@ class htmlUX {
 	const gridRow = ['DIV-ROW', '<div class="row">'];
 	const grid3 = ['DIV-CELL3', '<div class="col-md-3 col-sm-12">'];
 	const grid4 = ['DIV-CELL4', '<div class="col-md-4 col-sm-12">'];
+	const grid5 = ['DIV-CELL5', '<div class="col-md-5 col-sm-12">'];
 	const grid6 = ['DIV-CELL6', '<div class="col-md-6 col-sm-12">'];
+	const grid7 = ['DIV-CELL7', '<div class="col-md-7 col-sm-12">'];
 	const grid8 = ['DIV-CELL8', '<div class="col-md-8 col-sm-12">'];
 	const grid9 = ['DIV-CELL9', '<div class="col-md-9 col-sm-12">'];
 	//5 - articles / grid (4)

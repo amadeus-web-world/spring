@@ -62,8 +62,10 @@ function file_stats($file, $call) {
 	return compact('call', 'folder', 'name', 'size');
 }
 
-function print_stats($force = false) {
-	if (!variable('stats') && !$force) return;
+function print_stats() {
+	$allow = getQueryParameter('debug') || getQueryParameter('stats');
+	if (!$allow) return;
+
 	features::ensureTables();
 
 	global $stat_all_size;

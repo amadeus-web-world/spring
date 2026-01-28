@@ -192,10 +192,6 @@ function render() {
 		}
 	}
 
-	if (isset($_GET['debug']) || isset($_GET['stats'])) {
-		variable('stats', true);
-	}
-
 	if (!$rendered) {
 		if (function_exists('did_render_page') && did_render_page()) {
 			//noop
