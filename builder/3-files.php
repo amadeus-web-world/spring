@@ -153,7 +153,7 @@ function disk_include_once($file, $variables = []) {
 	if (function_exists('debug'))
 		debug(__FILE__, 'disk_include_once', ['$file' => $file]);
 
-	if (!$file || !disk_file_exists($file)) showDebugging('$file MISSING', $file, PleaseDie, IncludeTrace);
+	//if (!$file || !disk_file_exists($file)) showDebugging('$file MISSING', $file, PleaseDie, IncludeTrace);
 	_disk_start();
 	$file = _makeSlashesConsistent($file);
 	extract($variables);

@@ -91,7 +91,7 @@ function print_stats() {
 		'+disk calls by name' => 'name count: ' . count($disk_calls_by_type),
 	];
 
-	//TODO: HIGH: scandir caching by version of site
+	//TODO: LOW: scandir caching on local when ?cache=1
 	//is_dir	time: 800.61 microseconds / count: 272
 	//time: 407.219 microseconds / count: 102
 	foreach ($disk_calls_by_type as $type => $item)

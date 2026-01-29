@@ -3,7 +3,6 @@ getSiteUrlKey();
 runFrameworkFile('site/network');
 
 variables([
-	//TODO: HI: chaining
 	'theme' => 'canvas',
 	'sub-theme' => 'go',
 	'custom-footer' => true,

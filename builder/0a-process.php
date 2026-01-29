@@ -51,46 +51,55 @@ function printReadable($array) {
 DEFINE('SLASHES', '////'); ////defined as #description, describes, category, link, line
 DEFINE('TODO', '//TODO: '); ////defines the TODO marker
 function processComments($file) {
-	if (!isset($_GET['process'])) return;
+	if (!isset($_GET['comments'])) return;
 	_disk_start();
 	$lines = explode(SAFENEWLINE, file_get_contents($file));
 
 	foreach ($lines as $ix => $line)
 	{
 		$line = trimCrLf($line);
-		if ($line == '' || !contains($line, SLASHES)) continue;
-		$bits = explode(SLASHES, $line);
-		$comment = $bits[isset($bits[2]) ? 2 : 1];
-		$lineNumber = $ix + 1;
-		$extra = [
-			'file' => shortPath($file),
-			'category' => isset($bits2[2]) ? $bits2[2] : 'spring',
-		];
-		if (contains($comment, VARTab)) {
-			$bits2 = explode(VARTab, $comment);
-			$extra['describes'] = $bits2[1];
-			if (isset($bits2[3])) $extra['link'] = $bits2[3];
-			$extra['fullLine'] = $line;
-			if (isset($bits2[4])) {
-				$extra['actualLine'] = $lineNumber;
-				$offset = $bits2[3];
-				if ($offset == 'next') $lineNumber += 1;
-				else throw new Error('Unsupported lineOffset: ' . print_r($extra, 1));
-			}
-			$extra['fullComment'] = $comment;
-			$comment = $bits2[0];
-		}
+		if ($line == '') continue;
 
-		$item = array_merge([
-			'comment' => $comment,
-			'lineNumber' => $lineNumber,
-		], $extra);
-		
-		add4SComment($item);
+		$hasSlash = contains($line, SLASHES);
+		$hasTodo = contains($line, TODO);
+		if (!$hasSlash && !$hasTodo) continue;
+
+		if ($hasSlash) _processSlash($line, $file, $ix + 1);
 	}
 
 	$time = _disk_end();
 	disk_call('slashesParse', $file, $time);
+}
+
+function _processSlash($line, $file, $lineNumber) {
+	$bits = explode(SLASHES, $line);
+	$comment = $bits[isset($bits[2]) ? 2 : 1];
+	
+	$extra = [
+		'file' => shortPath($file),
+		'category' => isset($bits2[2]) ? $bits2[2] : 'spring',
+	];
+	if (contains($comment, VARTab)) {
+		$bits2 = explode(VARTab, $comment);
+		$extra['describes'] = $bits2[1];
+		if (isset($bits2[3])) $extra['link'] = $bits2[3];
+		$extra['fullLine'] = $line;
+		if (isset($bits2[4])) {
+			$extra['actualLine'] = $lineNumber;
+			$offset = $bits2[3];
+			if ($offset == 'next') $lineNumber += 1;
+			else throw new Error('Unsupported lineOffset: ' . print_r($extra, 1));
+		}
+		$extra['fullComment'] = $comment;
+		$comment = $bits2[0];
+	}
+
+	$item = array_merge([
+		'comment' => $comment,
+		'lineNumber' => $lineNumber,
+	], $extra);
+	
+	add4SComment($item);
 }
 
 global $comments; $comments = [];
@@ -102,7 +111,7 @@ function add4SComment($item) {
 }
 
 function printOrSaveComments() {
-	$allow = getQueryParameter('process');
+	$allow = getQueryParameter('comments');
 	if (!$allow) return;
 	echo '<style>#footer { display: none; }</style>' . NEWLINES2;
 	global $comments;
@@ -111,8 +120,8 @@ function printOrSaveComments() {
 
 function _printComments($items, $heading) {
 	echo '<div class="container">';
-	echo '<h3 class="m-2 text-center">' . $heading . '</h3>';
-	echo '<textarea class="vh-75 w-100">' . NEWLINE;
+	echo '<h3 class="m-2 text-center">' . $heading . ' (' . count($items) . ')</h3>';
+	echo '<textarea class="vh-50 w-100">' . NEWLINE;
 	foreach ($items as $comment)
 		echo printReadable($comment) . NEWLINES2;
 	echo '</textarea>' . NEWLINES2;

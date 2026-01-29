@@ -296,7 +296,7 @@ function menu($folderRelative = false, $settings = []) {
 
 		$text = $namesOfFiles && isset($namesOfFiles[$file]) ? $namesOfFiles[$file] : humanize($file, $onlySlugForSectionMenu);
 
-		//TODO: HIGH: LOOK FOR USAGE:
+		//TODO: LOW: LOOK FOR USAGE:
 
 		if (isset($settings['innerHtml'])) {
 			$innerHtml = $settings['innerHtml']($file, compact('extension', 'url', 'folder'));

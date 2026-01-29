@@ -1,13 +1,6 @@
 <?php
-/******
- * Amadeus' Table Feature
- * v2 - from amadeusweb/code (datatables) - Dec 2024
- * v2.5 - supoprting dossiers (tsv / auto)
- * Trying to support multiple in one page (not tested yet)
- */
 
-//add_foot_hook(featurePath('tables/foot-hook.php'));
-
+//TODO: LOW: reinstate this
 variable('calendar-cells', explode(',', '1-1,1-2,1-3,1-4,1-5,1-6,1-7,2-1,'
 	. '2-2,2-3,2-4,2-5,2-6,2-7,3-1,3-2,3-3,3-4,3-5,3-6,3-7,'
 	. '4-1,4-2,4-3,4-4,4-5,4-6,4-7,5-1,5-2,5-3,5-4,5-5,5-6,5-7'));
@@ -19,7 +12,7 @@ function getTableTemplate($nameOrMeta) {
 }
 
 function _table_row_values($item, $cols, $tsv, $values, $template) {
-	//TODO: HIGH: use $tsv for sticking with old code path.. seems buggy
+	//TODO: MED: use $tsv for sticking with old code path.. seems buggy
 	if (!$tsv && $tsv != 'array') { $r = []; foreach ($cols as $c) $r[$c] = !is_int($item) && $item[$c] ? $item[$c] : ''; return $r; }
 	$r = [];
 

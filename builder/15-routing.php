@@ -58,7 +58,6 @@ function getSectionFrom($dir) {
 	return pathinfo($dir, PATHINFO_FILENAME);
 }
 
-//TODO: HI: cleanup
 DEFINE('LASTPARAM', 'last-page');
 DEFINE('NODEVAR', 'node');
 DEFINE('SITEHOME', 'index');

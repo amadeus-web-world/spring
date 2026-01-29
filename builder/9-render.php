@@ -220,7 +220,6 @@ function _renderImplementation($fileOrRaw, $settings) {
 	if (valueIfSet($settings, VARUseContentBox, BOOLNo))
 		$output = cbWrapAndReplaceHr($output);
 
-	//TODO: HI: Jan 26 - no need var for now!
 	if (!$noReplaces && isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
 
 	if ($engageContent) {
