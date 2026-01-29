@@ -204,10 +204,16 @@ function render() {
 	$theme = variable('theme') ? variable('theme') : 'default';
 	$embed = variable('embed');
 
+	$fileWanted = $rootFile = in_array(nodeValue(), ['readme', 'license']) ? SITEPATH . '/' . strtoupper(nodeValue()) . '.md' : false;
 	$folder = SITEPATH . '/' . (variable('folder') ? variable('folder') : '');
-	$contentExt = disk_one_of_files_exist($contentFWE = $folder . nodeValue() . '.', CONTENTFILES);
-	if ($contentExt) {
-		read_seo($contentFWE . $contentExt, true);
+	if (!$rootFile) {
+		//asumes logic below will never go to else part
+		$contentExt = disk_one_of_files_exist($contentFWE = $folder . nodeValue() . '.', CONTENTFILES);
+		$fileWanted = $contentFWE . $contentExt;
+	}
+
+	if ($fileWanted) {
+		read_seo($fileWanted, true); //so rootFile supports seo
 	}
 
 	if (!$embed) {
@@ -223,13 +229,19 @@ function render() {
 		features::runPage(features::share);
 		$rendered = true;
 	} else if (isset($_GET['cta'])) {
-		H2(title(FORHEADING), 'container text-center my-3');
+		H2(title(FORHEADING), H2CenterContainer);
 		echo getCodeSnippet('cta-or-engage', CORESNIPPET);
 		$rendered = true;
 	} else if (hasPageParameter('slider')) {
 		$rendered = true; //dont want to render content. and needed here as it shouldnt support "content" menu pages
 	} else if (variable('skip-content-render')) {
 		$rendered = false;
+	} else if ($rootFile) {
+		H2(humanize(variable('name') . ' &mdash; ' . nodeValue()), H2CenterContainer);
+		contentBox('root-file', 'container content-box');
+		renderAny($rootFile);
+		contentBox('end');
+		$rendered = true;
 	} else {
 		$rendered = false;
 		if ($contentExt) {
@@ -244,7 +256,7 @@ function render() {
 			//noop
 		} else if ($missing = getSnippet('missing-page')) {
 			if (!hasVariable('showing-media'))
-				h2(title(FORHEADING), 'container text-center mt-4');
+				h2(title(FORHEADING), H2CenterContainer);
 			contentBox('missing-page', 'container');
 			renderMarkdown($missing);
 			contentBox('end');

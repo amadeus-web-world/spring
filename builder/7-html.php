@@ -135,6 +135,8 @@ function div($what = 'start', $h1 = '', $class = 'video-container') {
 	echo $what == 'start' ? '<div class="' . $class . '">' . $h1 . NEWLINE : TAGDIVEND . NEWLINES2;
 }
 
+DEFINE('H2CenterContainer', 'container text-center my-3');
+
 function h2($text, $class = '', $return = false) {
 	if ($class) $class = ' class="' . $class . '"';
 	$result = '<h2' . $class . '>';

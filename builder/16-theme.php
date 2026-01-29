@@ -343,7 +343,7 @@ function siteWidgets() {
 
 	if ($showSocial) {
 		$op[] = str_replace('[WHAT]', socialBuilder::variableName, $start);
-		$op[] = '<h4 class="mb-1">Social</h4>';
+		$op[] = '<h4 class="mb-1">' . variableOr('social-caption', 'Social') . '</h4>';
 		appendSocial($social, $op);
 		$op[] = '</div>'; $op[] = '';
 	}

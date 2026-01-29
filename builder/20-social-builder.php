@@ -10,6 +10,17 @@ class socialBuilder {
 	private $items = [];
 	function getItems() { return $this->items; }
 
+	static function default($builtin = true, $hr = 'after') {////$hr = before|after|both
+		return self::create()
+			->setSocialCaption()
+			->addHR($hr == 'after')
+			->addBuiltin($builtin ? self::readme : false, $builtin ? self::license : false)
+			->addSignup()
+			->addSmithy()
+			->addHR($hr == 'before')
+			->getItems();
+	}
+
 	static function create($items = []) {
 		$r = new socialBuilder();
 		if (!empty($items)) {
@@ -29,8 +40,13 @@ class socialBuilder {
 		return $r;
 	}
 
-	function addHR() {
-		$this->items[] = self::HR;
+	function setSocialCaption($text = 'Social and Quick Links') {
+		variable('social-caption', $text);
+		return $this;
+	}
+
+	function addHR($skip = false) {
+		if (!$skip) $this->items[] = self::HR;
 		return $this;
 	}
 
@@ -39,14 +55,15 @@ class socialBuilder {
 		return $this;
 	}
 
+	//#region begin
 	function addSpecial($url, $name, $type) {
 		extract(specialLinkVars(compact('url', 'name', 'type')));
 		return $this->add($type, $url, $name);
 	}
 
-	function addExternal($type, $relUrl, $name, $nofollow = true) {
-		$relUrl .= NOFOLLOWSUFFIX;
-		return $this->add($type, $relUrl, $name);
+	function addExternal($type, $absUrl, $name, $nofollow = true) {
+		if ($nofollow) $absUrl .= NOFOLLOWSUFFIX;
+		return $this->add($type, $absUrl, $name);
 	}
 
 	function addInternal($relUrl, $name, $type, $skip = false) {
@@ -56,6 +73,24 @@ class socialBuilder {
 		return $this->add($type, $relUrl, $name);
 	}
 
+	//#region begin
+	const readme = 'fa fa-book-reader bg-success';
+	const license = 'fa fa-legal bg-danger';
+	function addBuiltin($readme = self::readme, $license = self::license) {
+		return $this
+			->addInternal('readme', 'ReadMe', $readme, !$readme)
+			->addInternal('license', 'License', $license, !$license);
+	}
+
+	function addSignup($class = 'fa fa-door-open bg-info') {
+		return $this->addExternal($class, getSiteUrl(SITEWORK, 'signup/'), 'AW Signup', false);
+	}
+
+	function addSmithy($class = 'bi bi-tools bg-secondary') {
+		return $this->addExternal($class, getSiteUrl(SITESMITHY), 'AW Smithy', false);
+	}
+
+	//#region begin
 	const instagram = 'instagram';
 	private const url_instagram = 'https://www.instagram.com/';
 	function addInstagram($relUrl, $name, $type = self::instagram, $skip = false) {
@@ -84,6 +119,7 @@ class socialBuilder {
 		return $this->addExternal($type, self::url_github . $relUrl, $name);
 	}
 
+	//#region begin
 	function addShare() {
 		return $this
 			->addInternal(getPageParameters(VARSlash . features::shareQS), 'Share Via&hellip;', self::shareBtn);
