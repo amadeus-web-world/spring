@@ -230,6 +230,19 @@ class sheet {
 	public array $values;
 	public array | null $group;
 
+	function __construct($file, $groupBy = 'section', $urlize = false)
+	{
+		extract(tsvToSheet(disk_file_get_contents($file)));
+		$this->columns = (array)$columns;
+		$this->rows = (array)$rows;
+		$this->values = (array)$values;
+		$this->group = null;
+
+		if($groupBy !== false)
+			$this->group = arrayGroupBy($rows, $columns[$groupBy], $urlize);
+		return $this;
+	}
+
 	public function firstOfGroup($key, $else = false, $fail = true) {
 		if (!isset($this->group[$key])) {
 			if (!$fail) return $else;
@@ -269,17 +282,7 @@ function getSheet($name, $groupBy = 'section', $urlize = false) : sheet {
 	if ($existing = variable($varName)) return $existing;
 
 	$file = _sheetPath($name);
-	extract(tsvToSheet(disk_file_get_contents($file)));
-
-	$r = new sheet;
-
-	$r->columns = (array)$columns;
-	$r->rows = (array)$rows;
-	$r->values = (array)$values;
-	$r->group = null;
-
-	if($groupBy !== false)
-		$r->group = arrayGroupBy($rows, $columns[$groupBy], $urlize);
+	$r = new sheet($file, $groupBy, $urlize);
 
 	variable($varName, $r);
 	return $r;

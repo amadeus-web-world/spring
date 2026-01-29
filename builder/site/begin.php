@@ -37,40 +37,8 @@ function parseSectionsAndGroups($siteVars, $return = false, $forNetwork = false)
 	$sections = isset($siteVars['sections']) ? $siteVars['sections'] : false;
 	if (variable(VARLocal) && isset($siteVars['sections_local'])) $sections = $siteVars['sections_local'];
 
-	if (!$sections) {
-		$sections = [];
-		if (!$forNetwork) variable('sections', $sections);
-		__testSiteVars(['sections' => $sections]);
-		return $sections;
-	}
-
-	$vars = [];
-	//Eg.: research, causes, solutions, us: programs+members+blog
-	if (contains($sections, ':')) {
-		$swgs = explode(', ', $sections); //sections wtih groups
-		$items = []; $groups = [];
-
-		foreach ($swgs as $item) {
-			if (contains($item, ':')) {
-				$bits = explode(': ', $item, 2);
-				$subItems = explode('+', $bits[1]);
-				$groups[$bits[0]] = $subItems;
-				$items = array_merge($items, $subItems);
-			} else {
-				$items[] = $item;
-				$groups[] = $item;
-			}
-		}
-
-		$vars['sections'] = $items;
-		$vars['section-groups'] = $groups;
-	} else {
-		$vars['sections'] = explode(', ', $sections);
-	}
-
+	$vars = sectionsTsv::load($sections, $forNetwork);
 	if ($return) return $vars;
-
-	__testSiteVars($vars);
 	variables($vars);
 }
 

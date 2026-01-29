@@ -36,9 +36,12 @@ function _renderMenu($home, $folder, $where) {
 		h2(humanize($where), 'amadeus-icon');
 
 	if ($home) {
-		$wantsNoCB = contains(disk_file_get_contents($home), WANTSNOCONTENTBOX);
+		$isMissing = !disk_file_exists($home);
+		$wantsNoCB = $isMissing || contains(disk_file_get_contents($home), WANTSNOCONTENTBOX);
 		if (!$wantsNoCB) contentBox('home');
-		renderAny($home);
+		if ($isMissing && getSnippet('missing-page'))
+			; //noop
+		else renderAny($home);
 		if (!$wantsNoCB) contentBox('end');
 	}
 

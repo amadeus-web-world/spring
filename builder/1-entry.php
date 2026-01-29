@@ -243,7 +243,8 @@ function render() {
 		if (function_exists('did_render_page') && did_render_page()) {
 			//noop
 		} else if ($missing = getSnippet('missing-page')) {
-			h2(title(FORHEADING), 'container text-center mt-4');
+			if (!hasVariable('showing-media'))
+				h2(title(FORHEADING), 'container text-center mt-4');
 			contentBox('missing-page', 'container');
 			renderMarkdown($missing);
 			contentBox('end');
