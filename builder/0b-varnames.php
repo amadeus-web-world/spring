@@ -8,11 +8,21 @@ DEFINE('VARLive', 'live');
 DEFINE('VARUsePreview', 'use-preview');
 define('VARUseAmadeusWeb', '--use-amadeusweb');
 
+DEFINE('VAREMPTY', '');
+DEFINE('VARSPACE', ' ');
+DEFINE('VAREQUAL', '=');
+DEFINE('VARQUOTE', '"');
 DEFINE('VARWrapper', '%');
 function wrap_variable($var) { return VARWrapper . $var / VARWrapper; }
 
+//1-entry.php
+DEFINE('VARPageSlider', 'slider');
+DEFINE('VARQueryContent', 'content');
+DEFINE('VARQueryName', 'name');
+DEFINE('VARQueryHeadings', 'headings');
+
 //4-array.php
-DEFINE('NOWRAPREPLACE', '');
+DEFINE('NOWRAPREPLACE', VAREMPTY);
 DEFINE('WRAPREPLACE', '%');
 
 DEFINE('TYPENOCHANGE', 'no-change');
@@ -73,6 +83,8 @@ DEFINE('VARNodeSafeName', 'nodeSafeName');
 
 //16-theme.php
 DEFINE('VARSubmenuAtNode', 'submenu-at-node');
+
+DEFINE('VARSubthemeContentOnly', 'content-only');
 
 //features/engage.php
 DEFINE('VAREngageNote', 'engage-note');

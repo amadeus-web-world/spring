@@ -94,61 +94,9 @@ function _getCBClassIfWanted($additionalClass) {
 	return implode(' ', $classes);
 }
 
-function contentBox($id, $class = '', $return = false) {
-	if ($id == 'end') {
-		$result = NEWLINE . TAGDIVEND . NEWLINES2;
-		if ($return) return $result;
-		echo $result;
-		return;
-	}
-
-	$attrs = '';
-	if ($id) $attrs .= ' id="' . $id . '"';
-
-	$all = _getCBClassIfWanted($class);
-	if ($all) $attrs .= ' class="' . $all . '"';
-
-	$result = NEWLINE . '<div' . $attrs . '>' . NEWLINE;
-	if ($return) return $result;
-	echo $result;
-}
-
-function standoutH2InCenter($text) {
-	contentBox('', 'container text-center standout');
-	echo returnLine('## ' . $text);
-	contentBox('end');
-}
-
-function startDiv($id, $class = '') {
-	$attrs = '';
-	if ($id) $attrs .= ' id="' . $id . '"';
-	if ($class) $attrs .= ' class="' . $class . '"';
-	echo NEWLINE . '<div' . $attrs . '>' . NEWLINE;
-}
-
-function endDiv() {
-	echo TAGDIVEND;
-}
-
-function div($what = 'start', $h1 = '', $class = 'video-container') {
-	if ($h1) $h1 = '<h1>' . $h1 . '</h1>';
-	echo $what == 'start' ? '<div class="' . $class . '">' . $h1 . NEWLINE : TAGDIVEND . NEWLINES2;
-}
-
-DEFINE('H2CenterContainer', 'container text-center my-3');
-
-function h2($text, $class = '', $return = false) {
-	if ($class) $class = ' class="' . $class . '"';
-	$result = '<h2' . $class . '>';
-	$result .= renderSingleLineMarkdown($text, ['echo' => false]);
-	$result .= '</h2>' . NEWLINE;
-	if ($return) return $result;
-	echo $result;
-}
-
-function listItem($html) {
-	return '	<li>' . $html . '</li>' . NEWLINE;
-}
+function contentBox($id, $class = '', $return = false) { return tagUX::contentBox($id, $class, $return); }
+function h2($text, $class = '', $return = false) { return tagUX::heading($text, $class, $return); }
+function listItem($html) { return tagUX::listItem($html); }
 
 ///Internal Variables & its replacements
 
@@ -327,6 +275,76 @@ function prepareLinks($output) {
 
 function replaceHtmlShortcuts($output) {
 	return htmlUX::replaceAll($output);
+}
+
+class tagUX {
+	const HorizontalRule = 'hr';
+
+	static function selfClosetag($name, $classes, $attributes = []) {
+		$attrs = '';
+		$attributes['class'] = $classes;
+		foreach ($attributes as $attr => $value)
+			$attrs .= concatStrings(VAREMPTY, VARSPACE, $attr, VAREQUAL, VARQUOTE, $value, VARQUOTE);
+		return "<$name$attrs />";
+	}
+
+	static function tag($name, $classes, $id = '', $innerHtml = '') {
+		$attrs = ' class="' . $classes . '"';
+		if ($id) $attrs = ' id="' . $id . '"' . $attrs;
+		return "<$name$attrs>$innerHtml</$name>";
+	}
+
+	static function contentBoxClasses($id, $class1, $class2) {
+		$classes = func_get_args();
+		unset($classes[0]);
+		return self::contentBox($id, cssUX::concat($classes), true);
+	}
+
+	static function contentBox($id, $class = '', $return = false) {
+		if ($id == 'end') {
+			$result = NEWLINE . TAGDIVEND . NEWLINES2;
+			if ($return) return $result;
+			echo $result;
+			return;
+		}
+
+		$attrs = '';
+		if ($id) $attrs .= ' id="' . $id . '"';
+
+		$all = _getCBClassIfWanted($class);
+		if ($all) $attrs .= ' class="' . $all . '"';
+
+		$result = NEWLINE . '<div' . $attrs . '>' . NEWLINE;
+		if ($return) return $result;
+		echo $result;
+	}
+
+	static function heading($text, $class = '', $return = false, $level = 2) {
+		if ($class) $class = ' class="' . $class . '"';
+		$result = '<h' . $level . $class . '>';
+		$result .= renderSingleLineMarkdown($text, [VAREcho => BOOLDontEcho]);
+		$result .= '</h' . $level . '>' . NEWLINE;
+		if ($return) return $result;
+		echo $result;
+	}
+
+	static function listItem($html) {
+		return '	<li>' . $html . '</li>' . NEWLINE;
+	}
+}
+
+class cssUX {
+	//start with caps for prebuilt concatenations
+	const CenterContainer = 'container text-center my-3';
+
+	const container = 'container';
+	const standout = 'standout';
+	const pt4 = 'pt-4';
+	const m2 = 'm-2';
+
+	static function concat($params) {
+		return implode(' ', $params);
+	}
 }
 
 class htmlUX {

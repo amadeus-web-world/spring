@@ -58,6 +58,17 @@ function replaceValues($text, $array) {
 	return $text;
 }
 
+function concatStrings($sep, $param1, $param2) {
+	$params = func_get_args();
+	unset($params[0]);
+	return implode($sep, $params);
+}
+
+function concatArgsWithSlash($param1, $param2) {
+	$params = func_get_args();
+	return implode('/', $params);
+}
+
 function concatSlugs($params, $sep = '/') {
 	return implode($sep, $params);
 }
@@ -225,6 +236,7 @@ function sheetExists($name) {
 }
 
 class sheet {
+	private $filePath;
 	public array $columns;
 	public array $rows;
 	public array $values;
@@ -232,7 +244,7 @@ class sheet {
 
 	function __construct($file, $groupBy = 'section', $urlize = false)
 	{
-		extract(tsvToSheet(disk_file_get_contents($file)));
+		extract(tsvToSheet(disk_file_get_contents($this->filePath = _sheetPath($file))));
 		$this->columns = (array)$columns;
 		$this->rows = (array)$rows;
 		$this->values = (array)$values;
@@ -246,7 +258,7 @@ class sheet {
 	public function firstOfGroup($key, $else = false, $fail = true) {
 		if (!isset($this->group[$key])) {
 			if (!$fail) return $else;
-			if (variable(VARLocal)) showDebugging('243 missing-group-key', $key, true, true);
+			if (variable(VARLocal)) showDebugging('262 missing-group-key', $key, true, true);
 		}
 		return isset($this->group[$key]) ? $this->group[$key][0] : $else;
 	}
@@ -255,8 +267,10 @@ class sheet {
 		return isset($this->columns[$columnName]);
 	}
 
-	public function getValue($item, $columnName, $default = '') {
+	public function getValue($item, $columnName, $default = VAREMPTY, $urlize = false) {
+		if (!isset($item[$this->columns[$columnName]])) showDebugging('Invalid Column: ' . $columnName . ' of file: ' . $this->filePath, $item, false, IncludeTrace);
 		$result = $item[$this->columns[$columnName]];
+		if ($urlize && $result) $result = urlize($result);
 		return $result ? $result : $default;
 	}
 

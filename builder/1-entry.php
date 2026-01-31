@@ -189,11 +189,11 @@ function getPageParameters($trail = '/', $baseUrl = true) {
 	return $base . ($all ? $all : '') . $trail;
 }
 
-function hasPageParameter($param) {
+function hasPageParameter($param) {////use: VARPage[$param]
 	return in_array($param, variableOr('page_parameters', [])) || isset($_GET[$param]);
 }
 
-function getQueryParameter($param, $or = false) {
+function getQueryParameter($param, $or = false) {////use: VARQuery[$param]
 	return isset($_GET[$param]) ? $_GET[$param] : $or;
 }
 
@@ -201,7 +201,7 @@ function render() {
 	if (function_exists('before_render')) before_render();
 	ob_start();
 
-	$theme = variable('theme') ? variable('theme') : 'default';
+	$theme = variable('theme');
 	$embed = variable('embed');
 
 	$fileWanted = $rootFile = in_array(nodeValue(), ['readme', 'license']) ? SITEPATH . '/' . strtoupper(nodeValue()) . '.md' : false;
@@ -229,15 +229,15 @@ function render() {
 		features::runPage(features::share);
 		$rendered = true;
 	} else if (isset($_GET['cta'])) {
-		H2(title(FORHEADING), H2CenterContainer);
+		h2(title(FORHEADING), cssUX::CenterContainer);
 		echo getCodeSnippet('cta-or-engage', CORESNIPPET);
 		$rendered = true;
-	} else if (hasPageParameter('slider')) {
+	} else if (hasPageParameter(VARPageSlider)) {
 		$rendered = true; //dont want to render content. and needed here as it shouldnt support "content" menu pages
 	} else if (variable('skip-content-render')) {
 		$rendered = false;
 	} else if ($rootFile) {
-		H2(humanize(variable('name') . ' &mdash; ' . nodeValue()), H2CenterContainer);
+		h2(humanize(variable('name') . ' &mdash; ' . nodeValue()), cssUX::CenterContainer);
 		contentBox('root-file', 'container content-box');
 		renderAny($rootFile);
 		contentBox('end');
@@ -256,8 +256,8 @@ function render() {
 			//noop
 		} else if ($missing = getSnippet('missing-page')) {
 			if (!hasVariable('showing-media'))
-				h2(title(FORHEADING), H2CenterContainer);
-			contentBox('missing-page', 'container');
+				h2(title(FORHEADING), cssUX::CenterContainer);
+			contentBox('missing-page', cssUX::container);
 			renderMarkdown($missing);
 			contentBox('end');
 		} else {

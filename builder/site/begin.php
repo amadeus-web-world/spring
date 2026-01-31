@@ -138,6 +138,9 @@ __testSiteVars($op);
 runFrameworkFile('site/network');
 runFrameworkFile('site/cms');
 
+if (disk_file_exists($fn = SITEPATH . '/functions.php'))
+	disk_include_once($fn);
+
 if (disk_file_exists($cms = SITEPATH . '/cms.php'))
 	disk_include_once($cms);
 
