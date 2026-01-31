@@ -780,7 +780,7 @@ function body_classes($return = false) {
 
 	$op[] = 'mobile-click-to-expand'; //TODO: configurable!
 
-	if (hasVariable(VARChatraID) && variable(VARChatraID) != 'none' && !variable(VARLocal) && !$loadingPollen) $op[] = 'has-chatra';
+	if (hasVariable(VARChatraID) && variable(VARChatraID) != 'none' && !is_local() && !$loadingPollen) $op[] = 'has-chatra';
 
 	if (hasVariable(BODYCLASSES)) $op[] = implode(' ', variable(BODYCLASSES));
 

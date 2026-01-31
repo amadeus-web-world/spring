@@ -258,7 +258,7 @@ class sheet {
 	public function firstOfGroup($key, $else = false, $fail = true) {
 		if (!isset($this->group[$key])) {
 			if (!$fail) return $else;
-			if (variable(VARLocal)) showDebugging('262 missing-group-key', $key, true, true);
+			if (is_local()) showDebugging('262 missing-group-key', $key, true, true);
 		}
 		return isset($this->group[$key]) ? $this->group[$key][0] : $else;
 	}

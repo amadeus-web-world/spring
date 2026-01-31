@@ -68,7 +68,7 @@ function dawn_menu($return = false) {
 }
 
 function getDomainLink($name, $site, $urlKey, $hrefOnly = false) {
-	$href = variable(VARLocal) ? replaceVariables('http://localhost%port%/', 'port') : 'https://amadeusweb.world/';
+	$href = is_local() ? replaceVariables('http://localhost%port%/', 'port') : 'https://amadeusweb.world/';
 	if ($site) $href .= $site . '/';
 	if ($hrefOnly) return $href;
 	return [$urlKey => $href, 'name' => $name];
@@ -134,7 +134,7 @@ function setupNetwork($noNetwork) {
 			}
 
 			if (startsWith($file, '==') || !disk_file_exists($tsv = ALLSITESROOT . $file . '/data/site.tsv')) {
-				if (variable(VARLocal)) echo '<!-- missing tsv: ' . $tsv . '-->' . NEWLINE;
+				if (is_local()) echo '<!-- missing tsv: ' . $tsv . '-->' . NEWLINE;
 				continue;
 			}
 			$items[$file] = $file;
@@ -180,7 +180,7 @@ function getSitesToShow($at, $urlKey = false) {
 	foreach ($fols as $relativePath) {
 		$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
 		if (!sheetExists($file)) {
-			if (variable(VARLocal)) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV missing' => $file, 'hint' => 'IS NETWORK / Site Grouping?'], DEBUGVERBOSE);
+			if (is_local()) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV missing' => $file, 'hint' => 'IS NETWORK / Site Grouping?'], DEBUGVERBOSE);
 			continue;
 		}
 
@@ -190,7 +190,7 @@ function getSitesToShow($at, $urlKey = false) {
 		$showInConfig = $site->firstOfGroup(DOMAINKEY, false, false);
 
 		if (!$showInConfig) {
-			if (variable(VARLocal)) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "' . DOMAINKEY . '" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
+			if (is_local()) debug(__FILE__, 'getSitesToShow', ['skipping' => $relativePath, 'TSV "' . DOMAINKEY . '" missing' => $file, 'hint' => 'STILL IN v9.2?'], DEBUGSPECIAL);
 			continue;
 		}
 
@@ -225,7 +225,7 @@ function _getOrWarn($relativePath, $urlKey = false) {
 	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
 	//need the check again as it may be called from subsites/
 	if (!sheetExists($file)) {
-		if (variable(VARLocal)) debug(__FILE__, '_getOrWarn', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
+		if (is_local()) debug(__FILE__, '_getOrWarn', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
 		return false;
 	}
 

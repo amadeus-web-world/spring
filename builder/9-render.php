@@ -115,6 +115,15 @@ function _renderImplementation($fileOrRaw, $settings) {
 
 	if ($wasFile = isContentFile($fileOrRaw)) {
 		$fileName = $fileOrRaw;
+
+		if (NeverExecute && is_local()) {
+			//checks if second call and dies
+			if ($firstCall = variable($doneKey = 'done_' . $fileName))
+				showDebugging('second call on: ' . $fileName, ['thisCall' => debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2), 'firstCall' => $firstCall], PleaseDie);
+			variable($doneKey, debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2));
+			//simulate 2nd call _renderImplementation($fileName, []);
+		}
+
 		$endsWithMd = endsWith($fileOrRaw, '.md');
 		$raw = disk_file_get_contents($fileOrRaw);
 		$noReplaces = contains($raw, NOREPLACES);
@@ -240,7 +249,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 }
 
 function _txtInfo($msg, $info) {
-	if (BOOLYes || !variable(VARLocal)) return '';
+	if (BOOLYes || !is_local()) return '';
 	return textBoxWithCopyOnClick($msg, _makeSlashesConsistent($info), 'Link Copied');
 }
 

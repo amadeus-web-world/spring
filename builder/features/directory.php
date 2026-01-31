@@ -27,7 +27,8 @@ function _sections($current) {
 	contentBox('end');
 }
 
-_renderMenu(variable('file') ? false : $folder . 'home.md', $folder, $where);
+$file = hasVariable('file') ? false : variableOr('directory-file', $folder . 'home.md');
+_renderMenu($file, $folder, $where);
 
 function _renderMenu($home, $folder, $where) {
 	$breadcrumbs = variable('breadcrumbs');
@@ -36,12 +37,9 @@ function _renderMenu($home, $folder, $where) {
 		h2(humanize($where), 'amadeus-icon');
 
 	if ($home) {
-		$isMissing = !disk_file_exists($home);
-		$wantsNoCB = $isMissing || contains(disk_file_get_contents($home), WANTSNOCONTENTBOX);
+		$wantsNoCB = contains(disk_file_get_contents($home), WANTSNOCONTENTBOX);
 		if (!$wantsNoCB) contentBox('home');
-		if ($isMissing && getSnippet('missing-page'))
-			; //noop
-		else renderAny($home);
+		renderAny($home);
 		if (!$wantsNoCB) contentBox('end');
 	}
 

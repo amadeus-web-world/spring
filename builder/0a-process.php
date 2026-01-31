@@ -1,11 +1,11 @@
 <?php
-DEFINE('VARErrorStart', '<div class="container mt-4 p-5 alert alert-warning text-center" style="border-radius: 25px;">');
+DEFINE('VARErrorStart', '<div class="container mt-4 p-5 alert alert-warning" style="border-radius: 25px;">');
 
 DEFINE('BOOLYes', true);
 	DEFINE('PleaseDie', BOOLYes);
 	DEFINE('IncludeTrace', BOOLYes);
+	DEFINE('NeverExecute', BOOLYes);
 DEFINE('BOOLNo', false);
-	DEFINE('BlockExecution', BOOLNo); ///dead code
 DEFINE('EmptyArray', []);
 
 function showDebugging($msg, $param, $die = false, $trace = false, $echo = true, $skip = false) {

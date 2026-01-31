@@ -4,7 +4,11 @@ function bool_r(bool $value) {
 }
 
 DEFINE('VARLocal', 'local');
+function is_local() { return variable(VARLocal); }
+
 DEFINE('VARLive', 'live');
+function is_live() { return variable(VARLive); }
+
 DEFINE('VARUsePreview', 'use-preview');
 define('VARUseAmadeusWeb', '--use-amadeusweb');
 
@@ -104,7 +108,7 @@ DEFINE('VARGithubRepo', 'github-repo');
 DEFINE('VARChatraID', 'ChatraID');
 DEFINE('VARGoogleAnalytics', 'google-analytics');
 function notSetOrNotLive($var) {
-	if (!variable($var) || variable(VARLocal)) return true;
+	if (!variable($var) || is_local()) return true;
 	if (variable(VARUsePreview) && variable(VARLive) === false) return true;
 	return false;
 }

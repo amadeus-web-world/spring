@@ -250,10 +250,8 @@ function menu($folderRelative = false, $settings = []) {
 			if ($isDir) $extension = '';
 
 			if ($file && $file[0] != '~' && !$extension && !$isDir) {
-				if (variable(VARLocal)) {
-					showDebugging('$settings', $settings);
-					showDebugging('file with no extension - skipping', [ 'folder' => $folder, 'file' => $file]);
-				}
+				if (is_local())
+					showDebugging('file with no extension - skipping', [ 'folder' => $folder, 'file' => $file, 'settings' => $settings], PleaseDie);
 				continue;
 			}
 

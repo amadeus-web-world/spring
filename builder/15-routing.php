@@ -11,14 +11,14 @@ function sluggize($relPath) {
 DEFINE('SITEURLKEY', 'site-url-key'); //typo proof
 
 function _getUrlKeySansPreview() {
-	return (variable(VARLocal) ? VARLocal : VARLive) . '-url';
+	return (is_local() ? VARLocal : VARLive) . '-url';
 }
 
 function getSiteUrlKey() {
 	$usePreview = variableOr(VARUsePreview, false);
-	$local = variable(VARLocal); //this is now in before_bootstrap
+	$local = is_local(); //this is now in before_bootstrap
 
-	//tests preview urls locally
+	//NOTE: tests preview urls locally
 	//$local = false; $preview = true;
 
 	if (!$usePreview) {
@@ -27,7 +27,7 @@ function getSiteUrlKey() {
 		return $result;
 	}
 
-	$live = variable(VARLive);
+	$live = is_live();
 	$testSafeHost = variableOr('testingHost', $_SERVER['HTTP_HOST']);
 	$preview = hasVariable('preview') ? variable('preview') :
 		($local ? !$live : contains($testSafeHost, 'preview'));

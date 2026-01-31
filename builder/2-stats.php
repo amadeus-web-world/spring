@@ -31,7 +31,7 @@ function disk_call($function, $parameter, $timeER) {
 		//needs check else runFrameworkFile causes load error
 		if (function_exists('variable')
 				&& !defined('SHOWSITESAT')
-				&& variable(VARLocal))
+				&& is_local())
 			showDebugging('SITEPATH', 'UNDEFINED: SITEPATH');
 	}
 

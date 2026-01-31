@@ -24,7 +24,7 @@ if (count($allItems)) {
 	if (!count($allItems)) $allItems = $bySiteAndAll;
 }
 
-if (!count($allItems)) return !variable(VARLocal) ? ''
+if (!count($allItems)) return !is_local() ? ''
 	: h2('No items resolved for current page.', 'text-danger', true) . '<p>Please check sufficient data in the "data/media.tsv" file.</p>';
 
 $items = getShuffledItems($allItems, 1);
