@@ -2,15 +2,22 @@
 getSiteUrlKey();
 runFrameworkFile('site/network');
 
-variables([
-	'theme' => 'canvas',
-	'sub-theme' => 'go',
-	'custom-footer' => true,
-	VARMediakit => '?palette=1',
+setTheme();
+setSubTheme(VARSubthemeGo);
 
+variables([
+	VARMediakit => '?palette=1',
 	VARNode => SITEHOME,
-	'name' => SITESATNAME,
-	VARByline => DAWN_NAME,
+	'name' => substr(DAWN_SECTION . SITESATNAME, 1),
+	VARFooterMessage => 'Proud Member of "' . DAWN_NAME . VARQUOTE,
+
+	VARChatraID => VARUseAmadeusWeb,
+	VARGoogleAnalytics => VARUseAmadeusWeb,
+	VAREmail => VARSystemEmail,
+	VARPhone => $ph1 = VARSystemMobile,
+	VARWhatsapp => $ph1,
+	VARAddress => VARSystemAddress,
+	VARNetwork => 'Webring',
 ]);
 
 add_body_class('showing-sites');

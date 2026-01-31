@@ -11,8 +11,12 @@ function getThemeFile($file, $folder = false) {
 	return concatSlugs([($folder ? $folder : AMADEUSTHEMESFOLDER) . $themeName, $file]);
 }
 
+function setTheme($name = VARThemeCanvas) {
+	variable(VARTheme, $name);
+}
+
 function setSubTheme($name) {
-	variable('sub-theme', $name);
+	variable(VARSubtheme, $name);
 }
 
 function renderThemeFile($file, $themeName = false) {

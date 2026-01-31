@@ -66,6 +66,8 @@ DEFINE('VARCTAONLY', '?cta=1&content=1');
 
 //14-main.php
 DEFINE('VARSystemEmail', 'imran@amadeusweb.world');
+DEFINE('VARSystemMobile', '+91-9841223313');
+DEFINE('VARSystemAddress', 'Chennai, India');
 function plus_email($email, $plusFolder) { return str_replace('@', '+' . $plusFolder . '@', $email); }
 
 //15-routing.php
@@ -84,7 +86,13 @@ DEFINE('VARNodeSafeName', 'nodeSafeName');
 //16-theme.php
 DEFINE('VARSubmenuAtNode', 'submenu-at-node');
 
+DEFINE('VARTheme', 'theme');
+DEFINE('VARThemeCanvas', 'canvas');
+
+DEFINE('VARSubtheme', 'sub-theme');
+DEFINE('VARSubthemeBusiness', 'business');
 DEFINE('VARSubthemeContentOnly', 'content-only');
+DEFINE('VARSubthemeGo', 'go');
 
 //features/engage.php
 DEFINE('VAREngageNote', 'engage-note');

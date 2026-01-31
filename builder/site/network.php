@@ -3,8 +3,10 @@ DEFINE('NETWORKSDEFINEDAT', AMADEUSSITEROOT . 'data/networks/');
 DEFINE('DAWN_SECTION', '~AmadeusWeb\'s ');
 DEFINE('DAWN_ABBR', 'DAWN');
 DEFINE('DAWN_NAME', 'The Dynamic AmadeusWeb Network');
+DEFINE('CORESITES', ['imran', 'work', 'spring', 'smithy', 'oases']);
+DEFINE('CORENames', ['imran' => 'by Imran Ali Namazi', 'oases' => 'AW Oases / World']);
 DEFINE('DOMAINS', ['authors', 'creativity', 'networks', 'retreats', 'technology', 'organizations', 'people', 'work-folk']);
-DEFINE('DOMAINNames', ['creativity' => 'Creativity Corner']);
+DEFINE('DOMAINNames', []);
 
 function is_dawn($fol) { return in_array($fol, ['dawn', 'public_html']); }
 function domain_name($domain) { return array_key_exists($domain, DOMAINNames) ? DOMAINNames[$domain] : humanize($domain); }
@@ -27,17 +29,41 @@ if (!$noNetwork) {
 	}
 }
 
-function dawn_menu() {
+function dawn_menu_items() {
+	$op = [];
+	$urlKey = _getUrlKeySansPreview();
+	$ix = 1;
+	foreach (dawn_menu(BOOLYes) as $ix => $item) {
+		if ($item === null) continue;
+		if (is_string($item)) {
+			$op[] = ($item > 1 ? HRTAG : '') . substr($item, strlen(DAWN_SECTION));
+			continue;
+		}
+
+		$op[] = getLink($item['name'], $item[$urlKey], 'btn btn-success me-1 mb-1');
+		$ix += 1;
+	}
+	return $op;
+}
+
+function dawn_menu($return = false) {
 	$urlKey = _getUrlKeySansPreview();
 	$showIn = variable(DOMAINKEY);
-	$back = getDomainLink('Back to ' . ($showIn ? humanize($showIn) : DAWN_ABBR), $showIn ? $showIn : '', $urlKey);
-	$items = array_merge([$back], variable('dawnSites'));
+
+	$items = [
+		$showIn && !$return ? getDomainLink('Back to ' . humanize($showIn), $showIn, $urlKey) : null,
+		!$return ? getDomainLink('DAWN Root', '', $urlKey) : null,
+	];
+
+	$items[] = DAWN_SECTION . 'Core';
+	foreach (CORESITES as $item)
+		$items[] = [$urlKey => getSiteUrl($item), 'name' => isset(CORENames[$item]) ? CORENames[$item] : 'AW ' . humanize($item)];
 
 	$items[] = DAWN_SECTION . 'Domains';
-
 	foreach (DOMAINS as $item)
 		$items[] = getDomainLink(domain_name($item), $item, $urlKey);
 
+	if ($return) return $items;
 	__flatMenu($items, DAWN_ABBR);
 }
 
@@ -60,6 +86,7 @@ function __flatMenu($items, $name) {
 	$urlKey = _getUrlKeySansPreview();
 	
 	foreach ($items as $item) {
+		if ($item === null) continue;
 		if (is_string($item)) {
 			$name = substr($item, 1);
 			if ($wrapTextInADiv) $name = '<div class="' . $anchorClass . '">' . $name . $topLevelAngle . '</div>';
@@ -77,7 +104,6 @@ function __flatMenu($items, $name) {
 }
 
 function setupNetwork($noNetwork) {
-	$dawnSites = [];
 	$networkSites = [];
 	addNetworkUrl(SITEROOT, getDomainLink('', '', '', true));
 
@@ -142,10 +168,7 @@ function setupNetwork($noNetwork) {
 		$networkSites[] = $item;
 	}
 
-	variables([
-		'dawnSites' => $dawnSites,
-		'networkSites' => $networkSites,
-	]);
+	variable('networkSites', $networkSites);
 }
 
 function getSitesToShow($at, $urlKey = false) {

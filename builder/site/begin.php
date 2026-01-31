@@ -60,12 +60,12 @@ function _visane($siteVars) {
 		[VAREmail2, plus_email(VARSystemEmail, 'owner')],
 		[VAREmail3, plus_email(VARSystemEmail, 'hr')],
 
-		[VARPhone, $ph1 = '+91-9841223313'],
-		[VARWhatsapp, $ph1], //clean can take place in -number (the link)
+		[VARPhone, $ph1 = VARSystemMobile],
+		[VARWhatsapp, $ph1],
 		[VARPhone2, $ph2 = '+91-9500001909'],
 		[VARWhatsapp2, $ph2],
 
-		[VARAddress, 'Chennai, India'],
+		[VARAddress, VARSystemAddress],
 		[VARAddressUrl, '#no-maps-set'],
 		[VARFullAddress, 'Devakalam, Mahalingapuram, Chennai, India'],
 		[VARTimings, 'Mon - Sat 11am to 7pm'],
@@ -80,8 +80,8 @@ function _visane($siteVars) {
 	];
 
 	if (!hasVariable('theme')) {
-		$guarantees[] = ['theme', 'canvas'];
-		$guarantees[] = ['sub-theme', variableOr('sub-theme', 'business')];
+		$guarantees[] = [VARTheme, VARThemeCanvas];
+		$guarantees[] = [VARSubtheme, variableOr(VARSubtheme, VARSubthemeBusiness)];
 	}
 
 	$op = [];
