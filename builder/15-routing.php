@@ -59,7 +59,7 @@ function getSectionFrom($dir) {
 }
 
 DEFINE('LASTPARAM', 'last-page');
-DEFINE('NODEVAR', 'node');
+DEFINE('NODEVAR', VARNode);
 DEFINE('SITEHOME', 'index');
 function nodeValue() { return variable(NODEVAR); }
 function nodeIs($what) { return nodeValue() == $what; }

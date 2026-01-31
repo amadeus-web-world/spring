@@ -268,7 +268,7 @@ function processPdfShortcode($html) {
 	]);
 }
 
-DEFINE('SPACERSTART', '<div class="divider divider-center m-0"><h1 class="h4">');
+DEFINE('SPACERSTART', '<div class="divider divider-center m-0 mt-3"><h1 class="h4">');
 DEFINE('SPACEREND', '</h1></div>');
 
 function printSpacer($heading) {

@@ -237,7 +237,7 @@ function render() {
 	} else if (variable('skip-content-render')) {
 		$rendered = false;
 	} else if ($rootFile) {
-		h2(humanize(variable('name') . ' &mdash; ' . nodeValue()), cssUX::CenterContainer);
+		h2(variable('name') . ' &mdash; ' . humanizeThis(), cssUX::CenterContainer);
 		contentBox('root-file', 'container content-box');
 		renderAny($rootFile);
 		contentBox('end');

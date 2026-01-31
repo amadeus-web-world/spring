@@ -23,7 +23,7 @@ function currentUrl() {
 
 function printNodeHeading($noEnd = false) {
 	sectionId('node', 'container text-center');
-	h2(humanize(nodeValue()), 'amadeus-icon');
+	h2(humanizeThis(), 'amadeus-icon');
 	if (!$noEnd)
 		sectionEnd();
 }
@@ -144,7 +144,6 @@ function replaceHtml($html) {
 	$key = 'htmlSitewideReplaces';
 	$replaces = variable($key);
 	if (!$replaces) {
-		$section = variable('section');
 		$node = nodeValue();
 		variable($key, $replaces = [
 			//Also, we should incorporate dev tools like w3c & broken link checkers
@@ -162,7 +161,7 @@ function replaceHtml($html) {
 
 			'%currentUrl%' => currentUrl(),
 			'%nodeSlug%' => $node,
-			'%nodeName%' => humanize($node),
+			'%nodeName%' => humanizeThis(),
 			'%nodeUrl%' => pageUrl($node),
 			'%nodeItem%' => $ni = getPageParameterAt(1, ''),
 			'%nodeItem_r%' => humanize($ni),
@@ -194,8 +193,8 @@ function replaceHtml($html) {
 			'%siteName_subject%' => urlencode($sn),
 			'%byline%' =>  variable(VARByline),
 			'%safeName%' =>  variable(VARSafeName),
-			'%section%' => $section, //let archives break!
-			'%section_r%' => humanize($section),
+			'%section%' => sectionValue(),
+			'%section_r%' => humanizeThis(SECTIONVAR),
 
 			'%network-signup%' => getSiteUrl(SITEWORLD, VARCTAONLY),
 			'%network-helping%' => getSiteUrl(SITEZVM, 'helping/'),

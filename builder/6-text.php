@@ -27,6 +27,10 @@ function first_of_underscore($txt) {
 
 DEFINE('NOSITEHUMANIZE', 'no-site');
 
+function humanizeThis($var = VARNode) {
+	return humanize(variable($var));
+}
+
 function humanize($txt, $how = false) {
 	$words = ucwords(replaceItems($txt, ['--' => ' &mdash; ', '-' => ' ', '_' => '']));
 	if ($how !== 'no-site' && function_exists('site_humanize')) $words = site_humanize($words, 'title', $how);

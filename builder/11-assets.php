@@ -26,16 +26,15 @@ function title($what = 'default') {
 		return variable('custom-title') . ' | ' . variable('name');
 	}
 
-	$node = nodeValue();
-	if ($what === TITLEONLY) return humanize($node);
+	if ($what === TITLEONLY) return humanizeThis();
 
-	$siteRoot = $node == SITEHOME || variable('under-construction');
+	$siteRoot = nodeIs(SITEHOME) || variable('under-construction');
 
 	if ($siteRoot)
-		return variable('name') . ' | ' . variable(VARByline);
+		return variable(VARName) . ' | ' . variable(VARByline);
 
 	$forHeading = $what == FORHEADING;
-	$result = $forHeading ? [humanize($node)] : [];
+	$result = $forHeading ? [humanizeThis()] : [];
 
 	$exclude = ['print', 'embed'];
 	$items = variableOr('page_parameters', []);
@@ -44,7 +43,7 @@ function title($what = 'default') {
 	foreach($items as $slug)
 		if (!in_array($slug, $exclude)) $result[] = humanize($slug);
 
-	if (!$forHeading) $result[] = humanize($node);
+	if (!$forHeading) $result[] = humanizeThis();
 
 	return implode($forHeading ? ' &mdash;&gt; ' : ' &lt; ', $result) . ($forHeading ? '' : ' | ' . variable('name'));
 }
