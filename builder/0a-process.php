@@ -2,10 +2,10 @@
 DEFINE('VARErrorStart', '<div class="container mt-4 p-5 alert alert-warning" style="border-radius: 25px;">');
 
 DEFINE('BOOLYes', true);
+DEFINE('BOOLNo', false);
 	DEFINE('PleaseDie', BOOLYes);
 	DEFINE('IncludeTrace', BOOLYes);
-	DEFINE('NeverExecute', BOOLYes);
-DEFINE('BOOLNo', false);
+	DEFINE('NeverExecute', BOOLNo);
 DEFINE('EmptyArray', []);
 
 function showDebugging($msg, $param, $die = false, $trace = false, $echo = true, $skip = false) {

@@ -299,13 +299,21 @@ class tagUX {
 		return self::contentBox($id, cssUX::concat($classes), true);
 	}
 
+	static function startPhpFile($at = 0) {
+		$page = $at == 0 ? nodeValue() : getPageParameterAt($at);
+		self::heading(humanize($page), cssUX::CenterContainer);
+		tagUX::contentBox($page, cssUX::concat(cssUX::container, cssUX::m2, cssUX::mauto));
+	}
+
+	static function contentBoxEnd($return = false) {
+		$result = NEWLINE . TAGDIVEND . NEWLINES2;
+		if ($return) return $result;
+		echo $result;
+		return;
+	}
+
 	static function contentBox($id, $class = '', $return = false) {
-		if ($id == 'end') {
-			$result = NEWLINE . TAGDIVEND . NEWLINES2;
-			if ($return) return $result;
-			echo $result;
-			return;
-		}
+		if ($id == 'end') return self::contentBoxEnd($return);
 
 		$attrs = '';
 		if ($id) $attrs .= ' id="' . $id . '"';
@@ -321,7 +329,7 @@ class tagUX {
 	static function heading($text, $class = '', $return = false, $level = 2) {
 		if ($class) $class = ' class="' . $class . '"';
 		$result = '<h' . $level . $class . '>';
-		$result .= renderSingleLineMarkdown($text, [VAREcho => BOOLDontEcho]);
+		$result .= trim(renderSingleLineMarkdown($text, [VAREcho => BOOLDontEcho]));
 		$result .= '</h' . $level . '>' . NEWLINE;
 		if ($return) return $result;
 		echo $result;
@@ -340,8 +348,10 @@ class cssUX {
 	const standout = 'standout';
 	const pt4 = 'pt-4';
 	const m2 = 'm-2';
+	const mauto = 'm-auto';
 
-	static function concat($params) {
+	static function concat($param1, $param2 = null) {
+		$params = is_array($param1) ? $param1 : func_get_args();
 		return implode(' ', $params);
 	}
 }
@@ -371,7 +381,7 @@ class htmlUX {
 	private static function ensureVars() {
 		$custom = [
 			self::cbOPEN[0] => contentBox('', '', true),
-			self::cbCNO[0] => cbCloseAndOpen('container'),
+			self::cbCNO[0] => cbCloseAndOpen('container my-5'),
 			self::cbOWC[0] => contentBox('', 'container', true),
 			self::cbCLOSE[0] => contentBox('end', 'mb-2', true),
 		];
